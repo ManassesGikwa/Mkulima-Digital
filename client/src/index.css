@@ -46,7 +46,7 @@ nav>div {
 }
 
 .video video {
-    position: fixed;
+    position: relative;
     height: 100%;
     width: 100%;
     object-fit: cover;
@@ -54,7 +54,7 @@ nav>div {
 }
 
 .detail {
-    position: fixed;
+    position:absolute;
     bottom: 4rem;
     text-align: center;
 }

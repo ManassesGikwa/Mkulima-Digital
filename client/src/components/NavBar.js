@@ -3,6 +3,7 @@ import React from 'react';
 import "../index.css"
 import { Link } from 'react-router-dom';
 import Home from '../pages/Home';
+import Posts from './Posts';
 
 const NavBar = () => {
   return (
@@ -51,8 +52,8 @@ const NavBar = () => {
                   </Link>
                 </li>
               </ul>
-              <Link to="/support"  className="btn sm primary">SUPPORT</Link>
-              <Link to="/login"  className="btn sm login">LOGIN</Link>
+              <Link to="/support"  className="nav-btn sm primary">SUPPORT</Link>
+              <Link to="/login"  className="nav-btn sm login">LOGIN</Link>
             </div>
           </div>
         </nav>

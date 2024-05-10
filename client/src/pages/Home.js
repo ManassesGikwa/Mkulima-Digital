@@ -117,7 +117,7 @@ const Home = () => {
         <div className="col-3">
           <div className="d-flex justify-content-center">
             <div className="detail">
-              <h2 className="mb-3 fw-bold">Mkulima Gigital</h2>
+              <h2 className="mb-3 fw-bold">Mkulima Digital</h2>
               <hr className="mb-3" />
               <p>
                 We Digitise Grain Management for over 11, 600 Agribusinesses Globally
@@ -157,6 +157,7 @@ const Home = () => {
           <div className="scrollbar-thumb"></div>
         </div>
       </div>
+    </div>
     </div>
     </div>
     </div>

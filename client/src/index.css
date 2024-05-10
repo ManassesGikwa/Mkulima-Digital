@@ -1,9 +1,13 @@
 /* ==================================================== NAVBAR & HEADER ========================================= */
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css");
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
 
 * {
     font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 header {
@@ -42,7 +46,7 @@ nav>div {
 }
 
 .video {
-    height: 100vh;
+    height: 80vh;
 }
 
 .video video {
@@ -105,6 +109,280 @@ nav>div {
   color: #fff;
 }
 
+/* =========================================IMAGE SLIDER ====================================================*/
+
+.body1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #f1f4fd;
+  }
+  
+  .container {
+    max-width: 1200px;
+    width: 95%;
+  }
+  
+  .slider-wrapper {
+    position: relative;
+  }
+  
+  .slider-wrapper .slide-button {
+    position: absolute;
+    top: 50%;
+    outline: none;
+    border: none;
+    height: 50px;
+    width: 50px;
+    z-index: 5;
+    color: #fff;
+    display: flex;
+    cursor: pointer;
+    font-size: 2.2rem;
+    background: #000;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .slider-wrapper .slide-button:hover {
+    background: #404040;
+  }
+  
+  .slider-wrapper .slide-button#prev-slide {
+    left: -25px;
+    display: none;
+  }
+  
+  .slider-wrapper .slide-button#next-slide {
+    right: -25px;
+  }
+  
+  .slider-wrapper .image-list {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 18px;
+    font-size: 0;
+    list-style: none;
+    margin-bottom: 30px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  
+  .slider-wrapper .image-list::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .slider-wrapper .image-list .image-item {
+    width: 325px;
+    height: 400px;
+    object-fit: cover;
+  }
+  
+  .container .slider-scrollbar {
+    height: 24px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+  
+  .slider-scrollbar .scrollbar-track {
+    background: #ccc;
+    width: 100%;
+    height: 2px;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    position: relative;
+  }
+  
+  .slider-scrollbar:hover .scrollbar-track {
+    height: 4px;
+  }
+  
+  .slider-scrollbar .scrollbar-thumb {
+    position: absolute;
+    background: #000;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    height: 100%;
+    cursor: grab;
+    border-radius: inherit;
+  }
+  
+  .slider-scrollbar .scrollbar-thumb:active {
+    cursor: grabbing;
+    height: 8px;
+    top: -2px;
+  }
+  
+  .slider-scrollbar .scrollbar-thumb::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -10px;
+    bottom: -10px;
+  }
+  
+  /* Styles for mobile and tablets */
+  @media only screen and (max-width: 1023px) {
+    .slider-wrapper .slide-button {
+      display: none !important;
+    }
+  
+    .slider-wrapper .image-list {
+      gap: 10px;
+      margin-bottom: 15px;
+      scroll-snap-type: x mandatory;
+    }
+  
+    .slider-wrapper .image-list .image-item {
+      width: 280px;
+      height: 380px;
+    }
+  
+    .slider-scrollbar .scrollbar-thumb {
+      width: 20%;
+    }
+  }
+
+
+/* =========================================FOOTER ====================================================*/
+/* Importing Google font - Open Sans */
+
+.footer {
+  background: black;
+  color: #fff;
+  padding: 60px 20px;
+}
+
+.footer .footer-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 30px; 
+}
+
+.footer .footer-col {
+  flex: 1;
+  max-width: 300px;
+}
+
+.footer .footer-col h4 {
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.footer .links {
+  list-style: none;
+  padding: 0;
+}
+
+.footer .links li {
+  margin-bottom: 10px;
+}
+
+.footer .links li a {
+  text-decoration: none;
+  color: #bfbfbf;
+  transition: color 0.3s ease;
+}
+
+.footer .links li a:hover {
+  color: #fff;
+}
+
+.footer p {
+  color: #bfbfbf;
+  max-width: 300px;
+  margin-bottom: 20px; /* Increase space below paragraph */
+}
+
+.footer form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.footer input {
+  height: 40px;
+  border-radius: 6px;
+  background: none;
+  width: 100%;
+  outline: none;
+  border: 1px solid #7489C6;
+  caret-color: #fff;
+  color: #fff;
+  padding: 0 10px; /* Adjust input padding */
+}
+
+.footer input::placeholder {
+  color: #ccc;
+}
+
+.footer button {
+  background: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.footer button:hover {
+  background: #cecccc;
+}
+
+.footer .icons {
+  display: flex;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.footer .icons i {
+  color: #afb6c7;
+  transition: color 0.3s ease;
+}
+
+.footer .icons i:hover {
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 40px 20px; /* Adjust padding for smaller screens */
+  }
+
+  .footer .footer-row {
+    gap: 20px; /* Reduce gap between footer columns */
+  }
+
+  .footer .footer-col {
+    max-width: 100%; /* Make footer columns full width on smaller screens */
+    margin-bottom: 30px; /* Add space below each footer column */
+  }
+
+  .footer form :where(input, button) {
+    width: 100%;
+  }
+
+  .footer button {
+    margin-top: 10px; /* Adjust button margin for smaller screens */
+  }
+}
+
+
+
+
+
+
+/* =========================================MEDIA QUERIES ====================================================*/
 @keyframes arrow {
     0% {
         transform: translateY(-5px);

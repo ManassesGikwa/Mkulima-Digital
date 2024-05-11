@@ -3,16 +3,15 @@ import React from 'react';
 import "../index.css"
 import { Link } from 'react-router-dom';
 import Home from '../pages/Home';
-import Posts from './Posts';
 
 const NavBar = () => {
   return (
     <div>
         <nav className="navbar navbar-expand-lg bg-white">
           <div className="container-fluid container-lg" id="round-onclick">
-            <a className="logo text-decoration-none" href="#">
-              <h1>Mkulima Digital</h1>
-            </a>
+            
+              <h1 className="logo text-decoration-none"><Link to="/" >Mkulima Digital</Link></h1>
+            
             <button
               className="navbar-toggler menu border-0"
               type="button"
@@ -57,7 +56,6 @@ const NavBar = () => {
             </div>
           </div>
         </nav>
-        <Home />
         
     </div>
   );

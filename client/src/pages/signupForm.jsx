@@ -48,7 +48,7 @@ const SignupForm = () => {
               >
                 🖋️
               </span>{" "}
-              Getting Started
+              Welcome to Mkulima Digital
             </h1>
             <h2>Kindly input your details to continue</h2>
             <form onSubmit={handleSubmit}>

@@ -410,7 +410,7 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from flask_migrate import Migrate
-from models import db, User, BlogPost, Community, Expert, Message, Comment, Like
+from models import db, User, BlogPost, Community, Expert, Message, Comment, Like, CommunityFollowers
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token
 import os
@@ -697,6 +697,39 @@ class UserDetails(Resource):
         db.session.delete(user)
         db.session.commit()
         return jsonify({'message': 'User deleted successfully'})
+    
+class CommunityFollowersResource(Resource):
+    def get(self, community_id):
+        # Query the database to retrieve followers of the specified community
+        followers = CommunityFollowers.query.filter_by(community_id=community_id).all()
+
+        # Serialize the follower data into JSON format
+        serialized_followers = [follower.to_dict() for follower in followers]
+
+        # Return the serialized follower data as the response
+        return jsonify(serialized_followers)
+class BlogPostCommentsResource(Resource):
+    def get(self, blogpost_id):
+        # Query the database to retrieve comments associated with the specified blog post
+        comments = Comment.query.filter_by(blog_post_id=blogpost_id).all()
+
+        # Serialize the comment data into JSON format
+        serialized_comments = [comment.to_dict() for comment in comments]
+
+        # Return the serialized comment data as the response
+        return jsonify(serialized_comments)
+
+class BlogPostLikes(Resource):
+    def get(self, blog_post_id):
+        # Query the database to retrieve likes associated with the specified blog post
+        likes = Like.query.filter_by(blog_post_id=blog_post_id).all()
+
+        # Serialize the likes into JSON format
+        serialized_likes = [like.to_dict() for like in likes]
+
+        # Return the serialized likes as the response
+        return jsonify(serialized_likes)
+    
 # Add routes for all resources
 api.add_resource(UserRegistration, '/register')
 api.add_resource(UserLogin, '/login')
@@ -714,6 +747,10 @@ api.add_resource(Likes, '/likes')
 api.add_resource(LikeDetails, '/likes/<int:id>')
 api.add_resource(Users, '/users')
 api.add_resource(UserDetails, '/users/<int:id>')
+api.add_resource(CommunityFollowersResource, '/communities/<int:community_id>/followers')
+api.add_resource(BlogPostCommentsResource, '/blogposts/<int:blogpost_id>/comments')
+api.add_resource(BlogPostLikes, '/blogposts/<int:blog_post_id>/likes')
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5555)

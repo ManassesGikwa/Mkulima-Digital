@@ -257,13 +257,16 @@ class Comment(db.Model):
     content = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     blog_post_id = db.Column(db.Integer, db.ForeignKey('blog_post.id'), nullable=False)
+    blog_post_id = db.Column(db.Integer, db.ForeignKey('blog_post.id'), nullable=False)  # Foreign key to BlogPost model
     created_at = db.Column(db.DateTime)
 
     def to_dict(self):
         return{
             'id':self.id,
             'content':self.content,
-            'created_at':self.created_at.isoformat()
+            'created_at':self.created_at.isoformat(),
+            'user_id': self.user_id,
+            'blog_post_id': self.blog_post_id 
         }
 
 class Like(db.Model):
@@ -275,6 +278,25 @@ class Like(db.Model):
     def to_dict(self):
         return{
             'id':self.id,
-            'created_at':self.created_at.isoformat()
+            'created_at':self.created_at.isoformat(),
+            'user_id': self.user_id,
+            'blog_post_id': self.blog_post_id
             
+        }
+    
+class CommunityFollowers(db.Model):
+    __tablename__ = 'community_followers'
+
+    community_id = db.Column(db.Integer, db.ForeignKey('community.id'), primary_key=True)
+    follower_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    followed_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    community = db.relationship('Community', backref=db.backref('followers', lazy='dynamic'))
+    follower = db.relationship('User', backref=db.backref('followed_communities', lazy='dynamic'))
+
+    def to_dict(self):
+        return {
+            'community_id': self.community_id,
+            'follower_id': self.follower_id,
+            'followed_at': self.followed_at.isoformat()
         }

@@ -666,7 +666,37 @@ class LikeDetails(Resource):
         db.session.delete(like)
         db.session.commit()
         return jsonify({'message': 'Like deleted successfully'})
+class Users(Resource):
+    def get(self):
+        users = User.query.all()
+        serialized_users = [user.to_dict() for user in users]
+        return jsonify(serialized_users)
 
+    def post(self):
+        data = request.json
+        new_user = User(**data)
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify(new_user.to_dict()), 201
+
+class UserDetails(Resource):
+    def get(self, id):
+        user = User.query.get_or_404(id)
+        return jsonify(user.to_dict())
+
+    def put(self, id):
+        user = User.query.get_or_404(id)
+        data = request.json
+        for key, value in data.items():
+            setattr(user, key, value)
+        db.session.commit()
+        return jsonify(user.to_dict())
+
+    def delete(self, id):
+        user = User.query.get_or_404(id)
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({'message': 'User deleted successfully'})
 # Add routes for all resources
 api.add_resource(UserRegistration, '/register')
 api.add_resource(UserLogin, '/login')
@@ -682,7 +712,8 @@ api.add_resource(Comments, '/comments')
 api.add_resource(CommentDetails, '/comments/<int:id>')
 api.add_resource(Likes, '/likes')
 api.add_resource(LikeDetails, '/likes/<int:id>')
-
+api.add_resource(Users, '/users')
+api.add_resource(UserDetails, '/users/<int:id>')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5555)

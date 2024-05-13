@@ -146,13 +146,14 @@
             
 #         }
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 
 db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    created_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     bio = db.Column(db.String)
     profile_picture = db.Column(db.String)
     password = db.Column(db.String)
@@ -173,7 +174,6 @@ class User(db.Model):
             'created_at':self.created_at.isoformat(),
             'bio':self.bio,
             'profile_picture':self.profile_picture,
-            'password': self.password,
             'email': self.email,
             'username':self.username
 

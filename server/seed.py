@@ -126,12 +126,23 @@ from faker import Faker
 from app import app
 from models import db, User, BlogPost, Community, Expert, Message, Comment, Like
 
-if __name__ == '__main__':
-    fake = Faker()
-    with app.app_context():
-        print("Starting seed...")
+#clear all data from tables
+def clear_data():
+    db.session.query(User).delete()
+    db.session.query(BlogPost).delete()
+    db.session.query(Community).delete()
+    db.session.query(Expert).delete()
+    db.session.query(Message).delete()
+    db.session.query(Comment).delete()
+    db.session.query(Like).delete()
+    db.session.commit()
+
+
 
         # Generate fake users
+def seed_data():
+        print("Starting seed...")
+        fake= Faker()
         num_users = 10
         users = []
         for _ in range(num_users):
@@ -229,3 +240,8 @@ if __name__ == '__main__':
         db.session.commit()
 
         print("Seed completed successfully!")
+if __name__ == '__main__':
+    # fake = Faker()
+    with app.app_context():
+        clear_data()
+        seed_data()

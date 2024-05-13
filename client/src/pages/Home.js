@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import '../index.css';
 import img1 from '../images/img-1.jpg';
@@ -102,65 +103,61 @@ const Home = () => {
       window.removeEventListener("resize", initSlider);
     };
   }, [maxScrollLeft]);
-
-  return (
-    <div className='main'>
+    return (
+      <div className='main'>
       <div className="video position-relative">
-    <video autoPlay muted loop id="myVideo">
-      <source
-        src="https://video.wixstatic.com/video/c0bbc5_ea3fdc8d953b4dbcab20a021d2ef1389/1080p/mp4/file.mp4"
-        type="video/mp4"
-      />
-    </video>
-    <div className="container">
-      <div className="row justify-content-center">
-        <div className="col-3">
-          <div className="d-flex justify-content-center">
-            <div className="detail">
-              <h2 className="mb-3 fw-bold">Mkulima Digital</h2>
-              <hr className="mb-3" />
-              <p>
-                We Digitise Grain Management for over 11, 600 Agribusinesses Globally
-              </p>
-              <a href="" className="text-decoration-none fw-normal">
-                LOGIN
-              </a>
-              <div className="arrow mt-4">
-                <i className="bi bi-chevron-down"></i>
+        <video autoPlay muted loop id="myVideo">
+          <source
+            src="https://video.wixstatic.com/video/c0bbc5_ea3fdc8d953b4dbcab20a021d2ef1389/1080p/mp4/file.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-3">
+              <div className="d-flex justify-content-center">
+                <div className="detail">
+                  <h2 className="mb-3 fw-bold">Mkulima Digital</h2>
+                  <hr className="mb-3" />
+                  {/* Wrap the "LOGIN" link with Link */}
+                  <Link to="/signup" className="text-decoration-none fw-normal">
+                    LOGIN
+                  </Link>
+                  <div className="arrow mt-4">
+                    <i className="bi bi-chevron-down"></i>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
-    </div>
-  </div>
-    <div className='body1'>
-    <div className="container">
-      <div className="slider-wrapper">
-        <button id="prev-slide" className="slide-button material-symbols-rounded">
-          chevron_left
-        </button>
-        <ul className="image-list">
-      {imageList.map((imgSrc, index) => (
-        <li key={`img-${index + 1}`}>
-          <img className="image-item" src={imgSrc} alt={`img-${index + 1}`} />
-        </li>
-      ))}
-    </ul>
-        <button id="next-slide" className="slide-button material-symbols-rounded">
-          chevron_right
-        </button>
-      </div>
-      <div className="slider-scrollbar">
-        <div className="scrollbar-track">
-          <div className="scrollbar-thumb"></div>
+      <div className='body1'>
+        <div className="container">
+          <div className="slider-wrapper">
+            <button id="prev-slide" className="slide-button material-symbols-rounded">
+              chevron_left
+            </button>
+            <ul className="image-list">
+              {imageList.map((imgSrc, index) => (
+                <li key={`img-${index + 1}`}>
+                  <img className="image-item" src={imgSrc} alt={`img-${index + 1}`} />
+                </li>
+              ))}
+            </ul>
+            <button id="next-slide" className="slide-button material-symbols-rounded">
+              chevron_right
+            </button>
+          </div>
+          <div className="slider-scrollbar">
+            <div className="scrollbar-track">
+              <div className="scrollbar-thumb"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    </div>
-    </div>
   );
-};
+  };
 
 export default Home;

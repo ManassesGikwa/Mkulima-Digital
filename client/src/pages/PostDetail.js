@@ -1,30 +1,62 @@
-import React from 'react'
-import PostAuthor from '../components/PostAuthor'
-import { Link } from 'react-router-dom'
-import Thumbnail from '../images2/blog22.jpg'
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import PostAuthor from '../components/PostAuthor';
+import Thumbnail from '../images2/blog22.jpg';
 
 const PostDetail = () => {
-  return (
-    <section className="post-detail">
-      <div className="container post-detail__container">
-        <div className="post-detail__header">
-          <PostAuthor />
-          <div className="post-detail__buttons">
-            <Link to={`/posts/werwer/edit`} className='btn sm primary'>Edit</Link>
-            <Link to={`/posts/werwer/delete`} className='btn sm danger'>Delete</Link>
-          </div>
-        </div>
-        <h1>This is the post title!</h1>
-        <div className="post-detail__thumbanail">
-          <img src={Thumbnail} alt="" />
-        </div>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet aliquid dolorem et sunt maxime corrupti aperiam magnam nemo facere numquam ducimus saepe eum error voluptate architecto nihil nulla, ratione consequuntur eligendi at, laborum voluptatibus, iure a minima. Aliquid, sed iste!</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis sapiente maxime pariatur suscipit. Laboriosam, ullam? Quod obcaecati omnis deserunt, minus sint ab exercitationem quia dolore similique facilis tempora deleniti cum, aut fuga rerum? Nihil at eos iure vel odio voluptate, quibusdam temporibus sint deserunt cumque neque in, eveniet voluptatibus esse quidem. Quas sequi et illum.</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto perferendis laborum odio facilis suscipit obcaecati, tempora architecto error animi minima quisquam consequuntur. Totam quae similique repudiandae unde laboriosam maxime sequi esse, inventore impedit rem est suscipit qui autem accusantium excepturi enim alias atque ut odio quas, possimus ipsam dolorem. Qui, maxime! Dignissimos tempore illum magni ut in eos corporis inventore nesciunt ipsum asperiores quas ipsa atque culpa, perspiciatis hic, temporibus mollitia, incidunt nam. Eaque, ex doloribus. Quod asperiores, vel eos labore velit ipsum accusantium necessitatibus architecto quis tenetur tempora sequi at quaerat, temporibus, doloremque dicta ut alias repudiandae consectetur atque quibusdam mollitia repellat ipsa. Suscipit ipsa error a iste unde natus, cum quod, numquam adipisci praesentium dolores distinctio ad sapiente! Deleniti aliquid non inventore, maiores, corrupti optio dolorem saepe ut sed quidem reiciendis vitae voluptatem cum nesciunt nihil voluptatibus autem necessitatibus. Fugiat accusamus optio rerum nostrum aut, nemo tempora consectetur, illum architecto repudiandae quam sapiente.</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi voluptas cupiditate eveniet! Facere laboriosam suscipit odio voluptatem dicta minus quod.</p>
-      </div>
-    </section>
-  )
-}
+    const [isLiked, setIsLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(0);
+    const [isFollowed, setIsFollowed] = useState(false);
 
-export default PostDetail
+    const handleLike = () => {
+        if (!isLiked) {
+            // Simulate API call to increment like count (replace with actual backend call)
+            // For demo purposes, we'll just increment the like count locally
+            setLikeCount(likeCount + 1);
+            setIsLiked(true);
+        }
+    };
+
+    const handleFollow = () => {
+        if (!isFollowed) {
+            // Simulate API call to perform follow action (replace with actual backend call)
+            setIsFollowed(true);
+        }
+    };
+
+    return (
+        <section className="post-detail">
+            <div className="container post-detail__container">
+                <div className="post-detail__header">
+                    <PostAuthor />
+                    <div className="post-detail__buttons">
+                        <Link to={`/posts/werwer/edit`} className='btn sm primary'>Edit</Link>
+                        <Link to={`/posts/werwer/delete`} className='btn sm danger'>Delete</Link>
+                    </div>
+                </div>
+                <h1>This is the post title!</h1>
+                <div className="post-detail__thumbanail">
+                    <img src={Thumbnail} alt="" />
+                </div>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet aliquid dolorem et sunt maxime corrupti aperiam magnam nemo facere numquam ducimus saepe eum error voluptate architecto nihil nulla, ratione consequuntur eligendi at, laborum voluptatibus, iure a minima. Aliquid, sed iste!
+                </p>
+                <p>
+                    {/* Add more paragraphs as needed */}
+                </p>
+
+                <div className="post-detail__actions">
+                    <button className='btn category' onClick={handleFollow}>
+                        {isFollowed ? 'Following' : 'Follow'}
+                    </button>
+                    <button className='btn category' onClick={handleLike}>
+                        {isLiked ? 'Liked' : 'Like'}
+                    </button>
+                    <span className="like-count">{likeCount} {likeCount === 1 ? 'like' : 'likes'}</span>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default PostDetail;

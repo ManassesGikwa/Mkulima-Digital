@@ -243,8 +243,3 @@ def seed_data():
     db.session.commit()
 
     print("Seed completed successfully!")
-
-if __name__ == '__main__':
-    with app.app_context():
-        clear_data()
-        seed_data()

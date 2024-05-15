@@ -562,6 +562,44 @@ nav>div {
     border-radius: var(--radius-2);
     overflow: hidden;
   }
+
+  /* =====================================================================Comments Section=========================================*/
+  .post__comments {
+    margin-top: 2rem;
+}
+
+.post__comments form {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.post__comments input {
+    width: 100px;
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid var(--color-gray-light);
+    border-radius: var(--radius-2);
+}
+
+.post__comments button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border-radius: var(--radius-2);
+    cursor: pointer;
+}
+
+.post__comments .comments-list {
+    margin-top: 1rem;
+}
+
+.post__comments .comments-list p {
+    background: var(--color-gray-light);
+    padding: 0.5rem;
+    border-radius: var(--radius-2);
+    margin-top: 0.5rem;
+}
   
   
   /*==================================================POST DETAIL==================================================*/
@@ -635,6 +673,9 @@ nav>div {
   .author__info p{
     margin-top: 1rem;
   }
+
+
+  
   /* =========================================LOGIN & SIGNUP====================================================*/
 .login-body {
 	background: #f6f5f7;

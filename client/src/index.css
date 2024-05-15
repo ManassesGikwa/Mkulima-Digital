@@ -4,7 +4,7 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
 :root{
-    --color-primary: #6f6af8;
+    --color-primary: rgb(15, 143, 15);
     --color-white: #fff;
     --color-red: rgb(255, 63, 63);
     --color-gray-100: hsl(220, 20%, 10%, 5%);
@@ -512,8 +512,9 @@ nav>div {
 /* =========================================POSTS ====================================================*/
 .posts__container{
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
   }
   
   .post{
@@ -533,6 +534,7 @@ nav>div {
     border-radius: var(--radius-3);
     overflow: hidden;
     height: 16rem;
+    position: relative;
   }
   
   .post__content{
@@ -554,6 +556,9 @@ nav>div {
     display: flex;
     gap: 1rem;
     align-items: flex-start;
+    position: relative;
+    margin-bottom: 0.3rem;
+    
   }
   
   .post__author-avatar{
@@ -563,7 +568,7 @@ nav>div {
     overflow: hidden;
   }
 
-  /* =====================================================================Comments Section=========================================*/
+  /* =====================================================================COMMENTS SECTION=========================================*/
   .post__comments {
     margin-top: 2rem;
 }
@@ -582,7 +587,7 @@ nav>div {
 }
 
 .post__comments button {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.1rem;
     border: none;
     background-color: var(--color-primary);
     color: var(--color-white);

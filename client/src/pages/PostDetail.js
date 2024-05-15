@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate instead of useHistory
 import PostAuthor from '../components/PostAuthor';
 import Thumbnail from '../images2/blog22.jpg';
 
-const PostDetail = () => {
+const PostDetail = ({ postID }) => {
     const [isLiked, setIsLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
     const [isFollowed, setIsFollowed] = useState(false);
-    const [comments, setComments] = useState([]);
-    const [commentText, setCommentText] = useState("");
-    const [showAllComments, setShowAllComments] = useState(false);
+    const navigate = useNavigate(); // Use useNavigate for navigation
 
     const handleLike = () => {
         if (!isLiked) {
+            // Simulate API call to increment like count (replace with actual backend call)
             setLikeCount(likeCount + 1);
             setIsLiked(true);
         }
@@ -20,20 +19,26 @@ const PostDetail = () => {
 
     const handleFollow = () => {
         if (!isFollowed) {
+            // Simulate API call to perform follow action (replace with actual backend call)
             setIsFollowed(true);
         }
     };
 
-    const handleCommentSubmit = (e) => {
-        e.preventDefault();
-        if (commentText.trim()) {
-            setComments([...comments, commentText]);
-            setCommentText("");
-        }
-    };
-
-    const toggleComments = () => {
-        setShowAllComments(!showAllComments);
+    const handleDelete = () => {
+        fetch(`http://127.0.0.1:5555/blogposts/${postID}`, {
+            method: 'DELETE',
+        })
+        .then((response) => {
+            if (response.ok) {
+                console.log('Post deleted successfully');
+                navigate('/'); // Redirect to another page after deletion
+            } else {
+                console.error('Failed to delete post');
+            }
+        })
+        .catch(error => {
+            console.error('Error occurred while deleting post:', error);
+        });
     };
 
     return (
@@ -42,8 +47,8 @@ const PostDetail = () => {
                 <div className="post-detail__header">
                     <PostAuthor />
                     <div className="post-detail__buttons">
-                        <Link to={`/posts/werwer/edit`} className='btn sm primary'>Edit</Link>
-                        <Link to={`/posts/werwer/delete`} className='btn sm danger'>Delete</Link>
+                        <Link to={`/posts/${postID}/edit`} className='btn sm primary'>Edit</Link>
+                        <button className='btn sm danger' onClick={handleDelete}>Delete</button>
                     </div>
                 </div>
                 <h1>This is the post title!</h1>
@@ -62,31 +67,6 @@ const PostDetail = () => {
                         {isLiked ? 'Liked' : 'Like'}
                     </button>
                     <span className="like-count">{likeCount} {likeCount === 1 ? 'like' : 'likes'}</span>
-                </div>
-
-                <div className="post__comments">
-                    <form onSubmit={handleCommentSubmit}>
-                        <input 
-                            type="text" 
-                            value={commentText} 
-                            onChange={(e) => setCommentText(e.target.value)} 
-                            placeholder="Add a comment..."
-                        />
-                        <button type="submit">Comment</button>
-                    </form>
-                    <div className="comments-list">
-                        {comments.slice(0, 1).map((comment, index) => (
-                            <p key={index}>{comment}</p>
-                        ))}
-                        {showAllComments && comments.slice(1).map((comment, index) => (
-                            <p key={index + 1}>{comment}</p>
-                        ))}
-                        {comments.length > 1 && (
-                            <button className="toggle-comments-btn" onClick={toggleComments}>
-                                {showAllComments ? 'Hide comments' : 'View all comments'}
-                            </button>
-                        )}
-                    </div>
                 </div>
             </div>
         </section>

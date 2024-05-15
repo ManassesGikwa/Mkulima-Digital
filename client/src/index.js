@@ -19,6 +19,7 @@ import Careers from './pages/Careers';
 import Finance from './pages/Finance';
 import Support from './pages/Support';
 import Dashboard from './pages/Dashboard';
+import EditPost from './pages/EditPost';
 
 
 const router = createBrowserRouter([
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       // {path: "solutions", element: <Solutions />},
       {path: "dashboard", element: <Dashboard />},
       {path: "blogs", element: <Posts />},
+      {path: "edit", element: <EditPost />},
       {path: "community", element: <Community />},
       {path: "careers", element: <Careers />},
       {path: "finance", element: <Finance />},

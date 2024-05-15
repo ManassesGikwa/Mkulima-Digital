@@ -12,6 +12,10 @@ import img7 from '../images/img-7.jpg';
 import img8 from '../images/img-8.jpg';
 import img9 from '../images/img-9.jpg';
 import img10 from '../images/img-10.jpg';
+import display1 from '../images/display1.jpg';
+import display2 from '../images/display2.jpg';
+import display3 from '../images/display3.jpg';
+import display4 from '../images/display4.jpg';
 
 const Home = () => {
   const [maxScrollLeft, setMaxScrollLeft] = useState(0);
@@ -103,6 +107,30 @@ const Home = () => {
       window.removeEventListener("resize", initSlider);
     };
   }, [maxScrollLeft]);
+
+  const images = [
+    {
+      url: display1,
+      title: 'For Farmers',
+      description: 'Manage your grain from paddock to payment with AgriDigital Onfar.'
+    },
+    {
+      url: display2,
+      title: 'For Site Operators',
+      description: 'Track and manage stored grain inventory with AgriDigital Store.'
+    },
+    {
+      url: display3,
+      title: 'For Traders',
+      description: 'Buy and sell grain, and access finance to unlock growth opportunities with AgriDigital Trade.'
+    },
+    {
+      url: display4,
+      title: 'For Brokers',
+      description: 'Connect, keep records and create value for your clients with AgriDigital Broker.'
+    }
+  ];
+  
     return (
       <div className='main'>
       <div className="video position-relative">
@@ -118,9 +146,10 @@ const Home = () => {
               <div className="d-flex justify-content-center">
                 <div className="detail">
                   <h2 className="mb-3 fw-bold">Mkulima Digital</h2>
+                  <p>We Digitise Grain Management for Over 11,600 Agribusinesses Globally</p>
                   <hr className="mb-3" />
-                  {/* Wrap the "LOGIN" link with Link */}
-                  <Link to="/signup" className="text-decoration-none fw-normal">
+            
+                  <Link to="/login" className="text-decoration-none fw-normal">
                     LOGIN
                   </Link>
                   <div className="arrow mt-4">
@@ -153,6 +182,40 @@ const Home = () => {
             <div className="scrollbar-track">
               <div className="scrollbar-thumb"></div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div className="image-display-container">
+      <h2 className="image-heading">Hard-working Solutions</h2>
+      <div className="image-cards-container">
+      {images.map((image, index) => (
+  <div key={index} className="image-card">
+    <img src={image.url} alt={`Image ${index + 1}`} className="image" />
+    <h5 className='title'>{image.title}</h5>
+    <p className="display-description">{image.description}</p>
+    <button className="discover-button">DISCOVER</button>
+  </div>
+))}
+      </div>
+    </div>
+    <div className="support-section">
+        <h2 className="support-title">GET REAL SUPPORT</h2>
+        <p className="support-description">Here when you need us.</p>
+        <div className="support-content">
+          <div className="support-category">
+            <h3 className="category-title">Sales</h3>
+            <p className="category-text">
+              Want to chat with sales? Simply complete our contact form and a member of our team will be in touch.
+              Alternatively, you can book a demo for a time convenient to you.
+            </p>
+          </div>
+          <div className="vertical-line"></div>
+          <div className="support-category">
+            <h3 className="category-title">Support</h3>
+            <p className="category-text">
+              Get the help you need, when you need it. Our Knowledgebase articles guide you through our most common support
+              requests. Simply contact our team if you need extra help.
+            </p>
           </div>
         </div>
       </div>

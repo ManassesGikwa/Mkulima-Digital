@@ -381,6 +381,127 @@ nav>div {
       width: 20%;
     }
   }
+  /*==============================================IMAGES============================================================ */
+  /* CSS for Image Display Container */
+.image-display-container {
+  max-width: 1200px; /* Set a maximum width for the container */
+  margin: 0 auto; /* Center the container horizontally */
+  padding: 20px; /* Add padding around the container */
+}
+
+/* CSS for Image Heading */
+.image-heading {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px; /* Add spacing below the image heading */
+  text-align: center; /* Center the heading text */
+}
+
+/* CSS for Image Cards Container */
+.image-cards-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow cards to wrap to the next row */
+  justify-content: space-between;
+}
+
+/* CSS for Individual Image Card */
+.image-card {
+  width: calc(25% - 20px);
+  margin-bottom: 20px; /* Add spacing below each card */
+  text-align: left; /* Center align card contents */
+  padding: 10px;
+  box-sizing: border-box; /* Include padding in card width calculation */
+}
+
+/* CSS for Image */
+.image {
+  width: 100%;
+  height: 370px;
+  border-radius: 5px; /* Add border radius to image */
+}
+
+/* CSS for Image Title */
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.description {
+  margin-top: 5px;
+}
+
+.discover-button {
+  display: inline-block;
+  padding: 5px 5px;
+  font-size: 9px;
+  font-weight: bold;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for Discover Button */
+.discover-button:hover {
+  background-color: #f0f0f0;
+}
+
+/* ==============================================================SUPPORT SECTION ===========================================*/
+/* index.css */
+
+.support-section {
+  padding: 50px 0;
+  background-color: var(--color-primary);
+  text-align: center;
+}
+
+.support-title {
+  font-size: 2rem;
+  margin-bottom: 5px;
+}
+
+.support-description {
+  font-size: 12px;
+  color: #fff;
+  margin-bottom: 80px;
+}
+
+.support-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.support-category {
+  width: 36%;
+  padding: 20px;
+}
+
+.category-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.category-text {
+  font-size: 14px;
+  color: #fff;
+  text-align: left;
+}
+
+.vertical-line {
+  height: 200px;
+  width: 2px;
+  background-color: #ddd;
+  margin: 0 20px;
+}
+
+
+
 
 
 /* =========================================FOOTER ====================================================*/
@@ -404,6 +525,7 @@ nav>div {
 }
 
 .footer .footer-col h4 {
+  color: #fff;
   font-size: 1.2rem;
   font-weight: 400;
   margin-bottom: 20px;

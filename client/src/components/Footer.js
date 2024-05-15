@@ -6,37 +6,34 @@ const Footer = () => {
     <section className="footer">
       <div className="footer-row">
         <div className="footer-col">
-          <h4>Info</h4>
+          <h4>SOLUTIONS</h4>
           <ul className="links">
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Compressions</a></li>
-            <li><a href="#">Customers</a></li>
-            <li><a href="#">Service</a></li>
-            <li><a href="#">Collection</a></li>
+            <li><a href="#">Onfarm</a></li>
+            <li><a href="#">Store</a></li>
+            <li><a href="#">Trade</a></li>
+            <li><a href="#">Broker</a></li>
+            <li><a href="#">Finance</a></li>
           </ul>
         </div>
 
         <div className="footer-col">
-          <h4>Explore</h4>
+          <h4>RESOURCES</h4>
           <ul className="links">
-            <li><a href="#">Free Designs</a></li>
-            <li><a href="#">Latest Designs</a></li>
+            <li><a href="#">Customer Stories</a></li>
+            <li><a href="#">Blog</a></li>
             <li><a href="#">Themes</a></li>
-            <li><a href="#">Popular Designs</a></li>
-            <li><a href="#">Art Skills</a></li>
-            <li><a href="#">New Uploads</a></li>
+            <li><a href="#">Support</a></li>
+            <li><a href="#">Legals</a></li>
           </ul>
         </div>
 
         <div className="footer-col">
-          <h4>Legal</h4>
+          <h4>COMMUNITY</h4>
           <ul className="links">
-            <li><a href="#">Customer Agreement</a></li>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">GDPR</a></li>
-            <li><a href="#">Security</a></li>
-            <li><a href="#">Testimonials</a></li>
-            <li><a href="#">Media Kit</a></li>
+            <li><a href="#">Our Team</a></li>
+            <li><a href="#">Why Mkulima Digital</a></li>
+            <li><a href="#">ICareers</a></li>
+            <li><a href="#">News</a></li>
           </ul>
         </div>
 

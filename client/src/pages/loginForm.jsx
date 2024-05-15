@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom"; // Import useNavigate instead of useHistory
 import "./LoginForm.css";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate(); // Replace useHistory with useNavigate
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +25,7 @@ const LoginForm = () => {
         const data = await response.json(); 
         localStorage.setItem("access_token", data.access_token);
         window.alert("Login successful");
-        history.push("/Home"); // Redirect to Home.jsx upon successful login
+        navigate("/home"); // Redirect to "/home" upon successful login
       } else {
         window.alert("Login failed. Invalid credentials");
       }

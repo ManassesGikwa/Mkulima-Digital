@@ -18,7 +18,7 @@ import Community from './pages/Community';
 import Careers from './pages/Careers';
 import Finance from './pages/Finance';
 import Support from './pages/Support';
-
+import LoginForm from './pages/LoginForm'; // Import LoginForm with correct file path
 
 const router = createBrowserRouter([
   {
@@ -35,7 +35,7 @@ const router = createBrowserRouter([
       {path: "finance", element: <Finance />},
       // {path: "register", element: <Register />},
       {path: "support", element: <Support />},
-      {path: "login", element: <Login />},
+      // {path: "login", element: <Login />},
       // {path: "profile/:id", element: <UserProfile />},
       {path: "authors", element: <Authors />},
       {path: "create", element: <CreatePost/>},

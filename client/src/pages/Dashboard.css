@@ -1,3 +1,17 @@
+
+.parent-container {
+    background-image: url('../images/dashboardbackground.jpg');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat;
+    height: 100vh;
+    padding:50px ;
+}
+
+
+
+
+
 .dashboard {
     position: relative;
     display: flex;
@@ -51,8 +65,9 @@
   
   .sidebar {
     width: 300px;
+   
     background-color: #f0f0f0;
-    padding:20px;
+    padding: 50px;
     margin-top: 60px; /* Adjust the margin-top value to add space */
   }
   
@@ -73,7 +88,9 @@
   .main-content {
     margin-left: 20px;
     flex: 1;
-    margin-top: 120px; /* Adjust the margin-top value to add space */
+    margin-top: 120px;
+    margin-left: 80px; 
+    width: 80%;
   }
   
   .options-button {
@@ -109,5 +126,37 @@
   
   .expert-info {
     flex: 1;
+    margin-bottom: 30px;
+    margin-left: 300px;
   }
   
+
+.followers{
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  width: 60%;
+}
+
+
+
+.following{
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  width: 60%;
+}
+
+
+.communities{
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  width: 60%;
+}

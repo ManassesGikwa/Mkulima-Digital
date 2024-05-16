@@ -162,7 +162,9 @@ function ExpertDashboard({ user }) {
     
 
     return (
-        <div className="dashboard">
+        <div className='parent-container'>
+
+<div className="dashboard">
              <div className="top-bar">
                 <div className="notification-container">
                     <FaBell className="notification-bell" />
@@ -262,6 +264,9 @@ function ExpertDashboard({ user }) {
                     </div>
                 </div>
         </div>
+
+        </div>
+        
     )
 }
 

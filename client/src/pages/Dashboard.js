@@ -234,7 +234,7 @@ function ExpertDashboard({ user }) {
             <div className="main-content">
                     
                     <div className='banner'>
-                        <h2> Add a New Blog Post</h2>
+                        <h2 style={{'color':'white'}}> Add a New Blog Post</h2>
                     </div>
                     <div className="content-sections">
                         <div className = "top-articles">

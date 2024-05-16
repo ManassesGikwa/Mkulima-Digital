@@ -222,6 +222,7 @@ class Expert(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     expertise_area = db.Column(db.String)
+    #we add bio
     image = db.Column(db.String)
     created_at = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

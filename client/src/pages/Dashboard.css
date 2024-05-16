@@ -1,0 +1,113 @@
+.dashboard {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80%;
+    width: 80%;
+    margin: 20px auto 0; /* Adjust the margin-top value to add space */
+    padding: 20px;
+    background-color: rgb(141, 177, 141);
+    border-radius: 15px;
+  }
+  
+  .top-bar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #ccc;
+    
+  }
+
+  .profile-icon{
+    font-size: 30px;
+    margin-right:20px ;
+  }
+  
+  .expert-profile-topbar {
+    display: flex;
+    margin-left: 50px;
+    margin-top: 20px;
+  }
+  .notification-container {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* Pushes the container to the right edge */
+    color: green;
+  }
+  
+  .notification-bell{
+    font-size: 24px; /* Adjust the font size as needed */
+  }
+
+  .option-button{
+    padding: 10px ;
+  }
+  
+  .sidebar {
+    width: 300px;
+    background-color: #f0f0f0;
+    padding:20px;
+    margin-top: 60px; /* Adjust the margin-top value to add space */
+  }
+  
+  .expert-profile-topbar {
+    margin-bottom: 20px;
+  }
+  
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .sidebar-icon {
+    margin-right: 10px;
+  }
+  
+  .main-content {
+    margin-left: 20px;
+    flex: 1;
+    margin-top: 120px; /* Adjust the margin-top value to add space */
+  }
+  
+  .options-button {
+    background-color: #007bff; 
+    border-color: #007bff; 
+}
+
+.options-button:hover {
+    background-color: #0056b3; /* Change the background color on hover */
+    border-color: #0056b3; /* Change the border color on hover */
+}
+
+  .notification-dot {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    margin-left: 5px;
+  }
+  
+  .banner {
+    margin-bottom: 20px;
+  }
+  
+  .content-sections {
+    display: flex;
+  }
+  
+  .top-articles {
+    flex: 1;
+    margin-right: 20px;
+  }
+  
+  .expert-info {
+    flex: 1;
+  }
+  

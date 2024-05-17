@@ -8,7 +8,6 @@ import App from './components/App';
 import ErrorPage from './pages/ErrorPage';
 import Home from './pages/Home';
 import PostDetail from './pages/PostDetail';
-import Login from './pages/Login';
 import Authors from './pages/Authors';
 import CreatePost from './pages/CreatePost';
 import AuthorPosts from './pages/AuthorPosts';
@@ -18,11 +17,12 @@ import Community from './pages/Community';
 import Careers from './pages/Careers';
 import Finance from './pages/Finance';
 import Support from './pages/Support';
-import LoginForm from './pages/LoginForm'; // Import LoginForm with correct file path
+import CommunityDetails from './pages/CommunityDetails';
+
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "*", // Change the path here
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
@@ -40,6 +40,7 @@ const router = createBrowserRouter([
       {path: "authors", element: <Authors />},
       {path: "create", element: <CreatePost/>},
       {path: "posts/users/:id", element: <AuthorPosts />},
+      {path: "community/:id", element: <CommunityDetails />}
       // {path: "myposts/:id", element: <Dashboard />},
       // {path: "posts/:id/edit", element: <EditPost />},
       // {path: "posts/:id/delete", element: <DeletePost />},
@@ -47,6 +48,7 @@ const router = createBrowserRouter([
     ]
   }
 ]);
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

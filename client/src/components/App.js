@@ -1,8 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { Switch, Route } from "react-router-dom";
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+
+import Home from '../pages/Home';
+import Solutions from '../pages/Solutions';
+import Posts from './Posts';
+import Finance from '../pages/Finance';
+import Careers from '../pages/Careers';
+import Community from "../pages/Community";
+import LoginForm from "../pages/loginForm";
+import SignupForm from "../pages/signupForm";
+import CommunityDetails from "../pages/CommunityDetails"; // Import the CommunityDetails component
 
 function App() {
-  return <h1>Project Client</h1>;
-}
+  const [registered, setRegistered] = useState(false);
 
+  return (
+    <div className="App">
+      <Routes>
+        <Route path="/" element={registered ? <Navigate to="/home" /> : <SignupForm setRegistered={setRegistered} />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/signup" element={<SignupForm setRegistered={setRegistered} />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/finance" element={<Finance />} /> 
+        <Route path="/careers" element={<Careers />} /> 
+        <Route path="/community" element={<Community />} /> 
+        <Route path="/community/:id" element={<CommunityDetails />} /> {/* Add this route */}
+        <Route path="/blogs" element={<Posts />} /> 
+        <Route path="/solutions" element={<Solutions />} />
+        <Route path="*" element={<Navigate to="/home" />} />
+      </Routes>
+    </div>
+  );
+}
+  
 export default App;

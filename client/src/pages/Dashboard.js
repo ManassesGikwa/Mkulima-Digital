@@ -20,6 +20,7 @@ function ExpertDashboard({ user }) {
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
     const [topArticles, setTopArticles] = useState([]);
+    const BASE_URL = 'http://localhost:5555';
 
     const [updatedProfileData, setUpdatedProfileData] = useState({
         name: "",
@@ -31,45 +32,38 @@ function ExpertDashboard({ user }) {
         name: "",
         description: ""
     });
-
-
-
     useEffect(() => {
-        // this fetches the experts data 
-        fetch('/api/experts/1')
-            .then(response => response.json())
-            .then(data => setExpert(data))
-            .catch(error => console.error('Error fetching expert data:', error));
+        // Fetch expert data
+        if (user) {
+            fetch(`${BASE_URL}/experts/${user.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    setExpert(data);
+                    setFollowers(data.followers);
+                    setFollowing(data.following);
+                    setCommunities(data.communities.length);
+                })
+                .catch(error => console.error('Error fetching expert data:', error));
+        }
 
-        // This fetches the top articles
-        fetch('/api/blogposts')
+        // Fetch top articles
+        fetch(`${BASE_URL}/blogposts`)
             .then(response => response.json())
-            .then(data => {
-                // Using setNotifications to set the top articles
-                setNotifications(data);
-            })
+            .then(data => setTopArticles(data))
             .catch(error => console.error('Error fetching top articles:', error));
 
-        fetch('/api/users/1')
-        .then(response => response.json())
-        .then(user => {
-            setFollowers(user.followers);  
-            setFollowing(user.following);
-            setCommunities(user.communities.length);  
-        })
-
-        
-
+        // Fetch notifications
         fetch('/api/notifications')
             .then(response => response.json())
             .then(data => setNotifications(data))
-            .catch(error => console.error('Error fetching the notifications:', error));
+            .catch(error => console.error('Error fetching notifications:', error));
 
-        fetch('/api/messages')
-             .then(response => response.json())
-             .then(data => setInboxMessages(data))
-             .catch(error => console.error('Error fetching messages:', error));
-    }, []);
+        // Fetch inbox messages
+        fetch(`${BASE_URL}/messages`)
+            .then(response => response.json())
+            .then(data => setInboxMessages(data))
+            .catch(error => console.error('Error fetching inbox messages:', error));
+    }, [user]);
 
          
 
@@ -86,7 +80,7 @@ function ExpertDashboard({ user }) {
 
     function handleToggleInbox() {
         if (!showInbox) {
-            fetch('/api/messages')
+            fetch(`${BASE_URL}/messages`)
                 .then(response => response.json())
                 .then(data => setInboxMessages(data))
                 .catch(error => console.error('Error fetching the inbox messages', error));
@@ -98,7 +92,7 @@ function ExpertDashboard({ user }) {
     function handleDropdownClick(action) {
         switch (action) {
             case 'updateProfile':
-                fetch('/api/experts/1', {
+                fetch(`${BASE_URL}/experts/{}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -113,7 +107,7 @@ function ExpertDashboard({ user }) {
                     .catch(error => console.error('Error updating profile:', error));
                 break;
             case 'addCommunity':
-                fetch('/api/communities', {
+                fetch(`${BASE_URL}/communities`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -127,7 +121,7 @@ function ExpertDashboard({ user }) {
                     .catch(error => console.error('Error creating community:', error));
                 break;
             case 'deleteProfile':
-                fetch('/api/experts/1', {
+                fetch(`${BASE_URL}/experts/{}`, {
                     method: 'DELETE'
                 })
                     .then(() => {

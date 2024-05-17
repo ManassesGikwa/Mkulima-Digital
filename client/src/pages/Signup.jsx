@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './signup.css'; // Include the CSS file
 import signupImage from '../assets/signup.jpeg';
 
@@ -9,7 +9,7 @@ const SignupForm = () => {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [redirecting, setRedirecting] = useState(false);
-  const history = useHistory();
+  const history = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();

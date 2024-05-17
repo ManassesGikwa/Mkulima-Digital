@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom"; 
 import "./signup.css";
 
 const SignupForm = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +25,7 @@ const SignupForm = () => {
 
       if (response.status === 201) {
         window.alert("User registered successfully!");
-        history.push("/login");
+        navigate("/login");
       } else {
         window.alert("Registration failed. Please try again.");
       }

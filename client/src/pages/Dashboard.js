@@ -98,41 +98,33 @@ function ExpertDashboard({ user }) {
     function handleDropdownClick(action) {
         switch (action) {
             case 'updateProfile':
-                if (selectedOption === 'updateProfile') {
-                    fetch('/api/experts/1', {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(updatedProfileData)
+                fetch('/api/experts/1', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updatedProfileData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        setExpert(data);
+                        console.log('Profile updated:', data);
                     })
-                        .then(response => response.json())
-                        .then(data => {
-                            setExpert(data);
-                            console.log('Profile updated:', data);
-                        })
-                        .catch(error => console.error('Error updating profile:', error));
-                } else {
-                    setSelectedOption('updateProfile');
-                }
+                    .catch(error => console.error('Error updating profile:', error));
                 break;
             case 'addCommunity':
-                if (selectedOption === 'addCommunity') {
-                    fetch('/api/communities', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(newCommunityData)
+                fetch('/api/communities', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newCommunityData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Community created:', data);
                     })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log('Community created:', data);
-                        })
-                        .catch(error => console.error('Error creating community:', error));
-                } else {
-                    setSelectedOption('addCommunity');
-                }
+                    .catch(error => console.error('Error creating community:', error));
                 break;
             case 'deleteProfile':
                 fetch('/api/experts/1', {
@@ -156,8 +148,7 @@ function ExpertDashboard({ user }) {
             default:
                 break;
         }
-    
-        setShowDropdown(!showDropdown);
+        setSelectedOption(null);
     }
     
 
@@ -171,7 +162,7 @@ function ExpertDashboard({ user }) {
                     {notifications.length > 0 && <span className="notification-dot"></span>}
                 </div>
                 <div className="expert-profile-topbar">
-                    <h3>Farmer2023<FaUser className='profile-icon'/> </h3>
+                    <h3>Expert2024<FaUser className='profile-icon'/> </h3>
                     {expert && (
                     <div>
                         <p>Name: {expert.name}</p>
@@ -179,34 +170,28 @@ function ExpertDashboard({ user }) {
                         <p>Bio: {expert.bio}</p>
                     </div>
                     )}
-            {showDropdown ? (
-                 <Dropdown as={ButtonGroup}>
-
-            <Button variant="success" style= {{'backgroundColor':'green'}} className='option-button'>Options</Button>
-
-            <Dropdown.Toggle split variant="success" style= {{'backgroundColor':'green'}} id="dropdown-split-basic" />
-
-            <Dropdown.Menu className="dropdown-menu">
-                    <Dropdown.Item onClick={() => handleDropdownClick('updateProfile')}>
-                        Update Profile
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleDropdownClick('addCommunity')}>
-                        Add Community
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleDropdownClick('deleteProfile')}>
-                        Delete Profile
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleDropdownClick('signOut')}>
-                        Sign Out
-                    </Dropdown.Item>
-                </Dropdown.Menu>
-                 </Dropdown>
-
-            ) : (
-                <Button className='option-button' style= {{'backgroundColor':'green'}} onClick={() => setShowDropdown(true)}>Options</Button>
-            )}
-
-                </div>
+                        <Dropdown as={ButtonGroup}>
+                            <Button className="options-button">Options</Button>
+                            <Dropdown.Toggle split className="options-button" id="dropdown-split-basic" />
+                            <Dropdown.Menu className="dropdown-menu">
+                                <Dropdown.Item onClick={() => setSelectedOption('updateProfile')}>
+                                    Update Profile
+                                </Dropdown.Item>
+                                <Dropdown.Item onClick={() => setSelectedOption('addCommunity')}>
+                                    Add Community
+                                </Dropdown.Item>
+                                <Dropdown.Item onClick={() => handleDropdownClick('deleteProfile')}>
+                                    Delete Profile
+                                </Dropdown.Item>
+                                <Dropdown.Item onClick={() => handleDropdownClick('signOut')}>
+                                    Sign Out
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </div>
+                    {selectedOption === 'updateProfile' && <ProfileUpdateForm onSubmit={setUpdatedProfileData} />}
+                    {selectedOption === 'addCommunity' && <CommunityCreationForm onSubmit={setNewCommunityData} />}
+                {/* </div> */}
 
 
             </div>
@@ -234,11 +219,13 @@ function ExpertDashboard({ user }) {
             <div className="main-content">
                     
                     <div className='banner'>
-                        <h2 style={{'color':'white'}}> Add a New Blog Post</h2>
+                        <h3 style={{'color':'white'}}> Hello Farmer2023 !</h3>
+                        <h4 style={{'color':'white'}}> Give us an update on how you farming experience is going</h4>
+                        <Button className='new-post-button'> Write New Post</Button>
                     </div>
                     <div className="content-sections">
                         <div className = "top-articles">
-                            <h3>Top Articles</h3>
+                            <h3 style={{'color':'white'}}>Top Articles</h3>
                             <ul>
                                 {topArticles.map(article => (<li key={article.id}>{article.title}</li>))}
                             </ul>
@@ -265,7 +252,7 @@ function ExpertDashboard({ user }) {
                 </div>
         </div>
 
-        </div>
+       </div>
         
     )
 }

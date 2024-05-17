@@ -1,53 +1,48 @@
-
 .parent-container {
-    background-image: url('../images/dashboardbackground.jpg');
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat;
-    height: 100vh;
-    padding:50px ;
+  background-image: url('../images/dashboardbackground.jpg');
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat;
+  height: 100vh;
+  padding: 50px;
 }
 
-
-
-
-
 .dashboard {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 80%;
-    width: 80%;
-    margin: 20px auto 0; /* Adjust the margin-top value to add space */
-    padding: 20px;
-    background-color: rgb(141, 177, 141);
-    border-radius: 15px;
-  }
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+  width: 80%;
+  margin: 20px auto 0;
+  padding: 20px;
+  background-color: rgb(141, 177, 141);
+  border-radius: 15px;
+}
   
-  .top-bar {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #ccc;
-    
-  }
+.top-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #ccc;
+}
 
-  .profile-icon{
-    font-size: 30px;
-    margin-right:20px ;
-  }
-  
-  .expert-profile-topbar {
-    display: flex;
-    margin-left: 50px;
-    margin-top: 20px;
-  }
+.profile-icon {
+  font-size: 30px;
+  margin-right: 20px;
+}
+
+.expert-profile-topbar {
+  display: flex;
+  flex-direction: column;
+  margin-left: 50px;
+  margin-top: 20px;
+}
   .notification-container {
     display: flex;
     align-items: center;
@@ -61,6 +56,7 @@
 
   .option-button{
     padding: 10px ;
+    background-color: green;
   }
   
   .sidebar {
@@ -118,51 +114,71 @@
     width: 650px;
     height: 150px;
    
+   
+  }
+
+  .new-post-button{
+    background-color: green;
+    color: white;
   }
   
   .content-sections {
     display: flex;
-  }
-  
-  .top-articles {
+}
+
+.top-articles {
     flex: 1;
     margin-right: 20px;
-  }
-  
-  .expert-info {
+}
+
+.expert-info {
     flex: 1;
-    margin-bottom: 30px;
     margin-left: 300px;
+}
+
+.followers, .following, .communities {
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 20px;
+    width: 60%;
+}
+
+
+.option-button{
+  background-color: green;
+  color: white;
+}
+
+/* Responsive styling */
+@media screen and (max-width: 768px) {
+  .main-content {
+      margin-left: 10px;
+      width: calc(100% - 20px);
   }
-  
 
-.followers{
-  background-color: white;
-  border-radius: 10px;
-  padding: 10px;
-  text-align: center;
-  margin-bottom: 20px;
-  width: 60%;
+  .sidebar {
+      width: 100%;
+      margin-top: 20px;
+      padding: 20px 10px;
+  }
+
+  .expert-info {
+      margin-left: 0;
+  }
+
+  .followers, .following, .communities {
+      width: 100%;
+  }
+
+  .top-bar, .expert-profile-topbar {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+
+  .expert-profile-topbar {
+      margin-left: 0;
+      margin-top: 10px;
+  }
 }
-
-
-
-.following{
-  background-color: white;
-  border-radius: 10px;
-  padding: 10px;
-  text-align: center;
-  margin-bottom: 20px;
-  width: 60%;
-}
-
-
-.communities{
-  background-color: white;
-  border-radius: 10px;
-  padding: 10px;
-  text-align: center;
-  margin-bottom: 20px;
-  width: 60%;
-}
-

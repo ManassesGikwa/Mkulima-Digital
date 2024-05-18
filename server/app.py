@@ -473,27 +473,34 @@ class ExpertBlogPosts(Resource):
         # Commit the changes to the database
         db.session.commit()
 
+
 class Notifications(Resource):
     def get(self, user_id=None, notification_id=None):
         if user_id is not None:
             # Retrieve notifications for the specified user
             notifications = Notification.query.filter_by(user_id=user_id).all()
-            serialized_notifications = [notification.serialize() for notification in notifications]
+            serialized_notifications = [notification.to_dict() for notification in notifications]
             return serialized_notifications, 200
         elif notification_id is not None:
             # Retrieve a specific notification by ID
             notification = Notification.query.get(notification_id)
             if notification:
-                return notification.serialize(), 200
+                return notification.to_dict(), 200
             else:
                 return {"message": "Notification not found"}, 404
         else:
-            # Handle invalid requests
-            return {"message": "Invalid request"}, 400
+            # Retrieve all notifications
+            notifications = Notification.query.all()
+            serialized_notifications = [notification.to_dict() for notification in notifications]
+            return serialized_notifications, 200
 
     def post(self):
         data = request.json
         user_id = data.get('user_id')
+        message_id = data.get('message_id')
+        community_id = data.get('community_id')
+        expert_id = data.get('expert_id')
+        blog_post_id = data.get('blog_post_id')
         notification_type = data.get('type')
         content = data.get('content')
 
@@ -503,9 +510,13 @@ class Notifications(Resource):
         # Create a new notification
         new_notification = Notification(
             user_id=user_id,
+            message_id=message_id,
+            community_id=community_id,
+            expert_id=expert_id,
+            blog_post_id=blog_post_id,
             type=notification_type,
             content=content,
-            created_at=datetime.utcnow()
+            timestamp=datetime.utcnow()
         )
         db.session.add(new_notification)
         db.session.commit()
@@ -513,13 +524,74 @@ class Notifications(Resource):
         return jsonify(new_notification.to_dict()), 201
 
     def delete(self, notification_id):
-    # Retrieve and delete the specified notification
+        # Retrieve and delete the specified notification
         notification = Notification.query.get_or_404(notification_id)
         db.session.delete(notification)
         db.session.commit()
-        return jsonify({'message': 'Notification deleted successfully'})
+        return jsonify({'message': 'Notification deleted successfully'}), 200
 
+def create_notification(user_id, notification_type, content, message_id=None, community_id=None, expert_id=None, blog_post_id=None):
+    new_notification = Notification(
+        user_id=user_id,
+        type=notification_type,
+        content=content,
+        message_id=message_id,
+        community_id=community_id,
+        expert_id=expert_id,
+        blog_post_id=blog_post_id,
+        timestamp=datetime.utcnow()
+    )
+    db.session.add(new_notification)
+    db.session.commit()
 
+@app.route('/blog_posts', methods=['POST'])
+def add_blog_post():
+    data = request.json
+    title = data.get('title')
+    content = data.get('content')
+    image = data.get('image')
+    user_id = data.get('user_id')
+    expert_id = data.get('expert_id')
+
+    if not title or not content or not user_id or not expert_id:
+        return {'message': 'Title, content, user_id, and expert_id are required'}, 400
+
+    new_blog_post = BlogPost(
+        title=title,
+        content=content,
+        image=image,
+        user_id=user_id,
+        expert_id=expert_id,
+        created_at=datetime.utcnow()
+    )
+    db.session.add(new_blog_post)
+    db.session.commit()
+
+    # Send notification to the expert
+    expert = Expert.query.get(expert_id)
+    expert_notification_content = f"Your post '{title}' has been created successfully. Click here to view."
+    create_notification(
+        user_id=user_id,
+        notification_type='blog_post',
+        content=expert_notification_content,
+        blog_post_id=new_blog_post.id,
+        expert_id=expert_id
+    )
+
+    # Send notification to all users
+    users = User.query.all()
+    for user in users:
+        if user.id != user_id:
+            user_notification_content = f"Expert {expert.name} has added a new post. Click here to check it out."
+            create_notification(
+                user_id=user.id,
+                notification_type='blog_post',
+                content=user_notification_content,
+                blog_post_id=new_blog_post.id,
+                expert_id=expert_id
+            )
+
+    return jsonify(new_blog_post.to_dict()), 201
 
 # Add routes for the Notifications resource
 api.add_resource(Notifications, '/notifications', '/notifications/<int:id>', '/users/<int:user_id>/notifications')

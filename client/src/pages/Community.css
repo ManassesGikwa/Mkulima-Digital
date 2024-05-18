@@ -1,47 +1,85 @@
-/* CommunityDetails.css */
+/* Community.css */
 
-.big-container {
-    display: flex;
-    margin: 20px;
-    height:50% ;
-    width: 50%;
-    border: 2px solid black; 
-    border-radius: 10px;
-  }
+.community {
+  padding: 20px;
+  background-color: #f8f9fa;
+ 
+}
+
+h1 {
+  color: #343a40; 
+  font-size: small;
+}
+
+.mini-community {
+  margin-top: 20px;
+}
+
+.community-list {
+  list-style: none;
+  padding: 0;
+ 
   
-  .image-container {
-    flex: 1;
-    padding: 20px;
-  }
+}
+
+.card {
+  background-color: #ffffff; 
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+  margin-bottom: 20px;
+  max-width: 400px; 
+  height: 500px;
+ 
   
-  .content-container {
-    flex: 1;
-    padding: 20px;
-  }
+}
+
+.card-img-top {
+  width: 100%;
+  max-height: 200px; 
+  object-fit: cover;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  color: #007bff; 
+  margin-bottom: 10px;
+}
+
+
+.product-list {
+  display: grid;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
   
-  h1 {
-    color: black;
-    font-size: 40px; 
-    font-weight: bold ;
-    margin-bottom: 10px;
-  }
+}
+/* button css */
+.btn {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  color: rgb(72, 72, 142);
+  padding: 34px;
+}
+
+.btn button {
+  padding: 3px 8px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+
+.community-name {
   
-  p {
-    color: black;
-    font-size: 40px; 
-    line-height: 1.5; 
-  }
-  
-  .card-img-top {
-    max-width: 100%;
-    height: auto;
-    border-radius: 20px solid black; 
-  }
-  .button{
-    border-radius: 20px;
-    width: 90px;
-    height: 40px;
-    color: black;
-    font-weight: bolder;
-    font-size: larger;
-  }
+  color: black; 
+  text-decoration: none; 
+  font-size: 40px;
+  font-weight: bolder;
+}

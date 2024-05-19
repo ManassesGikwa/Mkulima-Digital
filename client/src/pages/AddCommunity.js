@@ -22,21 +22,21 @@ const AddCommunity = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const token = localStorage.getItem("access_token"); // Get the JWT token from local storage
+      const token = localStorage.getItem("access_token"); 
 
       if (!token) {
         throw new Error("No token found");
       }
 
-      const formData = new FormData(); // Create a new FormData object
+      const formData = new FormData();
       formData.append("name", community.name);
       formData.append("description", community.description);
-      formData.append("image", community.image); // Use community.image instead of imageFile
+      formData.append("image", community.image); 
 
       const response = await fetch("http://127.0.0.1:5555/communities", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
@@ -50,12 +50,14 @@ const AddCommunity = () => {
 
       const data = await response.json();
       console.log("Community added successfully:", data);
-      // Handle success response
-      navigate("/community"); // Redirect to the community page after successful addition
+      navigate("/community"); 
     } catch (error) {
       console.error("Error adding community:", error);
-      // Handle error response
     }
+  };
+
+  const handleBack = () => {
+    navigate("/community");
   };
 
   return (
@@ -103,18 +105,33 @@ const AddCommunity = () => {
             style={{ width: "100%", padding: "8px", marginBottom: "15px" }}
           />
         </label>
-        <button
-          type="submit"
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#007bff",
-            color: "#fff",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          Add
-        </button>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <button
+            type="button"
+            onClick={handleBack}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#6c757d",
+              color: "#fff",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            Back
+          </button>
+          <button
+            type="submit"
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#007bff",
+              color: "#fff",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            Add
+          </button>
+        </div>
       </form>
     </div>
   );

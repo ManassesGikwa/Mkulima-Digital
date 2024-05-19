@@ -1,93 +1,48 @@
-/* Community.css */
-
 .community {
-    padding: 20px;
-    background-color: #f8f9fa;
-   
-  }
-  
-  h1 {
-    color: #343a40; 
-    font-size: small;
-  }
-  
-  .mini-community {
-    margin-top: 20px;
-    
-  }
-  
-  .community-list {
-    list-style: none;
-    padding: 0;
-    display: block;
-   
-    
-  }
-  
-  .card {
-    background-color: #ffffff; 
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
-    margin-bottom: 20px;
-    max-width: 400px; 
-    height: 500px;
-    /* display: grid;
-    padding: 400px; */
-  
-  }
-  
-  .card-img-top {
-    width: 100%;
-    max-height: 200px; 
-    object-fit: cover;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-  }
-  
-  .card-body {
-    padding: 20px;
-  }
-  
-  .card-title {
-    color: #007bff; 
-    margin-bottom: 10px;
-  }
-  
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
 
-  .product-list {
-    display: grid;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 20px;
-    
-  }
-  /* button css */
-  .btn {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-    color: rgb(72, 72, 142);
-    padding: 34px;
-  }
-  
-  .btn button {
-    padding: 3px 8px;
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
-  }
-  
+.community h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-  .community-name {
-    
-    color: black; 
-    text-decoration: none; 
-    font-size: 40px;
-    font-weight: bolder;
-  }
-.com-button{
-  font-size: larger;
-  font-weight: bolder;
-  margin-left: 690px;
+.com-button {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.com-button a {
+  text-decoration: none;
+  color: #007bff;
+  font-size: 20px;
+}
+
+.mini-community {
+  margin-top: 20px;
+}
+
+.community-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+  width: 100%;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.community-name {
+  display: block;
+  margin-top: 10px;
+  font-size: 18px;
 }

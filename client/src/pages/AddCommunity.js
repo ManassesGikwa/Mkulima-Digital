@@ -1,27 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const EditCommunity = ({ initialCommunity }) => {
-  const { id: communityId } = useParams();
-  const [community, setCommunity] = useState(
-    initialCommunity || {
-      name: "",
-      description: "",
-      created_at: "",
-      image: null,
-    }
-  );
+const AddCommunity = () => {
+  const [community, setCommunity] = useState({
+    name: "",
+    description: "",
+    created_at: "",
+    image: null,
+  });
 
-  useEffect(() => {
-    if (!initialCommunity && communityId) {
-      fetch(`http://127.0.0.1:5555/communities/${communityId}`)
-        .then((response) => response.json())
-        .then((data) => setCommunity(data))
-        .catch((error) =>
-          console.error("Error fetching community data:", error)
-        );
-    }
-  }, [initialCommunity, communityId]);
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     const { name, value, files } = event.target;
@@ -33,41 +21,46 @@ const EditCommunity = ({ initialCommunity }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const formData = new FormData();
-    formData.append("name", community.name);
-    formData.append("description", community.description);
-    formData.append("created_at", community.created_at);
-    if (community.image) {
-      formData.append("image", community.image);
-    }
-
     try {
-      const response = await fetch(
-        `http://127.0.0.1:5555/communities/${communityId}`,
-        {
-          method: "PUT",
-          body: formData,
-        }
-      );
+      const token = localStorage.getItem("access_token"); // Get the JWT token from local storage
+
+      if (!token) {
+        throw new Error("No token found");
+      }
+
+      const formData = new FormData(); // Create a new FormData object
+      formData.append("name", community.name);
+      formData.append("description", community.description);
+      formData.append("image", community.image); // Use community.image instead of imageFile
+
+      const response = await fetch("http://127.0.0.1:5555/communities", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+        },
+        body: formData,
+      });
 
       if (!response.ok) {
-        const errorText = await response.text();
+        const errorData = await response.json();
         throw new Error(
-          `Error updating community: ${response.status} ${errorText}`
+          `Error adding community: ${response.status} ${errorData.msg}`
         );
       }
 
       const data = await response.json();
-      console.log("Community updated successfully", data);
+      console.log("Community added successfully:", data);
+      // Handle success response
+      navigate("/community"); // Redirect to the community page after successful addition
     } catch (error) {
-      console.error("Error updating community:", error);
+      console.error("Error adding community:", error);
+      // Handle error response
     }
   };
 
   return (
     <div style={{ maxWidth: "600px", margin: "0 auto" }}>
-      <h1 style={{ fontSize: "24px", marginBottom: "20px" }}>Edit Community</h1>
+      <h1 style={{ fontSize: "24px", marginBottom: "20px" }}>Add Community</h1>
       <form
         style={{ display: "flex", flexDirection: "column" }}
         onSubmit={handleSubmit}
@@ -120,11 +113,11 @@ const EditCommunity = ({ initialCommunity }) => {
             cursor: "pointer",
           }}
         >
-          Save
+          Add
         </button>
       </form>
     </div>
   );
 };
 
-export default EditCommunity;
+export default AddCommunity;

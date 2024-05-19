@@ -18,6 +18,8 @@ import Careers from './pages/Careers';
 import Finance from './pages/Finance';
 import Support from './pages/Support';
 import CommunityDetails from './pages/CommunityDetails';
+import Dashboard from './pages/Dashboard'
+import EditPost from './pages/EditPost'
 
 
 const router = createBrowserRouter([

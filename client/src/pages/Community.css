@@ -13,11 +13,13 @@
   
   .mini-community {
     margin-top: 20px;
+    
   }
   
   .community-list {
     list-style: none;
     padding: 0;
+    display: block;
    
     
   }
@@ -29,8 +31,9 @@
     margin-bottom: 20px;
     max-width: 400px; 
     height: 500px;
-   
-    
+    /* display: grid;
+    padding: 400px; */
+  
   }
   
   .card-img-top {
@@ -83,3 +86,8 @@
     font-size: 40px;
     font-weight: bolder;
   }
+.com-button{
+  font-size: larger;
+  font-weight: bolder;
+  margin-left: 690px;
+}

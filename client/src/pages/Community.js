@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import "./Community.css"
+import "./Community.css";
+
 
 const Community = () => {
   const [communities, setCommunities] = useState([]);
@@ -31,7 +32,6 @@ const Community = () => {
     setCommunities(updatedCommunities);
     
     // Perform API call to delete the community from backend (if needed)
-    // Example:
     fetch(`http://127.0.0.1:5555/communities/${id}`, {
       method: 'DELETE',
     })
@@ -46,6 +46,9 @@ const Community = () => {
   return (
     <div className='community'>
       <h1>OUR COMMUNITIES</h1>
+      <div className='com-button'>
+        <Link to="/community/add">Add Community</Link>
+      </div>
       <div className='mini-community'>
         <ul className='community-list'>
           {communities.map((community) => (
@@ -55,8 +58,6 @@ const Community = () => {
                 <img src={community.image} alt={community.name} className='card-img-top' />
                 <Link to={`/community/${community.id}`} className='community-name'>{community.name}</Link>
                 <div className='card-body'>
-                  {/* <p className='card-text'>{community.description}</p> */}
-                 
                     <button onClick={() => handleLike(community.id)} className='btn1'>Like</button>
                     <button onClick={() => handleFollow(community.id)} className='btn1'>Follow</button>
                     <button onClick={() => handleDelete(community.id)} className='btn1'>Delete</button>
@@ -66,6 +67,9 @@ const Community = () => {
             </li>
           ))}
         </ul>
+      </div>
+      <div>
+      
       </div>
     </div>
   );

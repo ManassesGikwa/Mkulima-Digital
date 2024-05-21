@@ -20,6 +20,7 @@ import Finance from './pages/Finance';
 import Support from './pages/Support';
 import Dashboard from './pages/Dashboard';
 import EditPost from './pages/EditPost';
+import CommunityDetails from './CommunityDetails';
 
 
 const router = createBrowserRouter([
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
       {path: "blogs", element: <Posts />},
       {path: "edit", element: <EditPost />},
       {path: "community", element: <Community />},
+      {path: "community/:id", element: <CommunityDetails />},
       {path: "careers", element: <Careers />},
       {path: "finance", element: <Finance />},
       // {path: "register", element: <Register />},

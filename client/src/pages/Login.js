@@ -158,12 +158,15 @@ const Login = () => {
   const handleSignInClick = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
+    const usernameOrEmail = formData.get('email'); // Assuming the form has a field for email
+    const password = formData.get('password');
+    
     const userData = {
       action: 'login',
-      username: formData.get('email'), // Assuming username is the email for login
-      password: formData.get('password'),
+      usernameOrEmail: usernameOrEmail,
+      password: password,
     };
-
+  
     try {
       // Send user credentials to the server for authentication
       const response = await fetch('/auth', {
@@ -173,14 +176,25 @@ const Login = () => {
         },
         body: JSON.stringify(userData),
       });
-
-      // Handle response (e.g., show success message, set authentication state)
-      const data = await response.json();
-      console.log(data); // Handle response from the server
+  
+      // Handle response
+      if (response.ok) {
+        // If the response is successful (status code 200), log in was successful
+        const data = await response.json();
+        console.log('Login successful:', data);
+        // You can handle further actions here, such as redirecting the user to a dashboard page
+      } else {
+        // If the response is not successful, handle the error
+        console.error('Login failed:', response.statusText);
+        // You can display an error message to the user
+      }
     } catch (error) {
       console.error('Error signing in:', error);
+      // Handle other errors, such as network errors
     }
   };
+  
+  
 
   return (
     <div className='login-body'>

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import './CommunityDetails.css'; // Import CSS file for styling
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import './CommunityDetails.css';
 
 const CommunityDetails = () => {
   const { id } = useParams();
   const [community, setCommunity] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`http://127.0.0.1:5555/communities/${id}`)
@@ -18,15 +19,26 @@ const CommunityDetails = () => {
   }
 
   return (
-    <div className='big-container'>
-      <div className='image-container'>
-        <img src={community.image} alt={community.name} className='card-img-top' />
+    <div className="big-container">
+      <div className="image-container">
+        <img
+          src={community.image}
+          alt={community.name}
+          className="card-img-top"
+        />
       </div>
-      <div className='content-container'>
-        <h1>name:{community.name}</h1>
-        <p>description:{community.description}</p>
-        <p>created_at:{community.created_at}</p>
-        <button className='button'>Edit</button>
+      <div className="content-container">
+        <h1>Name: {community.name}</h1>
+        <h1>Description: {community.description}</h1>
+        <h1>Created At: {community.created_at}</h1>
+        <div className="button-container">
+          <Link to={`/community/${id}/edit`} className="button">
+            Edit
+          </Link>
+          <button onClick={() => navigate('/community')} className="button back">
+            Back
+          </button>
+        </div>
       </div>
     </div>
   );

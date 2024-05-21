@@ -2,20 +2,22 @@
 
 // const Login = () => {
 //   const [isSignUpActive, setIsSignUpActive] = useState(false);
+//   const [role, setRole] = useState('user'); // Default role is user
 
 //   const handleSignUpClick = async (event) => {
 //     event.preventDefault();
 //     const formData = new FormData(event.target);
 //     const userData = {
-//       name: formData.get('name'),
+//       action: 'register',
+//       username: formData.get('name'),
 //       email: formData.get('email'),
 //       password: formData.get('password'),
-//       // You may include additional fields like 'isExpert' based on your needs
+//       role: formData.get('role'), // Get selected role from the form data
 //     };
 
 //     try {
 //       // Send user data to the server for registration
-//       const response = await fetch('/api/signup', {
+//       const response = await fetch('/auth', {
 //         method: 'POST',
 //         headers: {
 //           'Content-Type': 'application/json',
@@ -36,13 +38,14 @@
 //     event.preventDefault();
 //     const formData = new FormData(event.target);
 //     const userData = {
-//       email: formData.get('email'),
+//       action: 'login',
+//       username: formData.get('email'), // Assuming username is the email for login
 //       password: formData.get('password'),
 //     };
 
 //     try {
 //       // Send user credentials to the server for authentication
-//       const response = await fetch('/api/login', {
+//       const response = await fetch('/auth', {
 //         method: 'POST',
 //         headers: {
 //           'Content-Type': 'application/json',
@@ -55,7 +58,6 @@
 //       console.log(data); // Handle response from the server
 //     } catch (error) {
 //       console.error('Error signing in:', error);
-//       // Handle error (e.g., display error message)
 //     }
 //   };
 
@@ -74,6 +76,10 @@
 //             <input type="text" name="name" placeholder="Name" required />
 //             <input type="email" name="email" placeholder="Email" required />
 //             <input type="password" name="password" placeholder="Password" required />
+//             <select name="role" value={role} onChange={(e) => setRole(e.target.value)}>
+//               <option value="user">User</option>
+//               <option value="expert">Expert</option>
+//             </select>
 //             <input type="password" name="confirmPassword" placeholder="Confirm Password" required />
 //             <button type="submit">Sign Up</button>
 //           </form>
@@ -113,7 +119,6 @@
 // };
 
 // export default Login;
-
 import React, { useState } from 'react';
 
 const Login = () => {
@@ -124,7 +129,8 @@ const Login = () => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const userData = {
-      name: formData.get('name'),
+      action: 'register',
+      username: formData.get('name'),
       email: formData.get('email'),
       password: formData.get('password'),
       role: formData.get('role'), // Get selected role from the form data
@@ -132,7 +138,7 @@ const Login = () => {
 
     try {
       // Send user data to the server for registration
-      const response = await fetch('/api/signup', {
+      const response = await fetch('/auth', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -153,13 +159,14 @@ const Login = () => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const userData = {
-      email: formData.get('email'),
+      action: 'login',
+      username: formData.get('email'), // Assuming username is the email for login
       password: formData.get('password'),
     };
 
     try {
       // Send user credentials to the server for authentication
-      const response = await fetch('/api/login', {
+      const response = await fetch('/auth', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

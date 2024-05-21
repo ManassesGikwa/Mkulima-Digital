@@ -26,8 +26,8 @@ const PostItem = ({ postID, title, content, userID, expertID, image, time }) => 
         const fetchData = async () => {
             try {
                 const [likesResponse, followsResponse, commentsResponse] = await Promise.all([
-                    fetch(`YOUR_API_ENDPOINT_HERE/posts/${postID}/likes`), // Replace with your actual API endpoint
-                    fetch(`YOUR_API_ENDPOINT_HERE/posts/${postID}/follows`), // Replace with your actual API endpoint
+                    fetch(`http://localhost:5555/blogposts/${postID}/likes`), // Replace with your actual API endpoint
+                    fetch(`YOUR_A/${postID}/follows`), // Replace with your actual API endpoint
                     fetch(`YOUR_API_ENDPOINT_HERE/posts/${postID}/comments`) // Replace with your actual API endpoint
                 ]);
 

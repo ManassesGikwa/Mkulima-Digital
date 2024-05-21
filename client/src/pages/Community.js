@@ -23,20 +23,16 @@ const Community = () => {
   };
 
   const handleFollow = (id) => {
-    // Your logic for handling follow button click (if needed)
+  
   };
 
   const handleDelete = (id) => {
-    // Filter out the community with the given id
     const updatedCommunities = communities.filter(community => community.id !== id);
     setCommunities(updatedCommunities);
-    
-    // Perform API call to delete the community from backend (if needed)
     fetch(`http://127.0.0.1:5555/communities/${id}`, {
       method: 'DELETE',
     })
     .then(() => {
-      // Handle success
     })
     .catch(error => {
       console.error('Error deleting community:', error);
@@ -54,7 +50,6 @@ const Community = () => {
           {communities.map((community) => (
             <li key={community.id}>
               <div className='card'>
-                {/* Render the link to CommunityDetails */}
                 <img src={community.image} alt={community.name} className='card-img-top' />
                 <Link to={`/community/${community.id}`} className='community-name'>{community.name}</Link>
                 <div className='card-body'>

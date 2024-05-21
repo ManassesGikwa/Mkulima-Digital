@@ -31,16 +31,11 @@ const CommunityDetails = () => {
         <h1>Name: {community.name}</h1>
         <h1>Description: {community.description}</h1>
         <h1>Created At: {community.created_at}</h1>
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div className="button-container">
           <Link to={`/community/${id}/edit`} className="button">
             Edit
           </Link>
-          {/* <div className="btn4">
-            <Link to="/community/add">
-              Add Community
-            </Link>
-          </div> */}
-          <button onClick={() => navigate('/community')} className="button">
+          <button onClick={() => navigate('/community')} className="button back">
             Back
           </button>
         </div>

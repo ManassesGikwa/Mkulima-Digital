@@ -189,35 +189,28 @@
   margin-top: 20px;
 }
 
-.article-grid{
-  display: flex;
+.article-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-gap :30px;
-  padding: 20px;
-  justify-content: center;
-  margin-left: 40px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
 }
 
-.article-card{
+.article-card {
   background-color: #fefefe;
-  padding: 20px;
- 
-  border-radius: 8px;
-  /* box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1); */
-  transition: transform 0.3s ease;
-  margin-right: 10px;
-  box-shadow:  0 0 20px rgba(0, 0, 0, 0.2); /* #FF3C00 shadow */
+  padding: 1rem;
+  border-radius: 4px; /* Changed to fixed value */
+  transition: box-shadow 0.3s ease-in-out; /* Added a transition for the shadow */
+  cursor: default;
+  box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
 }
 
-.article-card:hover{
-  transform:scale(1.05);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+.article-card:hover {
+  box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
 }
 
-.show-more-button{
-
-  margin-top:20px;
+.show-more-button {
+  margin-top: 20px;
 }
 
 .expert-info {

@@ -561,7 +561,7 @@ from flask_jwt_extended import JWTManager, create_access_token
 import os
 import jwt.exceptions
 
-app = Flask(_name_)
+app = Flask(__name__)
 CORS(app, origins='http://localhost:3000')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

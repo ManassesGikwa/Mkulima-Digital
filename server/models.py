@@ -19,6 +19,9 @@ class User(db.Model):
     messages_received = db.relationship('Message', foreign_keys='Message.receiver_id', backref='receiver', lazy=True)
     comments = db.relationship('Comment', backref='user', lazy=True)
     liked_posts = db.relationship('Like', backref='liked_user', lazy=True)  # Adjusted backref name
+    notifications = db.relationship('Notification', backref='user', lazy=True)
+    
+
 
     def to_dict(self):
         return{
@@ -67,6 +70,7 @@ class Community(db.Model):
     image = db.Column(db.String)
     created_at = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    notifications = db.relationship('Notification', backref='community', lazy=True)
 
     def to_dict(self):
         return {
@@ -85,6 +89,7 @@ class Expert(db.Model):
     image = db.Column(db.String)
     created_at = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    notifications = db.relationship('Notification', backref='expert', lazy=True)
 
     def to_dict(self):
         return {
@@ -102,11 +107,13 @@ class Message(db.Model):
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime)
+    notifications = db.relationship('Notification', backref='message', lazy=True)
+
 
     def to_dict(self):
         return {
             'id': self.id,
-            'content': self.content,
+            'content': self.content,    
             'sender_id': self.sender_id,
             'receiver_id': self.receiver_id,
             'created_at': self.created_at.isoformat()
@@ -163,19 +170,48 @@ class CommunityFollowers(db.Model):
             'follower_id': self.follower_id,
             'followed_at': self.followed_at.isoformat()
         }
-# Define Notification Model
+# # Define Notification Model
+# class Notification(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+#     type = db.Column(db.String)  # Type of notification (e.g., 'blog_post', 'new_expert', 'message')
+#     content = db.Column(db.String)
+#     read = db.Column(db.Boolean, default=False)
+#     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+#     def to_dict(self):
+#         return {
+#             'id': self.id,
+#             'user_id': self.user_id,
+#             'type': self.type,
+#             'content': self.content,
+#             'read': self.read,
+#             'timestamp': self.timestamp
+#         }
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    type = db.Column(db.String)  # Type of notification (e.g., 'blog_post', 'new_expert', 'message')
+    message_id = db.Column(db.Integer, db.ForeignKey('message.id'))
+    community_id = db.Column(db.Integer, db.ForeignKey('community.id'))
+    expert_id = db.Column(db.Integer, db.ForeignKey('expert.id'))
+    type = db.Column(db.String)  # Type of notification (e.g., 'blog_post', 'new_expert', 'message','Community')
     content = db.Column(db.String)
     read = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
+    user = db.relationship('User', backref='notifications', lazy=True)
+    message = db.relationship('Message', backref='notifications', lazy=True)
+    community = db.relationship('Community', backref='notifications', lazy=True)
+    expert = db.relationship('Expert', backref='notifications', lazy=True)
+    blog_post = db.relationship('BlogPost', backref='notifications', lazy=True)
     def to_dict(self):
         return {
             'id': self.id,
             'user_id': self.user_id,
+            'message_id': self.message_id,
+            'community_id': self.community_id,
+            'expert_id': self.expert_id,
+            'blog_post_id': self.blog_post_id,
             'type': self.type,
             'content': self.content,
             'read': self.read,

@@ -1,35 +1,42 @@
 .parent-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background-image: url('../images/dashboardbackground.jpg');
-  background-size: cover; 
-  background-position: center; 
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
-  height: 100vh;
+  height: 100%;
   padding: 50px;
 }
 
 .dashboard {
-  position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 80%;
   width: 80%;
+  height: 100%;
   margin: 20px auto 0;
   padding: 20px;
-  background-color: rgb(141, 177, 141);
+  background-color: rgb(52, 116, 52);
   border-radius: 15px;
 }
-  
+
 .top-bar {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
+  position: relative;
+  width: 1450px;
+  height: 170px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #ccc;
+  background-color: #b37f5a;
+  border-radius: 10px 10px 0 0;
+  z-index: 1;
+  margin-top: -20px;
+  margin-left:-5px;
+  
 }
 
 .profile-icon {
@@ -43,142 +50,207 @@
   margin-left: 50px;
   margin-top: 20px;
 }
-  .notification-container {
-    display: flex;
-    align-items: center;
-    margin-left: auto; /* Pushes the container to the right edge */
-    color: green;
-  }
-  
-  .notification-bell{
-    font-size: 24px; /* Adjust the font size as needed */
-  }
 
-  .option-button{
-    padding: 10px ;
-    background-color: green;
-  }
-  
-  .sidebar {
-    width: 300px;
-   
-    background-color: #f0f0f0;
-    padding: 50px;
-    margin-top: 60px; /* Adjust the margin-top value to add space */
-  }
-  
-  .expert-profile-topbar {
-    margin-bottom: 20px;
-  }
-  
-  .sidebar-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .sidebar-icon {
-    margin-right: 10px;
-  }
-  
-  .main-content {
-    margin-left: 20px;
-    flex: 1;
-    margin-top: 120px;
-    margin-left:40px; 
-    width: 80%;
-  }
-  
-  .options-button {
-    background-color: #007bff; 
-    border-color: #007bff; 
+.notification-container {
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* Pushes the container to the right edge */
+  color: green;
+}
+
+.notification-bell {
+  font-size: 24px;
+  color: #98ff92;
+}
+
+.option-button {
+  padding: 10px;
+  background-color: green;
+}
+
+.sidebar {
+  position: absolute;
+  border-radius: 10px 0px 0 10px ;
+  margin-right:1150px;
+  width: 305px;
+  height: 1100px; 
+  margin-bottom:500px;
+  background-color:  rgb(52, 116, 52);
+  color: white;
+  padding-top:350px;
+
+  padding-left: 50px;
+  box-sizing: border-box;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  margin-top: 35px;
+  font-size: 22px;
+}
+
+.sidebar-icon {
+  margin-right: 10px;
+}
+
+.main-content {
+  margin-left: 320px; /* Width of the sidebar + some margin */
+  flex: 1;
+  margin-top: 80px; /* Ensure it is below the top-bar */
+  width: calc(100% - 340px); /* Full width minus sidebar width and some margin */
+}
+
+.options-button {
+  background-color: #228235;
+  border-color: #52cb6a;
 }
 
 .options-button:hover {
-    background-color: #0056b3; /* Change the background color on hover */
-    border-color: #0056b3; /* Change the border color on hover */
+  background-color: #23bf42;
+  border-color: #eef3ef;
 }
 
-  .notification-dot {
-    width: 10px;
-    height: 10px;
-    background-color: red;
-    border-radius: 50%;
-    margin-left: 5px;
-  }
-  
-  .banner {
-    margin-bottom: 20px;
-    background-image: url(../images/dashboardbanner.jpg);
-    padding: 30px;
-    width: 650px;
-    height: 150px;
-   
-   
-  }
-
-  .new-post-button{
-    background-color: green;
-    color: white;
-  }
-  
-  .content-sections {
-    display: flex;
+.show-more-button {
+  background-color: #228235;
+  border-color: #52cb6a;
+  margin-top: 20px;
 }
 
-.top-articles {
-    flex: 1;
-    margin-right: 20px;
+.show-more-button:hover {
+  background-color: #23bf42;
+  border-color: #eef3ef;
 }
 
-.expert-info {
-    flex: 1;
-    margin-left: 300px;
+.notification-dot {
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  margin-left: 5px;
 }
 
-.followers, .following, .communities {
-    background-color: white;
-    border-radius: 10px;
-    padding: 10px;
-    text-align: center;
-    margin-bottom: 20px;
-    width: 60%;
+.banner {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  background-image: url('../images/dashboardbanner.jpg');
+  padding: 30px;
+  width: 650px;
+  height: 150px;
 }
 
-
-.option-button{
+.new-post-button {
   background-color: green;
   color: white;
 }
 
+.content-sections {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.top-articles {
+  width: 60%; /* Ensures it takes full width available */
+  height: 80%;
+  background-color: #b37f5a;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.article-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.article-card {
+  background-color: #fefefe;
+  padding: 1rem;
+  border-radius: 4px; /* Changed to fixed value */
+  transition: box-shadow 0.3s ease-in-out; /* Added a transition for the shadow */
+  cursor: default;
+  box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.article-card:hover {
+  box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+}
+
+.show-more-button {
+  margin-top: 20px;
+}
+
+.expert-info {
+  flex: 1;
+  margin-left: 60px;
+  margin-bottom: 50px;
+}
+
+.followers, .following, .communities {
+  background-color: #98ff92;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.followers:hover, .following:hover, .communities:hover {
+  transform: scale(1.05);
+  background-color: white;
+  box-shadow: 0 30px 20px rgba(0, 0, 0, 0.2);
+}
+
+.expert-details {
+  margin-top: -200px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.follower-icon {
+  font-size: 50px;
+}
+
+.following-icon {
+  font-size: 50px;
+}
+
+.communities-icon {
+  font-size: 50px;
+}
+
+
+
+
 /* Responsive styling */
 @media screen and (max-width: 768px) {
   .main-content {
-      margin-left: 10px;
-      width: calc(100% - 20px);
+    margin-left: 10px;
+    width: calc(100% - 20px);
   }
 
   .sidebar {
-      width: 100%;
-      margin-top: 20px;
-      padding: 20px 10px;
+    width: 100%;
+    margin-top: 20px;
+    padding: 20px 10px;
   }
 
   .expert-info {
-      margin-left: 0;
+    margin-left: 0;
   }
 
   .followers, .following, .communities {
-      width: 100%;
+    width: 100%;
   }
 
   .top-bar, .expert-profile-topbar {
-      flex-direction: column;
-      align-items: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .expert-profile-topbar {
-      margin-left: 0;
-      margin-top: 10px;
+    margin-left: 0;
+    margin-top: 10px;
   }
 }

@@ -1,0 +1,157 @@
+  .App {
+    text-align: center;
+    max-width: 728px;
+    margin: 0 auto;
+  }
+  
+  .App header {
+    background-color: #dbdbdb;
+    height: 10vh;
+    min-height: 50px;
+    color: white;
+    position: relative;
+    width: 100%;
+    max-width: 728px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 99;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  .App section {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    min-height: 100vh;
+    background-color: #fff;
+  }
+  
+  main {
+    position: relative;
+    padding: 10px;
+    height: 80vh;
+    margin: 10vh 0 10vh;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  main::-webkit-scrollbar {
+    width: 0.25rem;
+  }
+  
+  main::-webkit-scrollbar-track {
+    background: #1e1e24;
+  }
+  
+  main::-webkit-scrollbar-thumb {
+    background: #6649b8;
+  }
+
+  .mess-form{
+    position: relative;
+  }
+  
+  .mess-form form {
+    height: 7vh;
+    bottom: 0;
+    background-color: #fff;
+    width: 100%;
+    max-width: 728px;
+    display: flex;
+    font-size: 1.5rem;
+    gap: 10px;
+  }
+  
+  .mess-form form button {
+    margin-left: 0.2rem;
+    width: 5%;
+    background-color: #0b93f6;
+  }
+  
+  
+  .mess-form input {
+    line-height: 1.5;
+    width: 100%;
+    font-size: 0.8rem;
+    background: #dbdbdb;
+    color: #000;
+    outline: none;
+    border: none;
+    padding: 0 10px;
+  }
+  
+  /* .mess-form button {
+    background-color: #0b93f6;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 1.25rem;
+  } */
+  
+  .mess-form button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  
+  .sign-in {
+    color: #282c34;
+    background: white;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  
+  
+  
+  ul, li {
+    text-align: left;
+    list-style: none;
+  }
+  
+  p {
+    max-width: 500px;
+    margin-bottom: 12px;
+    line-height: 24px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    position: relative;
+    color: white;
+    text-align: center;
+  }
+  
+  .message {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  
+  .sent {
+    flex-direction: row-reverse;
+  }
+  
+  .sent p {
+    color: white;
+    background: #0b93f6;
+    align-self: flex-end;
+  }
+  .received p {
+    background: #d2d2d4;
+    color: black;
+  }
+  
+  .message img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 2px 5px;
+  }

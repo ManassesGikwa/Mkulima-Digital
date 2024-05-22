@@ -9,6 +9,7 @@ import './Dashboard.css'
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
+import { Link } from 'react-router-dom';
 
 function ExpertDashboard() {
     const [expert, setExpert] = useState(null);
@@ -178,7 +179,7 @@ function ExpertDashboard() {
                     </div>
                     <div className="sidebar-item">
                         <FaEnvelope className='sidebar-icon' />
-                        <span>Inbox</span>
+                        <span><Link to='/inbox'> Inbox </Link></span>
                         {/* {inboxMessages.length > 0 && <span className='notification-dot'></span> } */}
                     </div>
                 </div>

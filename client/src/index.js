@@ -20,6 +20,7 @@ import Finance from './pages/Finance';
 import Support from './pages/Support';
 import Dashboard from './pages/Dashboard';
 import EditPost from './pages/EditPost';
+import Messaging from './pages/Messaging';
 
 
 const router = createBrowserRouter([
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
       {path: "authors", element: <Authors />},
       {path: "create", element: <CreatePost/>},
       {path: "posts/users/:id", element: <AuthorPosts />},
+      {path: "inbox", element: <Messaging />}
       // {path: "myposts/:id", element: <Dashboard />},
       // {path: "posts/:id/edit", element: <EditPost />},
       // {path: "posts/:id/delete", element: <DeletePost />},

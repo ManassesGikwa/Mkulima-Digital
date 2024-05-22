@@ -139,8 +139,8 @@ function ExpertDashboard() {
                         <div className='user-profile'>
                             {expert && (
                                 <div>
-                                    <h3 style={{ color: 'white', marginBottom: '15px' }}>{expert.name}<FaUser className='profile-icon' /></h3>
-                                    <p style={{ fontSize: "20px", color: 'white' }}>{expert.expertise_area}</p>
+                                    <h3 style={{'marginBottom': '15px', }}>{expert.name}<FaUser className='profile-icon' /></h3>
+                                    <p style={{ 'fontSize': "20px",}}>{expert.expertise_area}</p>
                                 </div>
                             )}
                         </div>
@@ -192,13 +192,13 @@ function ExpertDashboard() {
                 </div>
                 <div className="main-content">
                     <div className='banner'>
-                        <h3 style={{ color: 'white' }}>Hello Farmer2023!</h3>
+                        <h3 style={{ color: 'white' }}>Hello Farmer2024!</h3>
                         <h4 style={{ color: 'white' }}>Give us an update on how your farming experience is going</h4>
                         <Button className='new-post-button'>Write New Post</Button>
                     </div>
                     <div className="content-sections">
                         <div className="top-articles">
-                            <h3 style={{ color: 'white' }}>Top Articles</h3>
+                            <h3 className='toparticles-h3'>Top Articles</h3>
                             {loading ? (
                                 <Spinner style={{ color: '#EE5E21' }} animation='border' role='status'>
                                     <span className='visually-hidden'>Loading...</span>

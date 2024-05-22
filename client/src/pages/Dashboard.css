@@ -19,7 +19,7 @@
   height: 100%;
   margin: 20px auto 0;
   padding: 20px;
-  background-color: rgb(52, 116, 52);
+  background-color: rgb(25, 39, 25);
   border-radius: 15px;
 }
 
@@ -31,7 +31,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #b37f5a;
+  background-color: #ffffff;
   border-radius: 10px 10px 0 0;
   z-index: 1;
   margin-top: -20px;
@@ -60,13 +60,10 @@
 
 .notification-bell {
   font-size: 24px;
-  color: #98ff92;
+  color:rgb(25, 39, 25);
 }
 
-.option-button {
-  padding: 10px;
-  background-color: green;
-}
+
 
 .sidebar {
   position: absolute;
@@ -75,8 +72,8 @@
   width: 305px;
   height: 1100px; 
   margin-bottom:500px;
-  background-color:  rgb(52, 116, 52);
-  color: white;
+  background-color: rgb(25, 39, 25);
+  color: #4db52a ;
   padding-top:350px;
 
   padding-left: 50px;
@@ -102,12 +99,14 @@
 }
 
 .options-button {
-  background-color: #228235;
-  border-color: #52cb6a;
+  background-color: rgb(25, 39, 25);
+;
+  border-color: #4db52a;
+  color:#4db52a ;
 }
 
 .options-button:hover {
-  background-color: #23bf42;
+  background-color: #89d799;
   border-color: #eef3ef;
 }
 
@@ -153,9 +152,13 @@
 .top-articles {
   width: 60%; /* Ensures it takes full width available */
   height: 80%;
-  background-color: #b37f5a;
+  background-color: #ffffff;
   padding: 20px;
   box-sizing: border-box;
+}
+
+.toparticles-h3{
+  color: #4db52a ;
 }
 
 .article-grid {
@@ -189,16 +192,17 @@
 }
 
 .followers, .following, .communities {
-  background-color: #98ff92;
+  background-color: #4db52a ;
   border-radius: 10px;
   padding: 10px;
   text-align: center;
   margin-bottom: 20px;
+  color: #ffffff;
 }
 
 .followers:hover, .following:hover, .communities:hover {
   transform: scale(1.05);
-  background-color: white;
+  background-color: rgb(159, 209, 150);
   box-shadow: 0 30px 20px rgba(0, 0, 0, 0.2);
 }
 

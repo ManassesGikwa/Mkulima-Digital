@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import './CommunityCreationForm.css';
+import './CommunityCreationForm.css';
 
 function CommunityCreationForm({ onSubmit }) {
     const [formData, setFormData] = useState({

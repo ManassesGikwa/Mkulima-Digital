@@ -9,12 +9,12 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal';
+import { Link } from 'react-router-dom';
 
 function ExpertDashboard() {
     const [expert, setExpert] = useState(null);
     const [notifications, setNotifications] = useState([]);
     const [followers, setFollowers] = useState(0);
-    const [following, setFollowing] = useState(0);
     const [communities, setCommunities] = useState([]);
     const [selectedOption, setSelectedOption] = useState(null);
     const [posts, setPosts] = useState([]);
@@ -22,7 +22,7 @@ function ExpertDashboard() {
     const [currentPage, setCurrentPage] = useState(1);
     const postsPerPage = 4;
     const [showModal, setShowModal] = useState(false);
-    const[showCommunities, setShowCommunities] = useState(false);
+    const [showCommunities, setShowCommunities] = useState(false);
     const [showFollowers, setShowFollowers] = useState(false);
 
     const [updatedProfileData, setUpdatedProfileData] = useState({
@@ -55,7 +55,6 @@ function ExpertDashboard() {
             .then(response => response.json())
             .then(user => {
                 setFollowers(user.followers ?? 0);
-                setFollowing(user.following ?? 0);
                 setCommunities(user.communities ?? []);
             })
             .catch(error => console.error('Error fetching user data:', error));
@@ -130,20 +129,12 @@ function ExpertDashboard() {
     return (
         <div className='parent-container'>
             <div className="dashboard">
-                <div className="top-bar">
+                <div className='top-right-corner'>
                     <div className="notification-container">
                         <FaBell className="notification-bell" />
                         {notifications.length > 0 && <span className="notification-dot"></span>}
                     </div>
                     <div className="expert-profile-topbar">
-                        <div className='user-profile'>
-                            {expert && (
-                                <div>
-                                    <h3 style={{'marginBottom': '15px', }}>{expert.name}<FaUser className='profile-icon' /></h3>
-                                    <p style={{ 'fontSize': "20px",}}>{expert.expertise_area}</p>
-                                </div>
-                            )}
-                        </div>
                         <Dropdown as={ButtonGroup}>
                             <Button className="options-button">Options</Button>
                             <Dropdown.Toggle split className="options-button" id="dropdown-split-basic" />
@@ -172,10 +163,10 @@ function ExpertDashboard() {
                             {selectedOption === 'addCommunity' && <CommunityCreationForm onSubmit={(data) => {
                                 addNewCommunity(data);
                                 setShowModal(false);
-                            }} />}
+                            }} userId={1} />}
                         </Modal.Body>
                     </Modal>
-                </div>
+                </div> 
                 <div className='sidebar'>
                     <div className='sidebar-item'>
                         <FaChartBar className="sidebar-icon" />
@@ -207,6 +198,7 @@ function ExpertDashboard() {
                                 <div className='article-grid'>
                                     {visibleArticles.map(article => (
                                         <div key={article.id} className='article-card'>
+                                            <Link to={`/blogposts/${article.id}`}>
                                             <img src={article.image} alt={article.title} />
                                             <div className='card-content'>
                                                 <h2 style={{ fontSize: "12px" }}>{article.title}</h2>
@@ -217,6 +209,7 @@ function ExpertDashboard() {
                                                     <span>{article.total_likes}</span>
                                                 </div>
                                             </div>
+                                            </Link>
                                         </div>
                                     ))}
                                 </div>
@@ -229,6 +222,7 @@ function ExpertDashboard() {
                                 ))}
                             </Pagination>
                         </div>
+
                         <div className='expert-info'>
                             <div className='expert-details' style={{ color: 'white' }}>
                                 {expert && (
@@ -250,11 +244,6 @@ function ExpertDashboard() {
                                         </ul>
                                     )}
                             </div>
-                            {/* <div className='following'>
-                                <FaUsers className='following-icon' />
-                                <h4>Following</h4>
-                                <p>{following}</p>
-                            </div> */}
                             <div className='communities'>
                                 <FaUsersCog className='communities-icon' />
                                 <h4>Communities</h4>

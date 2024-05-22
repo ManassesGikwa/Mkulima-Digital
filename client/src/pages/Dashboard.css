@@ -23,21 +23,10 @@
   border-radius: 15px;
 }
 
-.top-bar {
-  position: relative;
-  width: 1450px;
-  height: 170px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #ffffff;
-  border-radius: 10px 10px 0 0;
-  z-index: 1;
-  margin-top: -20px;
-  margin-left:-5px;
-  
+.top-right-corner{
+margin-left: auto;
 }
+
 
 .profile-icon {
   font-size: 30px;
@@ -60,7 +49,8 @@
 
 .notification-bell {
   font-size: 24px;
-  color:rgb(25, 39, 25);
+  color:#4db52a;
+  ;
 }
 
 
@@ -72,7 +62,7 @@
   width: 305px;
   height: 1100px; 
   margin-bottom:500px;
-  background-color: rgb(25, 39, 25);
+
   color: #4db52a ;
   padding-top:350px;
 

@@ -475,6 +475,8 @@ class BlogPostLikesToggle(Resource):  # Renamed resource
 
 
 
+
+
 # Add routes for all resources
 api.add_resource(UserAuthentication, '/auth')
 #api.add_resource(BlogPosts, '/blogposts')

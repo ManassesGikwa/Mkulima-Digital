@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import PostAuthor from './PostAuthor';
 
 const PostItem = ({ postID, title, content, userID, expertID, image, time }) => {
 const PostItem = ({ postID, title, content, userID, expertID, image, time }) => {
@@ -98,32 +97,22 @@ const PostItem = ({ postID, title, content, userID, expertID, image, time }) => 
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
         if (commentText.trim()) {
-            try {
-                const response = await fetch(`http://localhost:5555/blogposts/${postID}/comments`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: commentText })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to post comment');
-                }
-
-                const newComment = await response.json();
-                setComments([...comments, newComment]);
-                setCommentText("");
-            } catch (error) {
-                console.error(error);
-            }
+            // Simulate API call to add a new comment
+            const newComment = {
+                id: comments.length + 1,
+                text: commentText,
+                user: "Current User", // You can replace this with the actual user data
+                timestamp: new Date().toISOString() // Timestamp for sorting comments
+            };
+            setComments([...comments, newComment]);
+            setCommentText("");
+            // In a real application, you would make a fetch request to add the comment on the server
         }
     };
 
     const toggleComments = () => {
         setShowAllComments(!showAllComments);
     };
-
-    const shortDescription = content && content.length > 145 ? `${content.substr(0, 145)}...` : content;
-    const postTitle = title && title.length > 30 ? `${title.substr(0, 30)}...` : title;
 
     return (
         <article className="post">

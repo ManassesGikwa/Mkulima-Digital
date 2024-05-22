@@ -525,6 +525,8 @@ class Notifications(Resource):
 api.add_resource(Notifications, '/notifications', '/notifications/<int:id>', '/users/<int:user_id>/notifications')
 
 
+
+
 # Add routes for all resources
 api.add_resource(UserRegistration, '/register')
 api.add_resource(UserLogin, '/login')

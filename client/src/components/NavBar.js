@@ -72,14 +72,14 @@ const NavBar = () => {
         </div>
 
         <div className="user-profile">
-        <Link to="/dashboard" className="user-profile">
+        <Link to="/dashboard">
              {expert && (
            <div>
-            <h3 style={{'marginBottom': '15px', }}>{expert.name}<FaUser className='profile-icon' /></h3>
-            <p style={{ 'fontSize': "20px",}}>{expert.expertise_area}</p>
-            </div>
+            <h3 style={{'color':'white','fontSize': "20px", }}>{expert.name}<FaUser className='profile-icon' style={{'marginRight':'5px'}} /></h3>
+            <p style={{ 'color':'white' ,'fontSize': "15px", 'textAlign':'center'}}>{expert.expertise_area}</p>
+          </div>
             )}
-       </Link>
+  </Link>
         </div>
       </nav>
     </div>

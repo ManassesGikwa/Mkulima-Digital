@@ -42,30 +42,26 @@ margin-left: auto;
 
 .notification-container {
   display: flex;
-  align-items: center;
-  margin-left: auto; /* Pushes the container to the right edge */
+  /* align-items: center; */
+  margin-left: auto; 
   color: green;
 }
 
 .notification-bell {
   font-size: 24px;
   color:#4db52a;
-  ;
+  
 }
 
 
 
 .sidebar {
   position: absolute;
-  border-radius: 10px 0px 0 10px ;
+  /* border-radius: 10px 0px 0 10px ; */
   margin-right:1150px;
   width: 305px;
-  height: 1100px; 
-  margin-bottom:500px;
-
-  color: #4db52a ;
-  padding-top:350px;
-
+  color: #ffffff ;
+  padding-top:150px;
   padding-left: 50px;
   box-sizing: border-box;
 }
@@ -75,6 +71,16 @@ margin-left: auto;
   align-items: center;
   margin-top: 35px;
   font-size: 22px;
+
+}
+
+.sidebar-item:hover{
+ 
+  background-color:#4db52a;
+  height: 80px;
+  padding: 10px;
+  border-radius: 10px;
+
 }
 
 .sidebar-icon {
@@ -84,15 +90,15 @@ margin-left: auto;
 .main-content {
   margin-left: 320px; /* Width of the sidebar + some margin */
   flex: 1;
-  margin-top: 80px; /* Ensure it is below the top-bar */
+  margin-top: px; /* Ensure it is below the top-bar */
   width: calc(100% - 340px); /* Full width minus sidebar width and some margin */
 }
 
 .options-button {
   background-color: rgb(25, 39, 25);
-;
+
   border-color: #4db52a;
-  color:#4db52a ;
+  color:#ffffff ;
 }
 
 .options-button:hover {
@@ -129,8 +135,14 @@ margin-left: auto;
 }
 
 .new-post-button {
-  background-color: green;
+  background-color:rgb(25, 39, 25) ;
   color: white;
+  border-color: #4db52a;
+}
+
+.new-post-button:hover{
+  background-color: #4db52a ;
+  border-color: #ffffff;
 }
 
 .content-sections {
@@ -179,6 +191,7 @@ margin-left: auto;
   flex: 1;
   margin-left: 60px;
   margin-bottom: 50px;
+  margin-top: 50px;
 }
 
 .followers, .following, .communities {
@@ -212,6 +225,27 @@ margin-left: auto;
 
 .communities-icon {
   font-size: 50px;
+}
+
+.meta-info {
+  display: flex;
+  align-items: center;
+  color:rgb(25, 39, 25) ;
+}
+
+.meta-info span {
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.meta-info span svg {
+  margin-right: 5px;
+}
+
+.article-card img{
+  width: 200px;
+  height: 200x;
 }
 
 

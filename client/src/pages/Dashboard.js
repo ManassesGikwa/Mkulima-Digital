@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaChartBar, FaPenFancy, FaEnvelope, FaBell, FaUser, FaUserFriends, FaUsers, FaUsersCog } from 'react-icons/fa';
+import { FaChartBar, FaPenFancy, FaEnvelope, FaBell, FaCalendarAlt, FaComments, FaHeart, FaUserFriends, FaUsersCog } from 'react-icons/fa';
 import ProfileUpdateForm from './ProfileUpdateForm';
 import CommunityCreationForm from './CommunityCreationForm';
 import Pagination from 'react-bootstrap/Pagination';
@@ -10,6 +10,7 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal';
 import { Link } from 'react-router-dom';
+import CreatePost from './CreatePost';
 
 function ExpertDashboard() {
     const [expert, setExpert] = useState(null);
@@ -24,12 +25,17 @@ function ExpertDashboard() {
     const [showModal, setShowModal] = useState(false);
     const [showCommunities, setShowCommunities] = useState(false);
     const [showFollowers, setShowFollowers] = useState(false);
+    const [showCreatePost, setShowCreatePost] = useState(false);
+    const [expertArticles, setExpertArticles] = useState([]);
+    const [showExpertArticles, setShowExpertArticles] = useState(false);
 
     const [updatedProfileData, setUpdatedProfileData] = useState({
         name: "",
         expertise_area: "",
         bio: ""
     });
+
+  
 
     useEffect(() => {
         // Fetch expert data
@@ -38,6 +44,7 @@ function ExpertDashboard() {
             .then(data => setExpert(data))
             .catch(error => console.error('Error fetching expert data:', error));
 
+       
         // Fetch posts
         fetch('/blogposts')
             .then(response => response.json())
@@ -60,18 +67,22 @@ function ExpertDashboard() {
             .catch(error => console.error('Error fetching user data:', error));
 
         // Fetch notifications
-        fetch('/notifications')
-            .then(response => response.json())
-            .then(data => setNotifications(data))
-            .catch(error => console.error('Error fetching notifications:', error));
+        fetchNotifications();
 
 
         fetch('/communities')
             .then(response => response.json())
             .then(data => setCommunities(data))
             .catch(error => console.error('Error fetching communities:', error));
-   
+
+            // fetch(`/user/1/notifications`)
+            // .then(response => response.json())
+
+            // .then(data => setNotifications(data))
+            // .catch(error => console.error('Error fetching notifications:', error));
     }, []);
+   
+   
 
     useEffect(() => {
         console.log('Communities updated:', communities);
@@ -116,6 +127,52 @@ function ExpertDashboard() {
         setCommunities(prevCommunities => [...prevCommunities, communityData]);
     }
 
+    function handleNewPostClick(){
+        setShowCreatePost(true);
+    };
+
+    function handleCloseCreatePost () {
+        setShowCreatePost(false);
+    };
+
+    const handleMyPostsClick = () => {
+        // Toggle the visibility of expert articles
+        setShowExpertArticles(!showExpertArticles);
+
+        // If expert articles section is being shown and expert articles are not fetched yet, fetch them
+        if (!showExpertArticles) {
+            fetch('/experts/1/blogposts')
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Failed to fetch expert articles');
+                })
+                .then(data => {
+                    setExpertArticles(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching expert articles:', error);
+                });
+        }
+    };
+
+
+     // Function to fetch notifications from API
+  const fetchNotifications = async () => {
+    try {
+      const response = await fetch('/notifications'); // Adjust the endpoint as per your API
+      if (!response.ok) {
+        throw new Error('Failed to fetch notifications');
+      }
+      const data = await response.json();
+      setNotifications(data.notifications); // Assuming the API response contains notifications array
+    } catch (error) {
+      console.error('Error fetching notifications:', error.message);
+    }
+  };
+
+
     // Pagination logic
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -130,10 +187,18 @@ function ExpertDashboard() {
         <div className='parent-container'>
             <div className="dashboard">
                 <div className='top-right-corner'>
-                    <div className="notification-container">
-                        <FaBell className="notification-bell" />
-                        {notifications.length > 0 && <span className="notification-dot"></span>}
+                <div className="notification-container">
+                <FaBell className="notification-bell" />
+                    {notifications.length > 0 && <span className="notification-dot"></span>}
+                    {/* Render notifications */}
+                    <div className="notification-list">
+                    {Array.isArray(notifications) && notifications.map(notification => (
+                            <div key={notification.id} className="notification-item">
+                                <span>{notification.content}</span>
+                            </div>
+                        ))}
                     </div>
+                        </div>
                     <div className="expert-profile-topbar">
                         <Dropdown as={ButtonGroup}>
                             <Button className="options-button">Options</Button>
@@ -168,14 +233,49 @@ function ExpertDashboard() {
                     </Modal>
                 </div> 
                 <div className='sidebar'>
+                    <Link to = {'/blogs'} style={{'color':'white'}}>
+
                     <div className='sidebar-item'>
                         <FaChartBar className="sidebar-icon" />
                         <span>My Feed</span>
                     </div>
-                    <div className='sidebar-item'>
-                        <FaPenFancy className='sidebar-icon' />
-                        <span>My Posts & Drafts</span>
+
+                    </Link>
+                   
+                   
+                    <div className='sidebar-item' onClick={handleMyPostsClick}>
+                    <FaPenFancy className='sidebar-icon' />
+                    <span>My Articles</span>
                     </div>
+                    {showExpertArticles && (
+                         <div className='article-grid'>
+                                    {expertArticles.map(article => (
+                               <div key={article.id} className='article-card'>
+                             
+                                <img src={article.image} alt={article.title} />
+                                
+                                <div className='card-content' >
+                                 <h2 style={{ fontSize: "12px" }}>{article.title}</h2>
+                                 <p style={{ fontSize: "12px" }}>{article.content}</p>
+                                 <div className='meta-info'>
+                                      <span>
+                                     <FaCalendarAlt /> {article.created_at}
+                                    </span>
+                                    <span>
+                                     <FaHeart style={{ color: 'red' }} /> {article.total_likes}
+                                    </span>
+
+                                    <span>
+                                    <FaComments /> {article.total_comments}
+                                    </span>
+                                    
+                                </div>
+                             </div>
+                         </div>
+                            ))}
+                        </div>
+                    )}
+               
                     <div className="sidebar-item">
                         <FaEnvelope className='sidebar-icon' />
                         <span>Inbox</span>
@@ -185,81 +285,93 @@ function ExpertDashboard() {
                     <div className='banner'>
                         <h3 style={{ color: 'white' }}>Hello Farmer2024!</h3>
                         <h4 style={{ color: 'white' }}>Give us an update on how your farming experience is going</h4>
-                        <Button className='new-post-button'>Write New Post</Button>
+                        <Button className='new-post-button' onClick={handleNewPostClick}>Write New Post</Button>
                     </div>
-                    <div className="content-sections">
-                        <div className="top-articles">
-                            <h3 className='toparticles-h3'>Top Articles</h3>
-                            {loading ? (
-                                <Spinner style={{ color: '#EE5E21' }} animation='border' role='status'>
-                                    <span className='visually-hidden'>Loading...</span>
-                                </Spinner>
-                            ) : (
-                                <div className='article-grid'>
-                                    {visibleArticles.map(article => (
-                                        <div key={article.id} className='article-card'>
-                                            <Link to={`/blogposts/${article.id}`}>
-                                            <img src={article.image} alt={article.title} />
-                                            <div className='card-content'>
-                                                <h2 style={{ fontSize: "12px" }}>{article.title}</h2>
-                                                <p style={{ fontSize: "12px" }}>{article.content}</p>
-                                                <div className='meta-info'>
-                                                    <span>{article.created_at}</span>
-                                                    <span>{article.total_comments}</span>
-                                                    <span>{article.total_likes}</span>
+                    {showCreatePost ? (
+                        <div className="create-post-view">
+                            <CreatePost onClose={handleCloseCreatePost} />
+                        </div>
+                    ) : (
+                        <div className="other-dashboard-content">
+                            <div className="content-sections">
+                                <div className="top-articles">
+                                    <h3 className='toparticles-h3'>Top Articles</h3>
+                                    {loading ? (
+                                        <Spinner style={{ color: '#EE5E21' }} animation='border' role='status'>
+                                            <span className='visually-hidden'>Loading...</span>
+                                        </Spinner>
+                                    ) : (
+                                        <div className='article-grid'>
+                                            {visibleArticles.map(article => (
+                                                <div key={article.id} className='article-card'>
+                                                    <img src={article.image} alt={article.title} />
+                                                    <div className='card-content'>
+                                                        <h2 style={{ fontSize: "12px" }}>{article.title}</h2>
+                                                        <p style={{ fontSize: "12px" }}>{article.content}</p>
+                                                        <div className='meta-info'>
+                                                            <span>
+                                                                <FaCalendarAlt /> {article.created_at}
+                                                            </span>
+                                                            <span>
+                                                             <FaHeart style={{ color: 'red' }} /> {article.total_likes}
+                                                            </span>
+                                                            <span>
+                                                                <FaComments /> {article.total_comments}
+                                                            </span>
+                                                            
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            </Link>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                            <Pagination style={{ display: 'flex', justifyContent: 'center' }}>
-                                {Array.from({ length: Math.ceil(posts.length / postsPerPage) }, (_, i) => (
-                                    <Pagination.Item key={i + 1} active={i + 1 === currentPage} onClick={() => paginate(i + 1)}>
-                                        {i + 1}
-                                    </Pagination.Item>
-                                ))}
-                            </Pagination>
-                        </div>
-
-                        <div className='expert-info'>
-                            <div className='expert-details' style={{ color: 'white' }}>
-                                {expert && (
-                                    <div>
-                                        <h4 style={{ fontSize: "20px", color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Bio</h4>
-                                        <p style={{ fontSize: "20px", color: 'white' }}>{expert.bio}</p>
-                                    </div>
-                                )}
-                            </div>
-                            <div className='followers'>
-                                <FaUserFriends className='follower-icon' />
-                                <h4>Followers</h4>
-                                <p onClick={toggleFollowers}>{followers.length}</p>
-                                    {showFollowers && (
-                                        <ul>
-                                            {followers.map((follower, index) => (
-                                                <li key={index}>{follower}</li>
                                             ))}
-                                        </ul>
+                                        </div>
                                     )}
-                            </div>
-                            <div className='communities'>
-                                <FaUsersCog className='communities-icon' />
-                                <h4>Communities</h4>
-                                <p onClick={() => setShowCommunities(!showCommunities)} style={{ cursor: 'pointer' }}>
-                                    {communities.length}
-                                </p>
-                                {showCommunities && (
-                                    <ul>
-                                        {communities.map((community, index) => (
-                                            <li key={index}>{community.name}</li>
+                                    <Pagination style={{ display: 'flex', justifyContent: 'center' }}>
+                                        {Array.from({ length: Math.ceil(posts.length / postsPerPage) }, (_, i) => (
+                                            <Pagination.Item key={i + 1} active={i + 1 === currentPage} onClick={() => paginate(i + 1)}>
+                                                {i + 1}
+                                            </Pagination.Item>
                                         ))}
-                                    </ul>
-                                )}
+                                    </Pagination>
+                                </div>
+                                <div className='expert-info'>
+                                    <div className='expert-details' style={{ color: 'white' }}>
+                                        {expert && (
+                                            <div>
+                                                <h4 style={{ fontSize: "20px", color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Bio</h4>
+                                                <p style={{ fontSize: "20px", color: 'white' }}>{expert.bio}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className='followers'>
+                                        <FaUserFriends className='follower-icon' />
+                                        <h4>Followers</h4>
+                                        <p onClick={toggleFollowers}>{followers.length}</p>
+                                        {showFollowers && (
+                                            <ul>
+                                                {followers.map((follower, index) => (
+                                                    <li key={index}>{follower}</li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
+                                    <div className='communities'>
+                                        <FaUsersCog className='communities-icon' />
+                                        <h4>Communities</h4>
+                                        <p onClick={() => setShowCommunities(!showCommunities)} style={{ cursor: 'pointer' }}>
+                                            {communities.length}
+                                        </p>
+                                        {showCommunities && (
+                                            <ul>
+                                                {communities.map((community, index) => (
+                                                    <li key={index}>{community.name}</li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>

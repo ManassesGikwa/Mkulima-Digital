@@ -241,6 +241,23 @@ nav>div {
   color: #fff;
 }
 
+.user-profile{
+  background-color:rgb(25, 39, 25) ;
+  padding: 20px;
+  border:2px solid #4db52a;
+  border-radius:50px;
+  height: 90px;
+  overflow: hidden;
+}
+
+.user-profile:hover{
+  background-color:#4db52a ;
+  border-color: white ;
+}
+
+.profile-icon{
+  margin-left: 8px;
+}
 /* =========================================IMAGE SLIDER ====================================================*/
 
 .body1 {
@@ -646,21 +663,23 @@ nav>div {
     padding-bottom: 2rem;
     transition: var(--transition);
     cursor: default;
+   
   }
   
   .post:hover{
     box-shadow: 0 1.5rem 2rem rgba(0,0,0,0.1);
   }
   
-  .post__thumbnail{
+  /* .post__thumbnail{
     border-radius: var(--radius-3);
     overflow: hidden;
     height: 16rem;
     position: relative;
-  }
+  } */
   
-  .post__content{
-    margin-top: 1.5rem;
+  .post__content {
+    max-width: 800px; 
+    margin: 0 auto; 
   }
   
   .post__content h3{
@@ -669,26 +688,96 @@ nav>div {
   
   .post__footer{
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: flex-end;
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
   
-  .post__author{
+  /* .post__author{
     display: flex;
     gap: 1rem;
     align-items: flex-start;
     position: relative;
     margin-bottom: 0.3rem;
     
-  }
+  } */
   
-  .post__author-avatar{
+  /* .post__author-avatar{
     width: 2.5rem;
     aspect-ratio: 1/1;
     border-radius: var(--radius-2);
     overflow: hidden;
+  } */
+
+  .posts {
+    padding: 20px;
   }
+  
+  
+  
+  
+  
+  .post__thumbnail img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  
+  .post__content {
+    padding: 20px;
+  }
+  
+  .post__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+  }
+  
+  .post__footer button {
+    margin-right: 0.5rem;
+  }
+  
+  .post__comments {
+    margin-top: 20px;
+  }
+  
+  .comment {
+    margin-bottom: 10px;
+  }
+  
+  .toggle-comments-btn {
+    margin-top: 10px;
+  }
+
+  /* Custom pagination styles */
+.pagination {
+  margin-top: 20px;
+}
+
+/* Style for active page */
+.pagination .page-item.active .page-link {
+  background-color:#4db52a; /* Blue color */
+  border-color: #ffffff; /* Blue color */
+  color: #fff; /* White color */
+}
+
+/* Style for page link */
+.pagination .page-link {
+  color: #ffffff; /* Blue color */
+  background-color:  rgb(25, 39, 25);
+  border: 1px solid  #fff; /* White color */
+  ;; /* Blue color */
+}
+
+/* Style for hover effect on page link */
+.pagination .page-link:hover {
+  background-color: #4db52a;; /* Blue color */
+  border-color: #4db52a; /* Blue color */
+  color: #fff; /* White color */
+}
+
+  
 
   /* =====================================================================COMMENTS SECTION=========================================*/
   .post__comments {

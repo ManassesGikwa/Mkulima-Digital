@@ -5,6 +5,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import './index.css';
 import App from './components/App';
+import NavBar from './components/NavBar';
 import ErrorPage from './pages/ErrorPage';
 import Home from './pages/Home';
 import PostDetail from './pages/PostDetail';
@@ -44,7 +45,8 @@ const router = createBrowserRouter([
       {path: "authors", element: <Authors />},
       {path: "create", element: <CreatePost/>},
       {path: "posts/users/:id", element: <AuthorPosts />},
-      {path: "community/:id", element: <CommunityDetails />}
+      {path: "community/:id", element: <CommunityDetails />},
+      {path: "navbar", element: <NavBar/>},
       // {path: "myposts/:id", element: <Dashboard />},
       // {path: "posts/:id/edit", element: <EditPost />},
       // {path: "posts/:id/delete", element: <DeletePost />},

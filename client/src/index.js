@@ -20,7 +20,10 @@ import Finance from './pages/Finance';
 import Support from './pages/Support';
 import Dashboard from './pages/Dashboard';
 import EditPost from './pages/EditPost';
-import CommunityDetails from './CommunityDetails';
+import CommunityDetails from './pages/CommunityDetails';
+import Conversation from './pages/Messages';
+import MessageInbox from './pages/MessageInbox';
+import EditCommunity from './pages/EditCommunity';
 
 
 const router = createBrowserRouter([
@@ -46,9 +49,7 @@ const router = createBrowserRouter([
       {path: "authors", element: <Authors />},
       {path: "create", element: <CreatePost/>},
       {path: "posts/users/:id", element: <AuthorPosts />},
-      // {path: "myposts/:id", element: <Dashboard />},
-      // {path: "posts/:id/edit", element: <EditPost />},
-      // {path: "posts/:id/delete", element: <DeletePost />},
+      { path: "community/:id/edit", element: <EditCommunity /> }
       // {path: "logout", element: <Logout />},
     ]
   }
@@ -60,3 +61,8 @@ root.render(
     <RouterProvider router={router}/>
   </React.StrictMode>
 );
+
+
+
+
+ 

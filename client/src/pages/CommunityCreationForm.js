@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './CommunityCreationForm.css';
 
 function CommunityCreationForm({ onSubmit }) {
     const [formData, setFormData] = useState({
@@ -14,28 +15,61 @@ function CommunityCreationForm({ onSubmit }) {
         }));
     };
 
-    const handleSubmit = e => {
+    async function handleSubmit(e) {
         e.preventDefault();
-        onSubmit(formData);
-      
-        setFormData({
-            name: '',
-            description: ''
-        });
-    };
+
+        try {
+            const response = await fetch('/communities', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+            if (response.ok) {
+                onSubmit(formData); // Call the onSubmit prop with the new community data
+                setFormData({
+                    name: '',
+                    description: ''
+                });
+            } else {
+                console.error('Failed to add new community');
+            }
+        } catch (error) {
+            console.error('Error adding a new community:', error);
+        }
+    }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
-                Community Name:
-                <input type="text" name="name" value={formData.name} onChange={handleChange} />
-            </label>
-            <label>
-                Description:
-                <textarea name="description" value={formData.description} onChange={handleChange} />
-            </label>
-            <button type="submit">Create Community</button>
-        </form>
+        <div className="community-form-container">
+            <h2 className="community-form-title">Create a New Community</h2>
+            <form onSubmit={handleSubmit}>
+                <div className="community-form-group">
+                    <label htmlFor="name" className="community-form-label">Community Name:</label>
+                    <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="community-form-input"
+                        placeholder="Enter community name"
+                    />
+                </div>
+                <div className="community-form-group">
+                    <label htmlFor="description" className="community-form-label">Description:</label>
+                    <textarea
+                        name="description"
+                        id="description"
+                        value={formData.description}
+                        onChange={handleChange}
+                        className="community-form-textarea"
+                        placeholder="Enter community description"
+                    />
+                </div>
+                <button type="submit" className="community-form-submit">Create Community</button>
+            </form>
+        </div>
     );
 }
 

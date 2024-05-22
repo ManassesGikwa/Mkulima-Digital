@@ -158,8 +158,8 @@ const Login = () => {
   const handleSignInClick = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
-    const usernameOrEmail = formData.get('email'); // Assuming the form has a field for email
-    const password = formData.get('password');
+    const usernameOrEmail = formData.get('email'); // Ensure the input field name is 'email'
+    const password = formData.get('password'); // Ensure the input field name is 'password'
     
     const userData = {
       action: 'login',
@@ -182,11 +182,12 @@ const Login = () => {
         // If the response is successful (status code 200), log in was successful
         const data = await response.json();
         console.log('Login successful:', data);
-        // You can handle further actions here, such as redirecting the user to a dashboard page
+        // Handle further actions here, such as redirecting the user to a dashboard page
       } else {
         // If the response is not successful, handle the error
-        console.error('Login failed:', response.statusText);
-        // You can display an error message to the user
+        const errorText = await response.text();
+        console.error('Login failed:', errorText);
+        // Optionally display an error message to the user
       }
     } catch (error) {
       console.error('Error signing in:', error);

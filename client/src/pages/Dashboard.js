@@ -208,7 +208,7 @@ function ExpertDashboard() {
                             }} userId={1} />}
                         </Modal.Body>
                     </Modal>
-                </div>
+                </div> 
                 <div className='sidebar'>
                     <Link to={'/blogs'} style={{ 'color': 'white' }}>
                         <div className='sidebar-item'>

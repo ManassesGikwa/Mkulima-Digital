@@ -1,4 +1,4 @@
-.parent-container {
+parent-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -36,7 +36,6 @@
   z-index: 1;
   margin-top: -20px;
   margin-left:-5px;
-  
 }
 
 .profile-icon {
@@ -54,16 +53,14 @@
 .notification-container {
   display: flex;
   align-items: center;
-  margin-left: auto; /* Pushes the container to the right edge */
+  margin-left: auto;
   color: green;
 }
 
 .notification-bell {
   font-size: 24px;
-  color:rgb(25, 39, 25);
+  color: rgb(25, 39, 25);
 }
-
-
 
 .sidebar {
   position: absolute;
@@ -75,7 +72,6 @@
   background-color: rgb(25, 39, 25);
   color: #4db52a ;
   padding-top:350px;
-
   padding-left: 50px;
   box-sizing: border-box;
 }
@@ -85,6 +81,19 @@
   align-items: center;
   margin-top: 35px;
   font-size: 22px;
+  cursor: pointer; /* Add cursor pointer for all sidebar items */
+}
+
+.sidebar-item:hover { /* Apply hover effect for all sidebar items */
+  color: #4db52a; /* Change text color on hover */
+}
+
+.sidebar-item.inbox { /* Specific styling for the inbox item */
+  cursor: pointer; /* Change cursor to pointer */
+}
+
+.sidebar-item.inbox:hover { /* Specific hover effect for the inbox item */
+  color: #228235; /* Change text color on hover */
 }
 
 .sidebar-icon {
@@ -100,9 +109,8 @@
 
 .options-button {
   background-color: rgb(25, 39, 25);
-;
   border-color: #4db52a;
-  color:#4db52a ;
+  color: #4db52a;
 }
 
 .options-button:hover {
@@ -150,22 +158,22 @@
 }
 
 .top-articles {
-  width: 60%; /* Ensures it takes full width available */
-  height: 80%;
+  width: 100%; /* Adjusted width to take full width available */
+  height: auto; /* Removed fixed height */
   background-color: #ffffff;
   padding: 20px;
   box-sizing: border-box;
 }
 
-.toparticles-h3{
-  color: #4db52a ;
+.toparticles-h3 {
+  color: #4db52a;
 }
 
 .article-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 2rem;
-  padding: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(50px, 0.5fr));
+  gap: 1rem;
+  padding: 0.5rem;
 }
 
 .article-card {
@@ -191,8 +199,10 @@
   margin-bottom: 50px;
 }
 
-.followers, .following, .communities {
-  background-color: #4db52a ;
+.followers,
+.following,
+.communities {
+  background-color: #4db52a;
   border-radius: 10px;
   padding: 10px;
   text-align: center;
@@ -200,7 +210,9 @@
   color: #ffffff;
 }
 
-.followers:hover, .following:hover, .communities:hover {
+.followers:hover,
+.following:hover,
+.communities:hover {
   transform: scale(1.05);
   background-color: rgb(159, 209, 150);
   box-shadow: 0 30px 20px rgba(0, 0, 0, 0.2);
@@ -224,9 +236,6 @@
   font-size: 50px;
 }
 
-
-
-
 /* Responsive styling */
 @media screen and (max-width: 768px) {
   .main-content {
@@ -244,11 +253,14 @@
     margin-left: 0;
   }
 
-  .followers, .following, .communities {
+  .followers,
+  .following,
+  .communities {
     width: 100%;
   }
 
-  .top-bar, .expert-profile-topbar {
+  .top-bar,
+  .expert-profile-topbar {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -257,4 +269,30 @@
     margin-left: 0;
     margin-top: 10px;
   }
+}
+.followers, .following, .communities {
+  background-color: #4db52a;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ffffff;
+  cursor: pointer; /* Add this line to change the cursor to a hand */
+}
+
+.followers:hover, .following:hover, .communities:hover {
+  transform: scale(1.05);
+  background-color: rgb(159, 209, 150);
+  box-shadow: 0 30px 20px rgba(0, 0, 0, 0.2);
+} 
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  height: 90vh; /* Adjusted height to 90% of the viewport height */
+  margin: 20px auto 0;
+  padding: 20px;
+  background-color: rgb(25, 39, 25);
+  border-radius: 15px;
 }

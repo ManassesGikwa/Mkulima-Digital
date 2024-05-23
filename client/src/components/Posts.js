@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import PostItem from "./PostItem";
 import Pagination from "react-bootstrap/Pagination";
 
+
 const Posts = () => {
     const [posts, setPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [postsPerPage] = useState(5); // Number of posts to display per page
+    const [postsPerPage] = useState(3); // Number of posts to display per page
     const [loading, setLoading] = useState(true); // Track loading state
     const [error, setError] = useState(null); // Track error state
 

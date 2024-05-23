@@ -534,6 +534,19 @@ class Communities(Resource):
         db.session.add(new_community)
         db.session.commit()
         return jsonify(new_community.to_dict()), 201
+        # DELETE method to delete a community
+    def delete(self, id):
+        community = Community.query.get_or_404(id)
+        db.session.delete(community)
+        db.session.commit()
+        return jsonify({'message': 'Community deleted successfully'})
+       
+    @app.route('/communities/<int:id>/like', methods=['POST'])
+    def like_community(id):
+        community = Community.query.get_or_404(id)
+        community.likes += 1
+        db.session.commit()
+        return jsonify({'message': 'Community liked successfully'})
 
 class CommunityDetails(Resource):
     def get(self, id):

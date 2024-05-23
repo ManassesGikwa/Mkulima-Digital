@@ -1,75 +1,40 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate instead of useHistory
-import PostAuthor from '../components/PostAuthor';
-import Thumbnail from '../images2/blog22.jpg';
+import React, { useState, useEffect } from 'react';
 
-const PostDetail = ({ postID }) => {
-    const [isLiked, setIsLiked] = useState(false);
-    const [likeCount, setLikeCount] = useState(0);
-    const [isFollowed, setIsFollowed] = useState(false);
-    const navigate = useNavigate(); // Use useNavigate for navigation
+const PostDetail = ({ postId, onClose }) => {
+    const [post, setPost] = useState(null);
 
-    const handleLike = () => {
-        if (!isLiked) {
-            // Simulate API call to increment like count (replace with actual backend call)
-            setLikeCount(likeCount + 1);
-            setIsLiked(true);
-        }
-    };
+    useEffect(() => {
+        // Fetch the specific post detail from '/blogposts/:postId'
+        fetch(`/blogposts/${postId}`)
+            .then(response => response.json())
+            .then(data => setPost(data))
+            .catch(error => console.error('Error fetching post detail:', error));
+    }, [postId]);
 
-    const handleFollow = () => {
-        if (!isFollowed) {
-            // Simulate API call to perform follow action (replace with actual backend call)
-            setIsFollowed(true);
-        }
-    };
-
-    const handleDelete = () => {
-        fetch(`http://127.0.0.1:5555/blogposts/${postID}`, {
-            method: 'DELETE',
-        })
-        .then((response) => {
-            if (response.ok) {
-                console.log('Post deleted successfully');
-                navigate('/'); // Redirect to another page after deletion
-            } else {
-                console.error('Failed to delete post');
-            }
-        })
-        .catch(error => {
-            console.error('Error occurred while deleting post:', error);
-        });
-    };
+    if (!post) {
+        return <div>Loading...</div>; // Display a loading indicator while waiting for data
+    }
 
     return (
-        <section className="post-detail">
-            <div className="container post-detail__container">
-                <div className="post-detail__header">
-                    <PostAuthor />
-                    <div className="post-detail__buttons">
-                        <Link to={`/posts/${postID}/edit`} className='btn sm primary'>Edit</Link>
-                        <button className='btn sm danger' onClick={handleDelete}>Delete</button>
-                    </div>
-                </div>
-                <h1>This is the post title!</h1>
-                <div className="post-detail__thumbnail">
-                    <img src={Thumbnail} alt="Post Thumbnail" />
-                </div>
-                <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet aliquid dolorem et sunt maxime corrupti aperiam magnam nemo facere numquam ducimus saepe eum error voluptate architecto nihil nulla, ratione consequuntur eligendi at, laborum voluptatibus, iure a minima. Aliquid, sed iste!
-                </p>
-
-                <div className="post-detail__actions">
-                    <button className='btn category' onClick={handleFollow}>
-                        {isFollowed ? 'Following' : 'Follow'}
+        <div className="post-detail">
+            <div className="post-detail__header">
+                <h2>{post.title}</h2>
+                <button className="close-btn" onClick={onClose}>Close</button>
+            </div>
+            <div className="post-detail__content">
+                <img src={post.image} alt={post.title} />
+                <p>{post.content}</p>
+                <div className="post-detail__footer">
+                    <button className='btn category'>
+                        {post.isFollowed ? 'Following' : 'Follow'}
                     </button>
-                    <button className='btn category' onClick={handleLike}>
-                        {isLiked ? 'Liked' : 'Like'}
+                    <button className='btn category'>
+                        {post.isLiked ? 'Liked' : 'Like'}
                     </button>
-                    <span className="like-count">{likeCount} {likeCount === 1 ? 'like' : 'likes'}</span>
+                    <span className="like-count">{post.likeCount} {post.likeCount === 1 ? 'like' : 'likes'}</span>
                 </div>
             </div>
-        </section>
+        </div>
     );
 };
 

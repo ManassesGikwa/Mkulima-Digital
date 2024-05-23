@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { FaEnvelope } from 'react-icons/fa';
 import './Messages.css';
 
 function Messages() {
     const [messages, setMessages] = useState([]);
+    const [newMessagesCount, setNewMessagesCount] = useState(0);
 
     useEffect(() => {
         fetch('/messages')
             .then(response => response.json())
-            .then(data => setMessages(data))
+            .then(data => {
+                setMessages(data);
+                const newMessages = data.filter(message => !message.read);
+                setNewMessagesCount(newMessages.length);
+            })
             .catch(error => console.error('Error fetching messages:', error));
     }, []);
 

@@ -181,7 +181,7 @@ const Login = () => {
       username: usernameOrEmail, // Ensure this matches the backend expectation
       password: password,
     };
-
+  
     try {
       // Send user credentials to the server for authentication
       const response = await fetch('/auth', {

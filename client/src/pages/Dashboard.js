@@ -36,8 +36,6 @@ function ExpertDashboard() {
         bio: ""
     });
 
-  
-
     useEffect(() => {
         // Fetch expert data
         fetch('/experts/1')
@@ -45,7 +43,6 @@ function ExpertDashboard() {
             .then(data => setExpert(data))
             .catch(error => console.error('Error fetching expert data:', error));
 
-       
         // Fetch posts
         fetch('/blogposts')
             .then(response => response.json())
@@ -82,8 +79,6 @@ function ExpertDashboard() {
             })
             .catch(error => console.error('Error fetching messages:', error));
     }, []);
-   
-   
 
     useEffect(() => {
         console.log('Communities updated:', communities);
@@ -213,7 +208,7 @@ function ExpertDashboard() {
                             }} userId={1} />}
                         </Modal.Body>
                     </Modal>
-                </div> 
+                </div>
                 <div className='sidebar'>
                     <Link to={'/blogs'} style={{ 'color': 'white' }}>
                         <div className='sidebar-item'>

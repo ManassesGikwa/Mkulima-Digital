@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom"; 
+import { NavLink, useHistory } from "react-router-dom";
 import "./signup.css";
+import loginImage from "../assets/login.jpeg";
 
 const SignupForm = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); 
+  const history = useHistory();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +26,7 @@ const SignupForm = () => {
 
       if (response.status === 201) {
         window.alert("User registered successfully!");
-        navigate("/login");
+        history.push("/login");
       } else {
         window.alert("Registration failed. Please try again.");
       }
@@ -39,6 +40,9 @@ const SignupForm = () => {
     <>
       <div className="bckg">
         <div className="register-container">
+          <div className="image-container">
+            <img src={loginImage} alt="Login" className="login-image" />
+          </div>
           <div className="form-container">
             <h1>
               <span
@@ -48,7 +52,7 @@ const SignupForm = () => {
               >
                 🖋️
               </span>{" "}
-              Welcome to Mkulima Digital
+              Getting Started
             </h1>
             <h2>Kindly input your details to continue</h2>
             <form onSubmit={handleSubmit}>

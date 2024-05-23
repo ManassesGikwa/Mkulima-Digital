@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom"; // Import useNavigate instead of useHistory
+import { NavLink, useHistory } from "react-router-dom";
+import loginImage from "../assets/login.jpeg";
+import "./Login.css";
 import "./LoginForm.css";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // Replace useHistory with useNavigate
+  const history = useHistory();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,10 +24,10 @@ const LoginForm = () => {
       });
 
       if (response.status === 200) {
-        const data = await response.json(); 
+        const data = await response.json();
         localStorage.setItem("access_token", data.access_token);
         window.alert("Login successful");
-        navigate("/home"); // Redirect to "/home" upon successful login
+        history.push("/Home"); // Redirect to Home.jsx upon successful login
       } else {
         window.alert("Login failed. Invalid credentials");
       }
@@ -38,6 +40,9 @@ const LoginForm = () => {
   return (
     <div className="custom-login-setup">
       <div className="custom-login-container">
+        <div className="custom-image-container">
+          <img src={loginImage} alt="login" className="login-image" />
+        </div>
         <div className="custom-form-container">
           <p className="hello-text">
             <span role="img" aria-label="waving-hand">
@@ -52,7 +57,6 @@ const LoginForm = () => {
               Username
               <input
                 type="text"
-                id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter your username"
@@ -65,7 +69,6 @@ const LoginForm = () => {
               Password
               <input
                 type="password"
-                id="password"
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

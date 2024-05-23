@@ -1,58 +1,89 @@
-import React, { useState } from 'react'
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
+import React, { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import './CreatePost.css';
 
-const CreatePost = () => {
-  const [title, setTitle] = useState('')
-  const [category, setCategory] = useState('Uncategorized')
-  const [description, setDescription] = useState('')
-  const [thumbnail, setThumbnail] = useState('')
+const CreatePost = ({ onClose }) => {
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    // const [image, setImage] = useState(null); // State to store the selected image file
 
-  const modules = {
-    toolbar: [
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-        ['link', 'image'],
-        ['clean']
-    ],
-  }
+    // const handleImageChange = (event) => {
+    //     const selectedImage = event.target.files[0];
+    //     setImage(selectedImage);
+    // };
 
-  const formats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike', 'blockquote',
-    'list', 'bullet', 'indent',
-    'link', 'image'
-  ]
+    const handleSubmit = (event) => {
+        event.preventDefault();
 
-  const POST_CATEGORIES = ["Agriculture", "Business", "Education", "Entertainment", "Art", "Investment", "Uncategorized", "Weather"]
+        // Create a new FormData object to send both text and file data
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('content', content);
+        // formData.append('image', image);
 
-  return (
-    <section className="create-post">
-      <div className="container">
-        <h2>Create Post</h2>
-        <p className="form__error-message">
-          This is an error message
-        </p>
-        <form className="form create-post__form">
-          <input type="text" placeholder='Title' value={title} onChange={e => setTitle(e.target.value)}autoFocus/>
-          <select name="category" value={category} onChange={e => setCategory(e.target.value)}>
-            {
-              POST_CATEGORIES.map(cat => <option key={cat}>{cat}</option>)
+        // Send a POST request to the "/blogposts" endpoint with the new post data
+        fetch('/blogposts', {
+            method: 'POST',
+            body: formData  // Send the FormData object directly
+        })
+        .then(response => {
+            if (response.ok) {
+                // Post successfully created, you can handle this accordingly
+                console.log('New post created successfully');
+                // Close the form
+                onClose();
+            } else {
+                // Post creation failed, handle error
+                console.error('Failed to create new post');
             }
-          </select>
-          <ReactQuill 
-          modules={modules} 
-          formats={formats} 
-          value={description} 
-          onChange={setDescription}
-          className='q1-editor'/>
-          <input type="file" onChange={e => setThumbnail(e.target.files[0])} accept='png, jpg, jpeg' />
-          <buttton type="submit" className='btn primary'>Create</buttton>
-        </form>
-      </div>
-    </section>
-  )
-}
+        })
+        .catch(error => {
+            console.error('Error creating new post:', error);
+        });
+    };
 
-export default CreatePost
+    return (
+        <div className="create-post-container">
+            <h2>Create a New Post</h2>
+            <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label htmlFor="title">Title:</label>
+                    <input 
+                        type="text" 
+                        id="title" 
+                        value={title} 
+                        onChange={(e) => setTitle(e.target.value)} 
+                        required 
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="content">Content:</label>
+                    <textarea 
+                        id="content" 
+                        value={content} 
+                        onChange={(e) => setContent(e.target.value)} 
+                        required 
+                    />
+                </div>
+                {/* <div className="form-group">
+                    <label htmlFor="image">Choose Image:</label>
+                    <input 
+                        type="file" 
+                        id="image" 
+                        onChange={handleImageChange} 
+                        accept="image/*" 
+                        required 
+                    />
+                </div> */}
+                <div className="form-actions">
+                    <Button type="submit" className='submit-button'>Submit</Button>
+                    <Button type="button"  className='cancel-button' onClick={onClose}>Cancel</Button>
+                </div>
+            </form>
+        </div>
+    );
+};
+
+export default CreatePost;
+
+

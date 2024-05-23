@@ -1,420 +1,14 @@
-# from flask import Flask,jsonify
-# from flask import Flask,jsonify,request
-# from flask_restful import Resource, Api
-# from flask_cors import CORS
-# from flask_migrate import Migrate
-# from models import db, User, Like, BlogPost, Community, Expert, Message, Comment
-# from config import app 
-# from flask_bcrypt import Bcrypt
-# from flask_jwt_extended import JWTManager, create_access_token
-# import os
-# import jwt.exceptions
-
-# app = Flask(__name__)
-# CORS(app, origins='http://localhost:3000')
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.secret_key = 'secret key'
-# app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'jwt-secret-key')
-
-# db.init_app(app)
-# migrate = Migrate(app, db)
-# api = Api(app)
-# bcrypt = Bcrypt(app)
-# jwt = JWTManager(app)
-
-
-# class UserRegistration(Resource):
-#     def post(self):
-#         try:
-#             data = request.json
-#             username = data.get('username')
-#             email = data.get('email')
-#             password = data.get('password')
-
-#             if not username or not email or not password:
-#                 return {'message': 'Username, email, and password are required'}, 400
-
-#             # Check if the username or email already exists
-#             if User.query.filter_by(username=username).first():
-#                 return {'message': 'Username already exists'}, 400
-
-#             if User.query.filter_by(email=email).first():
-#                 return {'message': 'Email already exists'}, 400
-
-#             # Hash the password before storing it
-#             hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-#             new_user = User(username=username, email=email, password=hashed_password)
-#             db.session.add(new_user)
-#             db.session.commit()
-
-#             return {'message': 'User created successfully!'}, 201
-#         except jwt.exceptions.DecodeError as e:
-#             return {'message': 'Registration failed. Error: {}'.format(str(e))}, 500
-
-# class UserLogin(Resource):
-#     def post(self):
-#         data = request.json
-#         username = data.get('username')
-#         password = data.get('password')
-
-#         user = User.query.filter_by(username=username).first()
-#         if user and bcrypt.check_password_hash(user.password, password):
-#             access_token = create_access_token(identity=user.id)
-#             return {'access_token': access_token}, 200
-#         else:
-#             return {'message': 'Invalid username or password'}, 401
-
-
-# # get all users 
-# # Routes for User model
-# @app.route('/users', methods=['GET'])
-# def get_all_users():
-#     users = User.query.all()
-#     user_list = [user.to_dict() for user in users]
-#     return jsonify(user_list)
-
-# # get all BlogPost
-# @app.route('/blogposts')
-# @app.route('/users/<int:user_id>', methods=['GET'])
-# def get_user(user_id):
-#     user = User.query.get_or_404(user_id)
-#     return jsonify(user.to_dict())
-
-# @app.route('/users', methods=['POST'])
-# def create_user():
-#     data = request.json
-#     new_user = User(**data)
-#     db.session.add(new_user)
-#     db.session.commit()
-#     return jsonify(new_user.to_dict()), 201
-
-# @app.route('/users/<int:user_id>', methods=['PUT'])
-# def update_user(user_id):
-#     user = User.query.get_or_404(user_id)
-#     data = request.json
-#     for key, value in data.items():
-#         setattr(user, key, value)
-#     db.session.commit()
-#     return jsonify(user.to_dict())
-
-# @app.route('/users/<int:user_id>', methods=['DELETE'])
-# def delete_user(user_id):
-#     user = User.query.get_or_404(user_id)
-#     db.session.delete(user)
-#     db.session.commit()
-#     return jsonify({'message': 'User deleted successfully'})
-
-
-# # blog posts
-
-# # Get all blog posts
-# @app.route('/blogposts', methods=['GET'])
-# def get_all_blogposts():
-#     blogposts = BlogPost.query.all()
-#     blogposts_list = [blogposts.to_dict() for blogpost in blogposts]
-#     return jsonify(blogposts_list)
-#     blogpost_list = [blogpost.to_dict() for blogpost in blogposts]
-#     return jsonify(blogpost_list)
-
-# # Get a specific blog post by ID
-# @app.route('/blogposts/<int:blogpost_id>', methods=['GET'])
-# def get_blogpost(blogpost_id):
-#     blogpost = BlogPost.query.get_or_404(blogpost_id)
-#     return jsonify(blogpost.to_dict())
-
-# # Create a new blog post
-# @app.route('/blogposts', methods=['POST'])
-# def create_blogpost():
-#     data = request.json
-#     new_blogpost = BlogPost(**data)
-#     db.session.add(new_blogpost)
-#     db.session.commit()
-#     return jsonify(new_blogpost.to_dict()), 201
-
-# # Update a blog post
-# @app.route('/blogposts/<int:blogpost_id>', methods=['PUT'])
-# def update_blogpost(blogpost_id):
-#     blogpost = BlogPost.query.get_or_404(blogpost_id)
-#     data = request.json
-#     for key, value in data.items():
-#         setattr(blogpost, key, value)
-#     db.session.commit()
-#     return jsonify(blogpost.to_dict())
-
-# # Partially update a blog post
-# @app.route('/blogposts/<int:blogpost_id>', methods=['PATCH'])
-# def patch_blogpost(blogpost_id):
-#     blogpost = BlogPost.query.get_or_404(blogpost_id)
-#     data = request.json
-#     for key, value in data.items():
-#         setattr(blogpost, key, value)
-#     db.session.commit()
-#     return jsonify(blogpost.to_dict())
-
-# # Delete a blog post
-# @app.route('/blogposts/<int:blogpost_id>', methods=['DELETE'])
-# def delete_blogpost(blogpost_id):
-#     blogpost = BlogPost.query.get_or_404(blogpost_id)
-#     db.session.delete(blogpost)
-#     db.session.commit()
-#     return jsonify({'message': 'Blog post deleted successfully'})
-
-
-# # Get all communities
-# @app.route('/communities', methods=['GET'])
-# def get_all_communities():
-#     communities = Community.query.all()
-#     community_list = [community.to_dict() for community in communities]
-#     return jsonify(community_list)
-
-# # Get a specific community by ID
-# @app.route('/communities/<int:community_id>', methods=['GET'])
-# def get_community(community_id):
-#     community = Community.query.get_or_404(community_id)
-#     return jsonify(community.to_dict())
-
-# # Create a new community
-# @app.route('/communities', methods=['POST'])
-# def create_community():
-#     data = request.json
-#     new_community = Community(**data)
-#     db.session.add(new_community)
-#     db.session.commit()
-#     return jsonify(new_community.to_dict()), 201
-
-# # Update a community
-# @app.route('/communities/<int:community_id>', methods=['PUT'])
-# def update_community(community_id):
-#     community = Community.query.get_or_404(community_id)
-#     data = request.json
-#     for key, value in data.items():
-#         setattr(community, key, value)
-#     db.session.commit()
-#     return jsonify(community.to_dict())
-
-# # update a community partially
-# @app.route('/communities/<int:community_id>', methods=['PATCH'])
-# def patch_community(community_id):
-#     community = Community.query.get_or_404(community_id)
-#     data = request.json
-#     for key, value in data.items():
-#         setattr(community, key, value)
-#     db.session.commit()
-#     return jsonify(community.to_dict())
-
-# # Delete a community
-# @app.route('/communities/<int:community_id>', methods=['DELETE'])
-# def delete_community(community_id):
-#     community = Community.query.get_or_404(community_id)
-#     db.session.delete(community)
-#     db.session.commit()
-#     return jsonify({'message': 'Community deleted successfully'})
-
-
-# # Get all experts
-# @app.route('/experts', methods=['GET'])
-# def get_all_experts():
-#     experts = Expert.query.all()
-#     expert_list = [expert.to_dict() for expert in experts]
-#     return jsonify(expert_list)
-
-# # Get a specific expert by ID
-# @app.route('/experts/<int:expert_id>', methods=['GET'])
-# def get_expert(expert_id):
-#     expert = Expert.query.get_or_404(expert_id)
-#     return jsonify(expert.to_dict())
-
-# # Create a new expert
-# @app.route('/experts', methods=['POST'])
-# def create_expert():
-#     data = request.json
-#     new_expert = Expert(**data)
-#     db.session.add(new_expert)
-#     db.session.commit()
-#     return jsonify(new_expert.to_dict()), 201
-
-# # Update an expert
-# @app.route('/experts/<int:expert_id>', methods=['PUT'])
-# def update_expert(expert_id):
-#     expert = Expert.query.get_or_404(expert_id)
-#     data = request.json
-#     for key, value in data.items():
-#         setattr(expert, key, value)
-#     db.session.commit()
-#     return jsonify(expert.to_dict())
-
-# # Partially update an expert
-# @app.route('/experts/<int:expert_id>', methods=['PATCH'])
-# def patch_expert(expert_id):
-#     expert = Expert.query.get_or_404(expert_id)
-#     data = request.json
-#     for key, value in data.items():
-#         setattr(expert, key, value)
-#     db.session.commit()
-#     return jsonify(expert.to_dict())
-
-# # Delete an expert
-# @app.route('/experts/<int:expert_id>', methods=['DELETE'])
-# def delete_expert(expert_id):
-#     expert = Expert.query.get_or_404(expert_id)
-#     db.session.delete(expert)
-#     db.session.commit()
-#     return jsonify({'message': 'Expert deleted successfully'})
-
-
-
-# # Get all messages
-# @app.route('/messages', methods=['GET'])
-# def get_all_messages():
-#     messages = Message.query.all()
-#     message_list = [message.to_dict() for message in messages]
-#     return jsonify(message_list)
-
-# # Get a specific message by ID
-# @app.route('/messages/<int:message_id>', methods=['GET'])
-# def get_message(message_id):
-#     message = Message.query.get_or_404(message_id)
-#     return jsonify(message.to_dict())
-
-# # Create a new message
-# @app.route('/messages', methods=['POST'])
-# def create_message():
-#     data = request.json
-#     new_message = Message(**data)
-#     db.session.add(new_message)
-#     db.session.commit()
-#     return jsonify(new_message.to_dict()), 201
-
-# # Update a message
-# @app.route('/messages/<int:message_id>', methods=['PUT'])
-# def update_message(message_id):
-#     message = Message.query.get_or_404(message_id)
-#     data = request.json
-#     for key, value in data.items():
-#         setattr(message, key, value)
-#     db.session.commit()
-#     return jsonify(message.to_dict())
-
-# # Partially update a message
-# @app.route('/messages/<int:message_id>', methods=['PATCH'])
-# def patch_message(message_id):
-#     message = Message.query.get_or_404(message_id)
-#     data = request.json
-#     for key, value in data.items():
-#         setattr(message, key, value)
-#     db.session.commit()
-#     return jsonify(message.to_dict())
-
-# # Delete a message
-# @app.route('/messages/<int:message_id>', methods=['DELETE'])
-# def delete_message(message_id):
-#     message = Message.query.get_or_404(message_id)
-#     db.session.delete(message)
-#     db.session.commit()
-#     return jsonify({'message': 'Message deleted successfully'})
-
-
-# # Get all comments
-# @app.route('/comments', methods=['GET'])
-# def get_all_comments():
-#     comments = Comment.query.all()
-#     comment_list = [comment.to_dict() for comment in comments]
-#     return jsonify(comment_list)
-
-# # Get a specific comment by ID
-# @app.route('/comments/<int:comment_id>', methods=['GET'])
-# def get_comment(comment_id):
-#     comment = Comment.query.get_or_404(comment_id)
-#     return jsonify(comment.to_dict())
-
-# # Create a new comment
-# @app.route('/comments', methods=['POST'])
-# def create_comment():
-#     data = request.json
-#     new_comment = Comment(**data)
-#     db.session.add(new_comment)
-#     db.session.commit()
-#     return jsonify(new_comment.to_dict()), 201
-
-# # Update a comment
-# @app.route('/comments/<int:comment_id>', methods=['PUT'])
-# def update_comment(comment_id):
-#     comment = Comment.query.get_or_404(comment_id)
-#     data = request.json
-#     for key, value in data.items():
-#         setattr(comment, key, value)
-#     db.session.commit()
-#     return jsonify(comment.to_dict())
-
-# # Partially update a comment
-# @app.route('/comments/<int:comment_id>', methods=['PATCH'])
-# def patch_comment(comment_id):
-#     comment = Comment.query.get_or_404(comment_id)
-#     data = request.json
-#     for key, value in data.items():
-#         setattr(comment, key, value)
-#     db.session.commit()
-#     return jsonify(comment.to_dict())
-
-# # Delete a comment
-# @app.route('/comments/<int:comment_id>', methods=['DELETE'])
-# def delete_comment(comment_id):
-#     comment = Comment.query.get_or_404(comment_id)
-#     db.session.delete(comment)
-#     db.session.commit()
-#     return jsonify({'message': 'Comment deleted successfully'})
-
-
-# # Get all likes
-# @app.route('/likes', methods=['GET'])
-# def get_all_likes():
-#     likes = Like.query.all()
-#     like_list = [like.to_dict() for like in likes]
-#     return jsonify(like_list)
-
-# # Get a specific like by ID
-# @app.route('/likes/<int:like_id>', methods=['GET'])
-# def get_like(like_id):
-#     like = Like.query.get_or_404(like_id)
-#     return jsonify(like.to_dict())
-
-# # Create a new like
-# @app.route('/likes', methods=['POST'])
-# def create_like():
-#     data = request.json
-#     new_like = Like(**data)
-#     db.session.add(new_like)
-#     db.session.commit()
-#     return jsonify(new_like.to_dict()), 201
-
-# # Update a like (not typically used for likes)
-# @app.route('/likes/<int:like_id>', methods=['PUT'])
-# def update_like(like_id):
-#     return jsonify({'message': 'Updating a like is not supported'})
-
-# # Delete a like
-# @app.route('/likes/<int:like_id>', methods=['DELETE'])
-# def delete_like(like_id):
-#     like = Like.query.get_or_404(like_id)
-#     db.session.delete(like)
-#     db.session.commit()
-#     return jsonify({'message': 'Like deleted successfully'})
-
-# api.add_resource(UserRegistration, '/register')
-# api.add_resource(UserLogin, '/login')
-# if __name__ == '__main__':
-#     app.run(port=5555, debug=True)
-
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from flask_migrate import Migrate
-from models import db, User, BlogPost, Community, Expert, Message, Comment, Like, CommunityFollowers
+from models import db, User, BlogPost, Community, Expert, Message, Comment, Like, CommunityFollowers, ExpertFollowers, CommunityLikes, Conversation
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token
-import os
-import jwt.exceptions
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+import os   
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app, origins='http://localhost:3000')
@@ -429,60 +23,72 @@ api = Api(app)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
-class UserRegistration(Resource):
+
+import bcrypt
+
+class UserAuthentication(Resource):
     def post(self):
-        try:
-            data = request.json
-            username = data.get('username')
-            email = data.get('email')
-            password = data.get('password')
+        data = request.json
+        action = data.get('action')
+        username = data.get('username')
+        password = data.get('password')
+        email = data.get('email') if action == 'register' else None
+        role = data.get('role') if action == 'register' else None
 
-            if not username or not email or not password:
-                return {'message': 'Username, email, and password are required'}, 400
+        if action == 'register':
+            if not username or not email or not password or not role:
+                return {'message': 'Username, email, password, and role are required'}, 400
 
-            # Check if the username or email already exists
             if User.query.filter_by(username=username).first():
                 return {'message': 'Username already exists'}, 400
 
             if User.query.filter_by(email=email).first():
                 return {'message': 'Email already exists'}, 400
+        
+    # Your code here
 
-            # Hash the password before storing it
-            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-            new_user = User(username=username, email=email, password=hashed_password)
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+            new_user = User(username=username, email=email, password=hashed_password, role=role)
             db.session.add(new_user)
             db.session.commit()
 
+            if role == 'expert':
+                new_expert = Expert(name=username, user_id=new_user.id, created_at=datetime.utcnow())
+                db.session.add(new_expert)
+                db.session.commit()
+
             return {'message': 'User created successfully!'}, 201
-        except jwt.exceptions.DecodeError as e:
-            return {'message': 'Registration failed. Error: {}'.format(str(e))}, 500
 
-class UserLogin(Resource):
-    def post(self):
-        data = request.json
-        username = data.get('username')
-        password = data.get('password')
+        elif action == 'login':
+            if not username or not password:
+                return {'message': 'Username and password are required'}, 400
 
-        user = User.query.filter_by(username=username).first()
-        if user and bcrypt.check_password_hash(user.password, password):
-            access_token = create_access_token(identity=user.id)
-            return {'access_token': access_token}, 200
+            print(f'Login attempt for user: {username}')
+
+            # Check if the user exists in either the users or experts table
+            user = User.query.filter_by(username=username).first()
+            if not user:
+                user = Expert.query.filter_by(name=username).first()
+                print(f'User not found in User table, checked Expert table. Found: {user is not None}')
+
+            if user:
+                print(f'Found user: {user.username}')
+            else:
+                print('User not found')
+
+            # If user is found and password matches, generate access token
+            if user and bcrypt.checkpw(password.encode('utf-8'), user.password):
+                print('Password matched')
+                access_token = create_access_token(identity=user.id)
+                return {'access_token': access_token}, 200
+            else:
+                print('Invalid username or password')
+                return {'message': 'Invalid username or password'}, 401
+
         else:
-            return {'message': 'Invalid username or password'}, 401
-
-class BlogPosts(Resource):
-    def get(self):
-        blogposts = BlogPost.query.all()
-        serialized_blogposts = [blogpost.to_dict() for blogpost in blogposts]
-        return jsonify(serialized_blogposts)
-
-    def post(self):
-        data = request.json
-        new_blogpost = BlogPost(**data)
-        db.session.add(new_blogpost)
-        db.session.commit()
-        return jsonify(new_blogpost.to_dict()), 201
-
+            return {'message': 'Invalid action specified'}, 400
+        
 class BlogPostDetails(Resource):
     def get(self, id):
         blogpost = BlogPost.query.get_or_404(id)
@@ -502,7 +108,7 @@ class BlogPostDetails(Resource):
         db.session.commit()
         return jsonify({'message': 'Blog post deleted successfully'})
 
-# Community Resources
+
 class Communities(Resource):
     def get(self):
         communities = Community.query.all()
@@ -515,6 +121,7 @@ class Communities(Resource):
         db.session.add(new_community)
         db.session.commit()
         return jsonify(new_community.to_dict()), 201
+
 
 class CommunityDetails(Resource):
     def get(self, id):
@@ -535,7 +142,7 @@ class CommunityDetails(Resource):
         db.session.commit()
         return jsonify({'message': 'Community deleted successfully'})
 
-# Expert Resources
+
 class Experts(Resource):
     def get(self):
         experts = Expert.query.all()
@@ -548,6 +155,7 @@ class Experts(Resource):
         db.session.add(new_expert)
         db.session.commit()
         return jsonify(new_expert.to_dict()), 201
+
 
 class ExpertDetails(Resource):
     def get(self, id):
@@ -567,10 +175,20 @@ class ExpertDetails(Resource):
         db.session.delete(expert)
         db.session.commit()
         return jsonify({'message': 'Expert deleted successfully'})
-
-# Message Resources
+    
 class Messages(Resource):
     def get(self):
+        sender_id = request.args.get('sender_id')
+        receiver_id = request.args.get('receiver_id')
+
+        if sender_id and receiver_id:
+            messages = Message.query.filter(
+                ((Message.sender_id == sender_id) & (Message.receiver_id == receiver_id)) |
+                ((Message.sender_id == receiver_id) & (Message.receiver_id == sender_id))
+            ).order_by(Message.created_at).all()
+            serialized_messages = [message.to_dict() for message in messages]
+            return jsonify(serialized_messages)
+        
         messages = Message.query.all()
         serialized_messages = [message.to_dict() for message in messages]
         return jsonify(serialized_messages)
@@ -601,19 +219,47 @@ class MessageDetails(Resource):
         db.session.commit()
         return jsonify({'message': 'Message deleted successfully'})
 
-# Comment Resources
+class Conversation(Resource):
+    def get(self):
+        sender_id = request.args.get('sender_id')
+        receiver_id = request.args.get('receiver_id')
+
+        if not sender_id or not receiver_id:
+            return {'message': 'Sender ID and Receiver ID are required'}, 400
+
+        messages = Message.query.filter(
+            ((Message.sender_id == sender_id) & (Message.receiver_id == receiver_id)) |
+            ((Message.sender_id == receiver_id) & (Message.receiver_id == sender_id))
+        ).order_by(Message.created_at).all()
+
+        serialized_messages = [message.to_dict() for message in messages]
+        return jsonify(serialized_messages)
+
+
 class Comments(Resource):
     def get(self):
         comments = Comment.query.all()
         serialized_comments = [comment.to_dict() for comment in comments]
         return jsonify(serialized_comments)
 
-    def post(self):
-        data = request.json
-        new_comment = Comment(**data)
-        db.session.add(new_comment)
-        db.session.commit()
-        return jsonify(new_comment.to_dict()), 201
+    @app.route('/blogposts/<int:blog_post_id>/comments', methods=['POST'])
+    def post_comment(blog_post_id):
+        data = request.get_json()
+        text = data.get('text')
+        user_id = data.get('user_id')  # Ensure you get the user_id from the request data
+
+        if not text or not user_id:
+            return {'error': 'Missing content or user_id'}, 400
+
+        try:
+            new_comment = Comment(content=text, blog_post_id=blog_post_id, user_id=user_id, created_at=datetime.utcnow())
+            db.session.add(new_comment)
+            db.session.commit()
+            return new_comment.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'error': str(e)}, 500
+
 
 class CommentDetails(Resource):
     def get(self, id):
@@ -634,7 +280,7 @@ class CommentDetails(Resource):
         db.session.commit()
         return jsonify({'message': 'Comment deleted successfully'})
 
-# Like Resources
+
 class Likes(Resource):
     def get(self):
         likes = Like.query.all()
@@ -647,6 +293,7 @@ class Likes(Resource):
         db.session.add(new_like)
         db.session.commit()
         return jsonify(new_like.to_dict()), 201
+
 
 class LikeDetails(Resource):
     def get(self, id):
@@ -666,6 +313,8 @@ class LikeDetails(Resource):
         db.session.delete(like)
         db.session.commit()
         return jsonify({'message': 'Like deleted successfully'})
+
+
 class Users(Resource):
     def get(self):
         users = User.query.all()
@@ -678,6 +327,7 @@ class Users(Resource):
         db.session.add(new_user)
         db.session.commit()
         return jsonify(new_user.to_dict()), 201
+
 
 class UserDetails(Resource):
     def get(self, id):
@@ -697,50 +347,142 @@ class UserDetails(Resource):
         db.session.delete(user)
         db.session.commit()
         return jsonify({'message': 'User deleted successfully'})
-    
+
 class CommunityFollowersResource(Resource):
     def get(self, community_id):
-        # Query the database to retrieve followers of the specified community
         followers = CommunityFollowers.query.filter_by(community_id=community_id).all()
-
-        # Serialize the follower data into JSON format
         serialized_followers = [follower.to_dict() for follower in followers]
-
-        # Return the serialized follower data as the response
         return jsonify(serialized_followers)
+
+
 class BlogPostCommentsResource(Resource):
     def get(self, blogpost_id):
-        # Query the database to retrieve comments associated with the specified blog post
         comments = Comment.query.filter_by(blog_post_id=blogpost_id).all()
-
-        # Serialize the comment data into JSON format
         serialized_comments = [comment.to_dict() for comment in comments]
-
-        # Return the serialized comment data as the response
         return jsonify(serialized_comments)
 
-class BlogPostLikes(Resource):
-    def get(self, blog_post_id):
-        # Query the database to retrieve likes associated with the specified blog post
-        likes = Like.query.filter_by(blog_post_id=blog_post_id).all()
+class BlogPostLikesToggle(Resource):
+    def post(self, blog_post_id):
+        try:
+            data = request.get_json()
+            print("Received data:", data)  # Debugging line
 
-        # Serialize the likes into JSON format
-        serialized_likes = [like.to_dict() for like in likes]
+            like = data.get('like')
+            user_id = data.get('user_id')
 
-        # Return the serialized likes as the response
-        return jsonify(serialized_likes)
+            if user_id is None:
+                return {'error': 'User ID is required'}, 400
+
+            # Check if the user has already liked the post
+            existing_like = Like.query.filter_by(user_id=user_id, blog_post_id=blog_post_id).first()
+
+            if existing_like:
+                # Unlike if already liked
+                if like is not None and like is False:
+                    db.session.delete(existing_like)
+                    db.session.commit()
+            else:
+                # Like if not already liked
+                if like is not None and like is True:
+                    new_like = Like(user_id=user_id, blog_post_id=blog_post_id, total=1)
+                    db.session.add(new_like)
+                    db.session.commit()
+
+            # Calculate total likes for the post
+            total_likes = Like.query.filter_by(blog_post_id=blog_post_id).count()
+
+            return {'isLiked': like, 'count': total_likes}
+        
+        except Exception as e:
+            print("Error:", e)  # Debugging line
+            return {'error': 'An error occurred'}, 500
+
+# Add resource to API with a unique endpoint name
+api.add_resource(BlogPostLikesToggle, '/blogposts/<int:blog_post_id>/likes', endpoint='blog_post_likes_toggle')
+class ExpertFollowResource(Resource):
+    def post(self, expert_id):
+        user_id = request.json.get('user_id')
+        if not user_id:
+            return {'message': 'User ID is required'}, 400
+        expert_follower = ExpertFollowers(expert_id=expert_id, follower_id=user_id)
+        db.session.add(expert_follower)
+        db.session.commit()
+        return jsonify(expert_follower.to_dict()), 201
+
+class CommunityLikeResource(Resource):
+    def post(self, community_id):
+        user_id = request.json.get('user_id')
+        if not user_id:
+            return {'message': 'User ID is required'}, 400
+        community_like = CommunityLikes(community_id=community_id, user_id=user_id)
+        db.session.add(community_like)
+        db.session.commit()
+        return jsonify(community_like.to_dict()), 201
     
+# Serve React app from 'client/build' folder
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != '' and os.path.exists("client/build/" + path):
+        return send_from_directory('client/build', path)
+    else:
+        return send_from_directory('client/build', 'index.html')
+
+# Addition
+class BlogPostFollows(Resource):
+    def post(self, blog_post_id):
+        data = request.json
+        follow = data.get('follow')
+
+        if follow is None:
+            return {'message': 'Invalid request, follow status is required.'}, 400
+
+        # Implement the logic for following/unfollowing a blog post here
+        # This can include checking if the user is already following the post
+        # and toggling the follow status accordingly.
+
+        # Placeholder response
+        return jsonify({'isFollowed': follow})
+
+class BlogPostComments(Resource):
+    def post(self, blog_post_id):
+        data = request.json
+        text = data.get('text')
+
+        if not text:
+            return {'message': 'Comment text is required.'}, 400
+
+        new_comment = Comment(text=text, blog_post_id=blog_post_id)
+        db.session.add(new_comment)
+        db.session.commit()
+
+        return jsonify(new_comment.to_dict()), 201
+
+class BlogPostLikesToggle(Resource):  # Renamed resource
+    def post(self, blog_post_id):
+        data = request.json
+        like = data.get('like')
+
+        if like is None:
+            return {'message': 'Invalid request, like status is required.'}, 400
+
+        # Implement the logic for liking/unliking a blog post here
+        # This can include checking if the user has already liked the post
+        # and toggling the like status accordingly.
+
+        # Placeholder response
+        return jsonify({'isLiked': like, 'count': 1 if like else 0})
+
+
+
 # Add routes for all resources
-api.add_resource(UserRegistration, '/register')
-api.add_resource(UserLogin, '/login')
-api.add_resource(BlogPosts, '/blogposts')
+api.add_resource(UserAuthentication, '/auth')
+#api.add_resource(BlogPosts, '/blogposts')
 api.add_resource(BlogPostDetails, '/blogposts/<int:id>')
 api.add_resource(Communities, '/communities')
 api.add_resource(CommunityDetails, '/communities/<int:id>')
 api.add_resource(Experts, '/experts')
 api.add_resource(ExpertDetails, '/experts/<int:id>')
-api.add_resource(Messages, '/messages')
-api.add_resource(MessageDetails, '/messages/<int:id>')
 api.add_resource(Comments, '/comments')
 api.add_resource(CommentDetails, '/comments/<int:id>')
 api.add_resource(Likes, '/likes')
@@ -749,8 +491,12 @@ api.add_resource(Users, '/users')
 api.add_resource(UserDetails, '/users/<int:id>')
 api.add_resource(CommunityFollowersResource, '/communities/<int:community_id>/followers')
 api.add_resource(BlogPostCommentsResource, '/blogposts/<int:blogpost_id>/comments')
-api.add_resource(BlogPostLikes, '/blogposts/<int:blog_post_id>/likes')
+api.add_resource(Messages, '/messages')
+api.add_resource(MessageDetails, '/messages/<int:id>')
+api.add_resource(Conversation, '/conversations/<int:sender_id>/<int:receiver_id>')
+api.add_resource(ExpertFollowResource, '/follow/expert/<int:expert_id>')
+api.add_resource(CommunityLikeResource, '/like/community/<int:community_id>')
+api.add_resource(BlogPostFollows, '/blogposts/<int:blog_post_id>/follows')
+api.add_resource(BlogPostComments, '/blogposts/<int:blog_post_id>/comments')
 
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5555)

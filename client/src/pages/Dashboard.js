@@ -1,25 +1,405 @@
+// import React, { useState, useEffect } from 'react';
+// import { FaChartBar, FaPenFancy, FaEnvelope, FaBell, FaCalendarAlt, FaComments, FaHeart, FaUserFriends, FaUsersCog } from 'react-icons/fa';
+// import ProfileUpdateForm from './ProfileUpdateForm';
+// import CommunityCreationForm from './CommunityCreationForm';
+// import Pagination from 'react-bootstrap/Pagination';
+// import Spinner from 'react-bootstrap/Spinner';
+// import './Dashboard.css';
+// import Button from 'react-bootstrap/Button';
+// import ButtonGroup from 'react-bootstrap/ButtonGroup';
+// import Dropdown from 'react-bootstrap/Dropdown';
+// import Modal from 'react-bootstrap/Modal';
+// import { Link } from 'react-router-dom';
+// import CreatePost from './CreatePost';
+
+// function ExpertDashboard() {
+//     const [expert, setExpert] = useState(null);
+//     const [notifications, setNotifications] = useState([]);
+//     const [followers, setFollowers] = useState(0);
+//     const [communities, setCommunities] = useState([]);
+//     const [selectedOption, setSelectedOption] = useState(null);
+//     const [posts, setPosts] = useState([]);
+//     const [loading, setLoading] = useState(true);
+//     const [currentPage, setCurrentPage] = useState(1);
+//     const postsPerPage = 4;
+//     const [showModal, setShowModal] = useState(false);
+//     const [showCommunities, setShowCommunities] = useState(false);
+//     const [showFollowers, setShowFollowers] = useState(false);
+//     const [showCreatePost, setShowCreatePost] = useState(false);
+//     const [expertArticles, setExpertArticles] = useState([]);
+//     const [showExpertArticles, setShowExpertArticles] = useState(false);
+
+//     const [updatedProfileData, setUpdatedProfileData] = useState({
+//         name: "",
+//         expertise_area: "",
+//         bio: ""
+//     });
+
+
+
+//     useEffect(() => {
+//         // Fetch expert data
+//         fetch('/experts/1')
+//             .then(response => response.json())
+//             .then(data => setExpert(data))
+//             .catch(error => console.error('Error fetching expert data:', error));
+
+
+//         // Fetch posts
+//         fetch('/blogposts')
+//             .then(response => response.json())
+//             .then(data => {
+//                 setPosts(data);
+//                 setLoading(false);
+//             })
+//             .catch(error => {
+//                 console.error('Error fetching posts:', error);
+//                 setLoading(false);
+//             });
+
+//         // Fetch user data
+//         fetch('/users/1')
+//             .then(response => response.json())
+//             .then(user => {
+//                 setFollowers(user.followers ?? 0);
+//                 setCommunities(user.communities ?? []);
+//             })
+//             .catch(error => console.error('Error fetching user data:', error));
+
+//         // Fetch notifications
+//         fetch('/notifications')
+//             .then(response => response.json())
+//             .then(data => setNotifications(data))
+//             .catch(error => console.error('Error fetching notifications:', error));
+
+
+//         fetch('/communities')
+//             .then(response => response.json())
+//             .then(data => setCommunities(data))
+//             .catch(error => console.error('Error fetching communities:', error));
+
+//         fetch('/users/1/notifications')
+//             .then(response => response.json())
+//             .then(data => setNotifications(data))
+//             .catch(error => console.error('Error fetching notifications:', error));
+//     }, []);
+
+
+
+//     useEffect(() => {
+//         console.log('Communities updated:', communities);
+//     }, [communities]);
+
+//     function handleDropdownClick(action) {
+//         console.log('Dropdown action:', action);
+//         switch (action) {
+//             case 'updateProfile':
+//                 setSelectedOption('updateProfile');
+//                 setShowModal(true);
+//                 break;
+//             case 'addCommunity':
+//                 setSelectedOption('addCommunity');
+//                 setShowModal(true);
+//                 break;
+//             case 'deleteProfile':
+//                 fetch('/experts/1', {
+//                     method: 'DELETE'
+//                 })
+//                     .then(() => {
+//                         setExpert(null);
+//                         console.log('Profile deleted');
+//                     })
+//                     .catch(error => console.error('Error deleting profile', error));
+//                 break;
+//             case 'signOut':
+//                 fetch('/signout', {
+//                     method: 'POST'
+//                 })
+//                     .then(() => {
+//                         console.log('Signed Out');
+//                     })
+//                     .catch(error => console.error('Error signing out:', error));
+//                 break;
+//             default:
+//                 break;
+//         }
+//     }
+
+//     function addNewCommunity(communityData) {
+//         setCommunities(prevCommunities => [...prevCommunities, communityData]);
+//     }
+
+//     function handleNewPostClick() {
+//         setShowCreatePost(true);
+//     };
+
+//     function handleCloseCreatePost() {
+//         setShowCreatePost(false);
+//     };
+
+//     const handleMyPostsClick = () => {
+//         // Toggle the visibility of expert articles
+//         setShowExpertArticles(!showExpertArticles);
+    
+//         // If expert articles section is being shown and expert articles are not fetched yet, fetch them
+//         if (!showExpertArticles) {
+//             fetch('/experts/1/blogposts')
+//                 .then(response => {
+//                     if (response.ok) {
+//                         return response.json();
+//                     }
+//                     throw new Error('Failed to fetch expert articles');
+//                 })
+//                 .then(data => {
+//                     setExpertArticles(data);
+//                 })
+//                 .catch(error => {
+//                     console.error('Error fetching expert articles:', error);
+//                 });
+//         }
+//     };
+    
+
+
+//     // Pagination logic
+//     const indexOfLastPost = currentPage * postsPerPage;
+//     const indexOfFirstPost = indexOfLastPost - postsPerPage;
+//     const visibleArticles = posts.slice(indexOfFirstPost, indexOfLastPost);
+
+//     const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+//     function toggleFollowers() {
+//         setShowFollowers(!showFollowers);
+//     }
+//     return (
+//         <div className='parent-container'>
+//             <div className="dashboard">
+//                 <div className='top-right-corner'>
+//                     <div className="notification-container">
+//                         <FaBell className="notification-bell" />
+//                         {notifications.length > 0 && <span className="notification-dot"></span>}
+//                         {/* Render notifications */}
+//                         <div className="notification-list">
+//                             {notifications.map(notification => (
+//                                 <div key={notification.id} className="notification-item">
+//                                     <span>{notification.content}</span>
+//                                 </div>
+//                             ))}
+//                         </div>
+//                     </div>
+//                     <div className="expert-profile-topbar">
+//                         <Dropdown as={ButtonGroup}>
+//                             <Button className="options-button">Options</Button>
+//                             <Dropdown.Toggle split className="options-button" id="dropdown-split-basic" />
+//                             <Dropdown.Menu className="dropdown-menu">
+//                                 <Dropdown.Item onClick={() => handleDropdownClick('updateProfile')}>
+//                                     Update Profile
+//                                 </Dropdown.Item>
+//                                 <Dropdown.Item onClick={() => handleDropdownClick('addCommunity')}>
+//                                     Add Community
+//                                 </Dropdown.Item>
+//                                 <Dropdown.Item onClick={() => handleDropdownClick('deleteProfile')}>
+//                                     Delete Profile
+//                                 </Dropdown.Item>
+//                                 <Dropdown.Item onClick={() => handleDropdownClick('signOut')}>
+//                                     Sign Out
+//                                 </Dropdown.Item>
+//                             </Dropdown.Menu>
+//                         </Dropdown>
+//                     </div>
+//                     <Modal show={showModal} onHide={() => setShowModal(false)}>
+//                         <Modal.Header closeButton>
+//                             <Modal.Title>{selectedOption === 'updateProfile' ? 'Update Profile' : 'Add Community'}</Modal.Title>
+//                         </Modal.Header>
+//                         <Modal.Body>
+//                             {selectedOption === 'updateProfile' && <ProfileUpdateForm onSubmit={setUpdatedProfileData} />}
+//                             {selectedOption === 'addCommunity' && <CommunityCreationForm onSubmit={(data) => {
+//                                 addNewCommunity(data);
+//                                 setShowModal(false);
+//                             }} userId={1} />}
+//                         </Modal.Body>
+//                     </Modal>
+//                 </div>
+//                 <div className='sidebar'>
+//                     <Link to={'/blogs'} style={{ 'color': 'white' }}>
+
+//                         <div className='sidebar-item'>
+//                             <FaChartBar className="sidebar-icon" />
+//                             <span>My Feed</span>
+//                         </div>
+
+//                     </Link>
+
+
+//                     <div className='sidebar-item' onClick={handleMyPostsClick}>
+//                         <FaPenFancy className='sidebar-icon' />
+//                         <span>My Articles</span>
+//                     </div>
+//                     {showExpertArticles && (
+//                         <div className='article-grid'>
+//                             {expertArticles.map(article => (
+//                                 <div key={article.id} className='article-card'>
+
+//                                     <img src={article.image} alt={article.title} />
+
+//                                     <div className='card-content' >
+//                                         <h2 style={{ fontSize: "12px" }}>{article.title}</h2>
+//                                         <p style={{ fontSize: "12px" }}>{article.content}</p>
+//                                         <div className='meta-info'>
+//                                             <span>
+//                                                 <FaCalendarAlt /> {article.created_at}
+//                                             </span>
+//                                             <span>
+//                                                 <FaHeart style={{ color: 'red' }} /> {article.total_likes}
+//                                             </span>
+
+//                                             <span>
+//                                                 <FaComments /> {article.total_comments}
+//                                             </span>
+
+//                                         </div>
+//                                     </div>
+//                                 </div>
+//                             ))}
+//                         </div>
+//                     )}
+
+//                     <div className="sidebar-item">
+//                         <FaEnvelope className='sidebar-icon' />
+//                         <span>Inbox</span>
+//                     </div>
+//                 </div>
+//                 <div className="main-content">
+//                     <div className='banner'>
+//                         <h3 style={{ color: 'white' }}>Hello Farmer2024!</h3>
+//                         <h4 style={{ color: 'white' }}>Give us an update on how your farming experience is going</h4>
+//                         <Button className='new-post-button' onClick={handleNewPostClick}>Write New Post</Button>
+//                     </div>
+//                     {showCreatePost ? (
+//                         <div className="create-post-view">
+//                             <CreatePost onClose={handleCloseCreatePost} />
+//                         </div>
+//                     ) : (
+//                         <div className="other-dashboard-content">
+//                             <div className="content-sections">
+//                                 <div className="top-articles">
+//                                     <h3 className='toparticles-h3'>Top Articles</h3>
+//                                     {loading ? (
+//                                         <Spinner style={{ color: '#EE5E21' }} animation='border' role='status'>
+//                                             <span className='visually-hidden'>Loading...</span>
+//                                         </Spinner>
+//                                     ) : (
+//                                         <div className='article-grid'>
+//                                             {visibleArticles.map(article => (
+//                                                 <div key={article.id} className='article-card'>
+//                                                     <img src={article.image} alt={article.title} />
+//                                                     <div className='card-content'>
+//                                                         <h2 style={{ fontSize: "12px" }}>{article.title}</h2>
+//                                                         <p style={{ fontSize: "12px" }}>{article.content}</p>
+//                                                         <div className='meta-info'>
+//                                                             <span>
+//                                                                 <FaCalendarAlt /> {article.created_at}
+//                                                             </span>
+//                                                             <span>
+//                                                                 <FaHeart style={{ color: 'red' }} /> {article.total_likes}
+//                                                             </span>
+//                                                             <span>
+//                                                                 <FaComments /> {article.total_comments}
+//                                                             </span>
+
+//                                                         </div>
+//                                                     </div>
+//                                                 </div>
+//                                             ))}
+//                                         </div>
+//                                     )}
+//                                     <Pagination style={{ display: 'flex', justifyContent: 'center' }}>
+//                                         {Array.from({ length: Math.ceil(posts.length / postsPerPage) }, (_, i) => (
+//                                             <Pagination.Item key={i + 1} active={i + 1 === currentPage} onClick={() => paginate(i + 1)}>
+//                                                 {i + 1}
+//                                             </Pagination.Item>
+//                                         ))}
+//                                     </Pagination>
+//                                 </div>
+//                                 <div className='expert-info'>
+//                                     <div className='expert-details' style={{ color: 'white' }}>
+//                                         {expert && (
+//                                             <div>
+//                                                 <h4 style={{ fontSize: "20px", color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Bio</h4>
+//                                                 <p style={{ fontSize: "20px", color: 'white' }}>{expert.bio}</p>
+//                                             </div>
+//                                         )}
+//                                     </div>
+//                                     <div className='followers'>
+//                                         <FaUserFriends className='follower-icon' />
+//                                         <h4>Followers</h4>
+//                                         <p onClick={toggleFollowers}>{followers.length}</p>
+//                                         {showFollowers && (
+//                                             <ul>
+//                                                 {followers.map((follower, index) => (
+//                                                     <li key={index}>{follower}</li>
+//                                                 ))}
+//                                             </ul>
+//                                         )}
+//                                     </div>
+//                                     <Link to = {'/community'}>
+//                                     <div className='communities'>
+//                                         <FaUsersCog className='communities-icon' />
+//                                         <h4>Communities</h4>
+//                                         <p onClick={() => setShowCommunities(!showCommunities)} style={{ cursor: 'pointer' }}>
+//                                             {communities.length}
+//                                         </p>
+//                                         {showCommunities && (
+//                                             <ul>
+//                                                 {communities.map((community, index) => (
+//                                                     <li key={index}>{community.name}</li>
+//                                                 ))}
+//                                             </ul>
+//                                         )}
+//                                     </div>
+//                                     </Link>
+//                                 </div>
+//                             </div>
+//                         </div>
+//                     )}
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// }
+
+// export default ExpertDashboard; 
 import React, { useState, useEffect } from 'react';
-import { FaChartBar, FaPenFancy, FaEnvelope, FaBell, FaUser } from 'react-icons/fa';
-import ProfileUpdateForm from './ProfileUpdateForm'; 
-import CommunityCreationForm from './CommunityCreationForm'; 
-import './Dashboard.css'
+import { FaChartBar, FaPenFancy, FaEnvelope, FaBell, FaCalendarAlt, FaComments, FaHeart, FaUserFriends, FaUsersCog } from 'react-icons/fa';
+import ProfileUpdateForm from './ProfileUpdateForm';
+import CommunityCreationForm from './CommunityCreationForm';
+import Pagination from 'react-bootstrap/Pagination';
+import Spinner from 'react-bootstrap/Spinner';
+import './Dashboard.css';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
+import Modal from 'react-bootstrap/Modal';
+import { Link } from 'react-router-dom';
+import CreatePost from './CreatePost';
 
-
-function ExpertDashboard({ user }) {
+function ExpertDashboard() {
     const [expert, setExpert] = useState(null);
     const [notifications, setNotifications] = useState([]);
-    const [followers, setFollowers] = useState(0);
-    const [following, setFollowing] = useState(0);
-    const [communities, setCommunities] = useState(0);
-    const [showNotifications, setShowNotifications] = useState([]);
-    const [inboxMessages, setInboxMessages] = useState([]);
-    const [showInbox, setShowInbox] = useState(false);
-    const [showDropdown, setShowDropdown] = useState(false);
+    const [followers, setFollowers] = useState([]);
+    const [communities, setCommunities] = useState([]);
     const [selectedOption, setSelectedOption] = useState(null);
-    const [topArticles, setTopArticles] = useState([]);
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const postsPerPage = 4;
+    const [showModal, setShowModal] = useState(false);
+    const [showCommunities, setShowCommunities] = useState(false);
+    const [showFollowers, setShowFollowers] = useState(false);
+    const [showCreatePost, setShowCreatePost] = useState(false);
+    const [expertArticles, setExpertArticles] = useState([]);
+    const [showExpertArticles, setShowExpertArticles] = useState(false);
+    const [newMessagesCount, setNewMessagesCount] = useState(0);
 
     const [updatedProfileData, setUpdatedProfileData] = useState({
         name: "",
@@ -27,109 +407,67 @@ function ExpertDashboard({ user }) {
         bio: ""
     });
 
-    const [newCommunityData, setNewCommunityData] = useState({
-        name: "",
-        description: ""
-    });
-
-
-
     useEffect(() => {
-        // this fetches the experts data 
-        fetch('/api/experts/1')
+        // Fetch expert data
+        fetch('/experts/1')
             .then(response => response.json())
             .then(data => setExpert(data))
             .catch(error => console.error('Error fetching expert data:', error));
 
-        // This fetches the top articles
-        fetch('/api/blogposts')
+        // Fetch posts
+        fetch('/blogposts')
             .then(response => response.json())
             .then(data => {
-                // Using setNotifications to set the top articles
-                setNotifications(data);
+                setPosts(data);
+                setLoading(false);
             })
-            .catch(error => console.error('Error fetching top articles:', error));
+            .catch(error => {
+                console.error('Error fetching posts:', error);
+                setLoading(false);
+            });
 
-        fetch('/api/users/1')
-        .then(response => response.json())
-        .then(user => {
-            setFollowers(user.followers);  
-            setFollowing(user.following);
-            setCommunities(user.communities.length);  
-        })
+        // Fetch user data
+        fetch('/users/1')
+            .then(response => response.json())
+            .then(user => {
+                setFollowers(user.followers ?? []);
+                setCommunities(user.communities ?? []);
+            })
+            .catch(error => console.error('Error fetching user data:', error));
 
-        
-
-        fetch('/api/notifications')
+        // Fetch notifications
+        fetch('/users/1/notifications')
             .then(response => response.json())
             .then(data => setNotifications(data))
-            .catch(error => console.error('Error fetching the notifications:', error));
-
-        fetch('/api/messages')
-             .then(response => response.json())
-             .then(data => setInboxMessages(data))
-             .catch(error => console.error('Error fetching messages:', error));
+            .catch(error => console.error('Error fetching notifications:', error));
+        
+        // Fetch messages
+        fetch('/messages')
+            .then(response => response.json())
+            .then(data => {
+                const newMessages = data.filter(message => !message.read);
+                setNewMessagesCount(newMessages.length);
+            })
+            .catch(error => console.error('Error fetching messages:', error));
     }, []);
 
-         
-
-    function handleToggleNotifications() {
-        if (!showNotifications) {
-            fetch('/api/notifications')
-                .then(response => response.json())
-                .then(data => setNotifications(data))
-                .catch(error => console.error('Error fetching the notifications:', error));
-        }
-
-        setShowNotifications(!showNotifications);
-    }
-
-    function handleToggleInbox() {
-        if (!showInbox) {
-            fetch('/api/messages')
-                .then(response => response.json())
-                .then(data => setInboxMessages(data))
-                .catch(error => console.error('Error fetching the inbox messages', error));
-        }
-
-        setShowInbox(!showInbox);
-    }
+    useEffect(() => {
+        console.log('Communities updated:', communities);
+    }, [communities]);
 
     function handleDropdownClick(action) {
+        console.log('Dropdown action:', action);
         switch (action) {
             case 'updateProfile':
-                fetch('/api/experts/1', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(updatedProfileData)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        setExpert(data);
-                        console.log('Profile updated:', data);
-                    })
-                    .catch(error => console.error('Error updating profile:', error));
+                setSelectedOption('updateProfile');
+                setShowModal(true);
                 break;
             case 'addCommunity':
-                fetch('/api/communities', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(newCommunityData)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Community created:', data);
-                    })
-                    .catch(error => console.error('Error creating community:', error));
+                setSelectedOption('addCommunity');
+                setShowModal(true);
                 break;
             case 'deleteProfile':
-                fetch('/api/experts/1', {
-                    method: 'DELETE'
-                })
+                fetch('/experts/1', { method: 'DELETE' })
                     .then(() => {
                         setExpert(null);
                         console.log('Profile deleted');
@@ -137,47 +475,81 @@ function ExpertDashboard({ user }) {
                     .catch(error => console.error('Error deleting profile', error));
                 break;
             case 'signOut':
-                fetch('/api/signout', {
-                    method: 'POST'
-                })
-                    .then(() => {
-                        console.log('Signed Out');
-                    })
+                fetch('/signout', { method: 'POST' })
+                    .then(() => console.log('Signed Out'))
                     .catch(error => console.error('Error signing out:', error));
                 break;
             default:
                 break;
         }
-        setSelectedOption(null);
     }
-    
+
+    function addNewCommunity(communityData) {
+        setCommunities(prevCommunities => [...prevCommunities, communityData]);
+    }
+
+    function handleNewPostClick() {
+        setShowCreatePost(true);
+    };
+
+    function handleCloseCreatePost() {
+        setShowCreatePost(false);
+    };
+
+    const handleMyPostsClick = () => {
+        setShowExpertArticles(!showExpertArticles);
+
+        if (!showExpertArticles) {
+            fetch('/experts/1/blogposts')
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Failed to fetch expert articles');
+                })
+                .then(data => {
+                    setExpertArticles(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching expert articles:', error);
+                });
+        }
+    };
+
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const visibleArticles = posts.slice(indexOfFirstPost, indexOfLastPost);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    function toggleFollowers() {
+        setShowFollowers(!showFollowers);
+    }
 
     return (
         <div className='parent-container'>
-
-<div className="dashboard">
-             <div className="top-bar">
-                <div className="notification-container">
-                    <FaBell className="notification-bell" />
-                    {notifications.length > 0 && <span className="notification-dot"></span>}
-                </div>
-                <div className="expert-profile-topbar">
-                    <h3>Expert2024<FaUser className='profile-icon'/> </h3>
-                    {expert && (
-                    <div>
-                        <p>Name: {expert.name}</p>
-                        <p>Expertise: {expert.expertise_area}</p>
-                        <p>Bio: {expert.bio}</p>
+            <div className="dashboard">
+                <div className='top-right-corner'>
+                    <div className="notification-container">
+                        <FaBell className="notification-bell" />
+                        {notifications.length > 0 && <span className="notification-dot"></span>}
+                        <div className="notification-list">
+                            {notifications.map(notification => (
+                                <div key={notification.id} className="notification-item">
+                                    <span>{notification.content}</span>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                    )}
+                    <div className="expert-profile-topbar">
                         <Dropdown as={ButtonGroup}>
                             <Button className="options-button">Options</Button>
                             <Dropdown.Toggle split className="options-button" id="dropdown-split-basic" />
                             <Dropdown.Menu className="dropdown-menu">
-                                <Dropdown.Item onClick={() => setSelectedOption('updateProfile')}>
+                                <Dropdown.Item onClick={() => handleDropdownClick('updateProfile')}>
                                     Update Profile
                                 </Dropdown.Item>
-                                <Dropdown.Item onClick={() => setSelectedOption('addCommunity')}>
+                                <Dropdown.Item onClick={() => handleDropdownClick('addCommunity')}>
                                     Add Community
                                 </Dropdown.Item>
                                 <Dropdown.Item onClick={() => handleDropdownClick('deleteProfile')}>
@@ -189,72 +561,157 @@ function ExpertDashboard({ user }) {
                             </Dropdown.Menu>
                         </Dropdown>
                     </div>
-                    {selectedOption === 'updateProfile' && <ProfileUpdateForm onSubmit={setUpdatedProfileData} />}
-                    {selectedOption === 'addCommunity' && <CommunityCreationForm onSubmit={setNewCommunityData} />}
-                {/* </div> */}
-
-
-            </div>
-            <div className='sidebar'>
-                
-                <div className= 'sidebar-item'>
-                    <FaChartBar className = "sidebar-icon" />
-                    <span> Analytics </span>
+                    <Modal show={showModal} onHide={() => setShowModal(false)}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>{selectedOption === 'updateProfile' ? 'Update Profile' : 'Add Community'}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            {selectedOption === 'updateProfile' && <ProfileUpdateForm onSubmit={setUpdatedProfileData} />}
+                            {selectedOption === 'addCommunity' && <CommunityCreationForm onSubmit={(data) => {
+                                addNewCommunity(data);
+                                setShowModal(false);
+                            }} userId={1} />}
+                        </Modal.Body>
+                    </Modal>
                 </div>
-
-                <div className='sidebar-item'>
-                    <FaPenFancy className='sidebar-icon' /> 
-                    <span>My Posts & Drafts</span>
+                <div className='sidebar'>
+                    <Link to={'/blogs'} style={{ 'color': 'white' }}>
+                        <div className='sidebar-item'>
+                            <FaChartBar className="sidebar-icon" />
+                            <span>My Feed</span>
+                        </div>
+                    </Link>
+                    <div className='sidebar-item' onClick={handleMyPostsClick}>
+                        <FaPenFancy className='sidebar-icon' />
+                        <span>My Articles</span>
+                    </div>
+                    {showExpertArticles && (
+                        <div className='article-grid'>
+                            {expertArticles.map(article => (
+                                <div key={article.id} className='article-card'>
+                                    <img src={article.image} alt={article.title} />
+                                    <div className='card-content'>
+                                        <h2 style={{ fontSize: "12px" }}>{article.title}</h2>
+                                        <p style={{ fontSize: "12px" }}>{article.content}</p>
+                                        <div className='meta-info'>
+                                            <span>
+                                                <FaCalendarAlt /> {article.created_at}
+                                            </span>
+                                            <span>
+                                                <FaHeart style={{ color: 'red' }} /> {article.total_likes}
+                                            </span>
+                                            <span>
+                                                <FaComments /> {article.total_comments}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <div className='sidebar-item'>
+                        <FaEnvelope className='sidebar-icon' />
+                        <Link to={'/messages'} style={{ color: 'white' }}>
+                            <span>Messages ({newMessagesCount})</span>
+                        </Link>
+                    </div>
                 </div>
-
-                <div className="sidebar-item">
-                    <FaEnvelope className='sidebar-icon' />
-                    <span>Inbox</span>
-                    {inboxMessages.length > 0 && <span className='notification-dot'></span> }
-                </div>
-            
-
-              
-            </div>
-            <div className="main-content">
-                    
+                <div className="main-content">
                     <div className='banner'>
-                        <h3 style={{'color':'white'}}> Hello Farmer2023 !</h3>
-                        <h4 style={{'color':'white'}}> Give us an update on how you farming experience is going</h4>
-                        <Button className='new-post-button'> Write New Post</Button>
+                        <h3 style={{ color: 'white' }}>Hello Farmer2024!</h3>
+                        <h4 style={{ color: 'white' }}>Give us an update on how your farming experience is going</h4>
+                        <Button className='new-post-button' onClick={handleNewPostClick}>Write New Post</Button>
                     </div>
-                    <div className="content-sections">
-                        <div className = "top-articles">
-                            <h3 style={{'color':'white'}}>Top Articles</h3>
-                            <ul>
-                                {topArticles.map(article => (<li key={article.id}>{article.title}</li>))}
-                            </ul>
+                    {showCreatePost ? (
+                        <div className="create-post-view">
+                            <CreatePost onClose={handleCloseCreatePost} />
                         </div>
-
-                        <div className='expert-info'>
-                            <div className='followers'>
-                                <h4>Followers</h4>
-                                <p>{followers}</p>
-                            </div>
-                            <div className='following'>
-                                <h4>Following</h4>
-                                <p>{following}</p>
-
-                            </div>
-
-                            <div className = 'communities'>
-                                <h4>Communities</h4>
-                                <p>{communities}</p>
-
+                    ) : (
+                        <div className="other-dashboard-content">
+                            <div className="content-sections">
+                                <div className="top-articles">
+                                    <h3 className='toparticles-h3'>Top Articles</h3>
+                                    {loading ? (
+                                        <Spinner style={{ color: '#EE5E21' }} animation='border' role='status'>
+                                            <span className='visually-hidden'>Loading...</span>
+                                        </Spinner>
+                                    ) : (
+                                        <div className='article-grid'>
+                                            {visibleArticles.map(article => (
+                                                <div key={article.id} className='article-card'>
+                                                    <img src={article.image} alt={article.title} />
+                                                    <div className='card-content'>
+                                                        <h2 style={{ fontSize: "12px" }}>{article.title}</h2>
+                                                        <p style={{ fontSize: "12px" }}>{article.content}</p>
+                                                        <div className='meta-info'>
+                                                            <span>
+                                                                <FaCalendarAlt /> {article.created_at}
+                                                            </span>
+                                                            <span>
+                                                                <FaHeart style={{ color: 'red' }} /> {article.total_likes}
+                                                            </span>
+                                                            <span>
+                                                                <FaComments /> {article.total_comments}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <Pagination style={{ display: 'flex', justifyContent: 'center' }}>
+                                        {Array.from({ length: Math.ceil(posts.length / postsPerPage) }, (_, i) => (
+                                            <Pagination.Item key={i + 1} active={i + 1 === currentPage} onClick={() => paginate(i + 1)}>
+                                                {i + 1}
+                                            </Pagination.Item>
+                                        ))}
+                                    </Pagination>
+                                </div>
+                                <div className='expert-info'>
+                                    <div className='expert-details' style={{ color: 'white' }}>
+                                        {expert && (
+                                            <div>
+                                                <h4 style={{ fontSize: "20px", color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Bio</h4>
+                                                <p style={{ fontSize: "20px", color: 'white' }}>{expert.bio}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className='followers'>
+                                        <FaUserFriends className='follower-icon' />
+                                        <h4>Followers</h4>
+                                        <p onClick={toggleFollowers}>{followers.length}</p>
+                                        {showFollowers && (
+                                            <ul>
+                                                {followers.map((follower, index) => (
+                                                    <li key={index}>{follower}</li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
+                                    <Link to={'/community'}>
+                                        <div className='communities'>
+                                            <FaUsersCog className='communities-icon' />
+                                            <h4>Communities</h4>
+                                            <p onClick={() => setShowCommunities(!showCommunities)} style={{ cursor: 'pointer' }}>
+                                                {communities.length}
+                                            </p>
+                                            {showCommunities && (
+                                                <ul>
+                                                    {communities.map((community, index) => (
+                                                        <li key={index}>{community.name}</li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </div>
+                                    </Link>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                 </div>
+            </div>
         </div>
-
-       </div>
-        
-    )
+    );
 }
 
 export default ExpertDashboard;

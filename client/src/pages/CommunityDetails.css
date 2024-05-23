@@ -9,12 +9,13 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   background-color: #fff;
-  max-height: 690px;
+  max-height: 100%;
 }
 
-.image-container {
+.image-container img{
   width: 100%;
   margin-bottom: 20px;
+  height: 250px;
 }
 
 .card-img-top {

@@ -432,12 +432,8 @@ from flask_migrate import Migrate
 from models import db, User, BlogPost, Community, Expert, Message, Comment, Like
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token
-from datetime import datetime 
 import os
 import jwt.exceptions
-from dateutil.parser import isoparse
-from flask import request
-from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 CORS(app, origins='http://localhost:3000')
@@ -445,7 +441,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'secret key'
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'jwt-secret-key')
-app.config['UPLOAD_FOLDER'] = 'static/images'
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -463,12 +458,15 @@ class UserRegistration(Resource):
 
             if not username or not email or not password:
                 return {'message': 'Username, email, and password are required'}, 400
+
+            # Check if the username or email already exists
             if User.query.filter_by(username=username).first():
                 return {'message': 'Username already exists'}, 400
 
             if User.query.filter_by(email=email).first():
                 return {'message': 'Email already exists'}, 400
-            
+
+            # Hash the password before storing it
             hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
             new_user = User(username=username, email=email, password=hashed_password)
             db.session.add(new_user)
@@ -523,6 +521,7 @@ class BlogPostDetails(Resource):
         db.session.commit()
         return jsonify({'message': 'Blog post deleted successfully'})
 
+# Community Resources
 class Communities(Resource):
     def get(self):
         communities = Community.query.all()
@@ -530,31 +529,11 @@ class Communities(Resource):
         return jsonify(serialized_communities)
 
     def post(self):
-        # Check if the request contains files
-        if 'image' not in request.files:
-            return jsonify({'error': 'No file part'}), 400
-
-        data = request.form
-        image = request.files['image']
-
-        # Check if the file is present
-        if image.filename == '':
-            return jsonify({'error': 'No selected file'}), 400
-
-        # Save the file to the server
-        filename = secure_filename(image.filename)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        image.save(filepath)
-
-        # Create a new community instance
-        new_community = Community(name=data['name'], description=data['description'], image=filename)
-        
-        # Add the new community to the database
+        data = request.json
+        new_community = Community(**data)
         db.session.add(new_community)
         db.session.commit()
-
         return jsonify(new_community.to_dict()), 201
-
 
 class CommunityDetails(Resource):
     def get(self, id):
@@ -563,18 +542,9 @@ class CommunityDetails(Resource):
 
     def put(self, id):
         community = Community.query.get_or_404(id)
-        data = request.form
-
+        data = request.json
         for key, value in data.items():
-            if key == 'created_at':
-                value = isoparse(value)
             setattr(community, key, value)
-
-        if 'image' in request.files:
-            image_file = request.files['image']
-            image_path = save_image(image_file)
-            community.image = image_path
-
         db.session.commit()
         return jsonify(community.to_dict())
 
@@ -584,13 +554,6 @@ class CommunityDetails(Resource):
         db.session.commit()
         return jsonify({'message': 'Community deleted successfully'})
 
-def save_image(image_file):
-    directory = 'static/images'
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    file_path = os.path.join(directory, image_file.filename)
-    image_file.save(file_path)
-    return file_path
 # Expert Resources
 class Experts(Resource):
     def get(self):

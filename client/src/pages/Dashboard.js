@@ -158,6 +158,12 @@ function ExpertDashboard() {
     return (
         <div className='parent-container'>
             <div className="dashboard">
+                
+                <div className='top-left-corner'>
+                    <h1 style={{'color':'white'}}>Mkulima Digital</h1>
+                    <h3 style={{'color':'white'}}>Expert's DashBoard</h3>
+                </div>
+                
                 <div className='top-right-corner'>
                     <div className="notification-container">
                         <FaBell className="notification-bell" />

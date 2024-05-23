@@ -199,14 +199,14 @@
 .article-card {
   background-color: #fefefe;
   padding: 1rem;
-  border-radius: 4px; /* Changed to fixed value */
-  transition: box-shadow 0.3s ease-in-out; /* Added a transition for the shadow */
+  border-radius: 4px;
+  transition: box-shadow 0.3s ease-in-out;
   cursor: default;
-  box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.1);
 }
 
 .article-card:hover {
-  box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+  box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.2);
 }
 
 .show-more-button {

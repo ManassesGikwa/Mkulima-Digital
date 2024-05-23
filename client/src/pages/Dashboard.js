@@ -156,7 +156,7 @@ function ExpertDashboard() {
     }
 
     return (
-        <div className='parent-container'>
+        
             <div className="dashboard">
             <div className='side-content'>
                 <div className='top-left-corner'>

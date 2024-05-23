@@ -15,7 +15,7 @@ import CreatePost from './CreatePost';
 function ExpertDashboard() {
     const [expert, setExpert] = useState(null);
     const [notifications, setNotifications] = useState([]);
-    const [followers, setFollowers] = useState(0);
+    const [followers, setFollowers] = useState([]);
     const [communities, setCommunities] = useState([]);
     const [selectedOption, setSelectedOption] = useState(null);
     const [posts, setPosts] = useState([]);
@@ -28,14 +28,13 @@ function ExpertDashboard() {
     const [showCreatePost, setShowCreatePost] = useState(false);
     const [expertArticles, setExpertArticles] = useState([]);
     const [showExpertArticles, setShowExpertArticles] = useState(false);
+    const [newMessagesCount, setNewMessagesCount] = useState(0);
 
     const [updatedProfileData, setUpdatedProfileData] = useState({
         name: "",
         expertise_area: "",
         bio: ""
     });
-
-  
 
     useEffect(() => {
         // Fetch expert data
@@ -44,7 +43,6 @@ function ExpertDashboard() {
             .then(data => setExpert(data))
             .catch(error => console.error('Error fetching expert data:', error));
 
-       
         // Fetch posts
         fetch('/blogposts')
             .then(response => response.json())
@@ -61,28 +59,26 @@ function ExpertDashboard() {
         fetch('/users/1')
             .then(response => response.json())
             .then(user => {
-                setFollowers(user.followers ?? 0);
+                setFollowers(user.followers ?? []);
                 setCommunities(user.communities ?? []);
             })
             .catch(error => console.error('Error fetching user data:', error));
 
         // Fetch notifications
-        fetchNotifications();
-
-
-        fetch('/communities')
+        fetch(`/users/1/notifications`)
             .then(response => response.json())
-            .then(data => setCommunities(data))
-            .catch(error => console.error('Error fetching communities:', error));
-
-            // fetch(`/user/1/notifications`)
-            // .then(response => response.json())
-
-            // .then(data => setNotifications(data))
-            // .catch(error => console.error('Error fetching notifications:', error));
+            .then(data => setNotifications(data))
+            .catch(error => console.error('Error fetching notifications:', error));
+        
+        // Fetch messages
+        fetch('/messages')
+            .then(response => response.json())
+            .then(data => {
+                const newMessages = data.filter(message => !message.read);
+                setNewMessagesCount(newMessages.length);
+            })
+            .catch(error => console.error('Error fetching messages:', error));
     }, []);
-   
-   
 
     useEffect(() => {
         console.log('Communities updated:', communities);
@@ -100,9 +96,7 @@ function ExpertDashboard() {
                 setShowModal(true);
                 break;
             case 'deleteProfile':
-                fetch('/experts/1', {
-                    method: 'DELETE'
-                })
+                fetch('/experts/1', { method: 'DELETE' })
                     .then(() => {
                         setExpert(null);
                         console.log('Profile deleted');
@@ -110,12 +104,8 @@ function ExpertDashboard() {
                     .catch(error => console.error('Error deleting profile', error));
                 break;
             case 'signOut':
-                fetch('/signout', {
-                    method: 'POST'
-                })
-                    .then(() => {
-                        console.log('Signed Out');
-                    })
+                fetch('/signout', { method: 'POST' })
+                    .then(() => console.log('Signed Out'))
                     .catch(error => console.error('Error signing out:', error));
                 break;
             default:
@@ -127,19 +117,17 @@ function ExpertDashboard() {
         setCommunities(prevCommunities => [...prevCommunities, communityData]);
     }
 
-    function handleNewPostClick(){
+    function handleNewPostClick() {
         setShowCreatePost(true);
     };
 
-    function handleCloseCreatePost () {
+    function handleCloseCreatePost() {
         setShowCreatePost(false);
     };
 
     const handleMyPostsClick = () => {
-        // Toggle the visibility of expert articles
         setShowExpertArticles(!showExpertArticles);
 
-        // If expert articles section is being shown and expert articles are not fetched yet, fetch them
         if (!showExpertArticles) {
             fetch('/experts/1/blogposts')
                 .then(response => {
@@ -157,48 +145,31 @@ function ExpertDashboard() {
         }
     };
 
-
-     // Function to fetch notifications from API
-  const fetchNotifications = async () => {
-    try {
-      const response = await fetch('/notifications'); // Adjust the endpoint as per your API
-      if (!response.ok) {
-        throw new Error('Failed to fetch notifications');
-      }
-      const data = await response.json();
-      setNotifications(data.notifications); // Assuming the API response contains notifications array
-    } catch (error) {
-      console.error('Error fetching notifications:', error.message);
-    }
-  };
-
-
-    // Pagination logic
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const visibleArticles = posts.slice(indexOfFirstPost, indexOfLastPost);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
-    
-    function toggleFollowers(){
+
+    function toggleFollowers() {
         setShowFollowers(!showFollowers);
     }
+
     return (
         <div className='parent-container'>
             <div className="dashboard">
                 <div className='top-right-corner'>
-                <div className="notification-container">
-                <FaBell className="notification-bell" />
-                    {notifications.length > 0 && <span className="notification-dot"></span>}
-                    {/* Render notifications */}
-                    <div className="notification-list">
-                    {Array.isArray(notifications) && notifications.map(notification => (
-                            <div key={notification.id} className="notification-item">
-                                <span>{notification.content}</span>
-                            </div>
-                        ))}
-                    </div>
+                    <div className="notification-container">
+                        <FaBell className="notification-bell" />
+                        {notifications.length > 0 && <span className="notification-dot"></span>}
+                        <div className="notification-list">
+                            {notifications.map(notification => (
+                                <div key={notification.id} className="notification-item">
+                                    <span>{notification.content}</span>
+                                </div>
+                            ))}
                         </div>
+                    </div>
                     <div className="expert-profile-topbar">
                         <Dropdown as={ButtonGroup}>
                             <Button className="options-button">Options</Button>
@@ -231,54 +202,47 @@ function ExpertDashboard() {
                             }} userId={1} />}
                         </Modal.Body>
                     </Modal>
-                </div> 
+                </div>
                 <div className='sidebar'>
-                    <Link to = {'/blogs'} style={{'color':'white'}}>
-
-                    <div className='sidebar-item'>
-                        <FaChartBar className="sidebar-icon" />
-                        <span>My Feed</span>
-                    </div>
-
+                    <Link to={'/blogs'} style={{ 'color': 'white' }}>
+                        <div className='sidebar-item'>
+                            <FaChartBar className="sidebar-icon" />
+                            <span>My Feed</span>
+                        </div>
                     </Link>
-                   
-                   
                     <div className='sidebar-item' onClick={handleMyPostsClick}>
-                    <FaPenFancy className='sidebar-icon' />
-                    <span>My Articles</span>
+                        <FaPenFancy className='sidebar-icon' />
+                        <span>My Articles</span>
                     </div>
                     {showExpertArticles && (
-                         <div className='article-grid'>
-                                    {expertArticles.map(article => (
-                               <div key={article.id} className='article-card'>
-                             
-                                <img src={article.image} alt={article.title} />
-                                
-                                <div className='card-content' >
-                                 <h2 style={{ fontSize: "12px" }}>{article.title}</h2>
-                                 <p style={{ fontSize: "12px" }}>{article.content}</p>
-                                 <div className='meta-info'>
-                                      <span>
-                                     <FaCalendarAlt /> {article.created_at}
-                                    </span>
-                                    <span>
-                                     <FaHeart style={{ color: 'red' }} /> {article.total_likes}
-                                    </span>
-
-                                    <span>
-                                    <FaComments /> {article.total_comments}
-                                    </span>
-                                    
+                        <div className='article-grid'>
+                            {expertArticles.map(article => (
+                                <div key={article.id} className='article-card'>
+                                    <img src={article.image} alt={article.title} />
+                                    <div className='card-content'>
+                                        <h2 style={{ fontSize: "12px" }}>{article.title}</h2>
+                                        <p style={{ fontSize: "12px" }}>{article.content}</p>
+                                        <div className='meta-info'>
+                                            <span>
+                                                <FaCalendarAlt /> {article.created_at}
+                                            </span>
+                                            <span>
+                                                <FaHeart style={{ color: 'red' }} /> {article.total_likes}
+                                            </span>
+                                            <span>
+                                                <FaComments /> {article.total_comments}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
-                             </div>
-                         </div>
                             ))}
                         </div>
                     )}
-               
-                    <div className="sidebar-item">
+                    <div className='sidebar-item'>
                         <FaEnvelope className='sidebar-icon' />
-                        <span>Inbox</span>
+                        <Link to={'/messages'} style={{ color: 'white' }}>
+                            <span>Messages ({newMessagesCount})</span>
+                        </Link>
                     </div>
                 </div>
                 <div className="main-content">
@@ -313,12 +277,11 @@ function ExpertDashboard() {
                                                                 <FaCalendarAlt /> {article.created_at}
                                                             </span>
                                                             <span>
-                                                             <FaHeart style={{ color: 'red' }} /> {article.total_likes}
+                                                                <FaHeart style={{ color: 'red' }} /> {article.total_likes}
                                                             </span>
                                                             <span>
                                                                 <FaComments /> {article.total_comments}
                                                             </span>
-                                                            
                                                         </div>
                                                     </div>
                                                 </div>
@@ -354,20 +317,22 @@ function ExpertDashboard() {
                                             </ul>
                                         )}
                                     </div>
-                                    <div className='communities'>
-                                        <FaUsersCog className='communities-icon' />
-                                        <h4>Communities</h4>
-                                        <p onClick={() => setShowCommunities(!showCommunities)} style={{ cursor: 'pointer' }}>
-                                            {communities.length}
-                                        </p>
-                                        {showCommunities && (
-                                            <ul>
-                                                {communities.map((community, index) => (
-                                                    <li key={index}>{community.name}</li>
-                                                ))}
-                                            </ul>
-                                        )}
-                                    </div>
+                                    <Link to={'/community'}>
+                                        <div className='communities'>
+                                            <FaUsersCog className='communities-icon' />
+                                            <h4>Communities</h4>
+                                            <p onClick={() => setShowCommunities(!showCommunities)} style={{ cursor: 'pointer' }}>
+                                                {communities.length}
+                                            </p>
+                                            {showCommunities && (
+                                                <ul>
+                                                    {communities.map((community, index) => (
+                                                        <li key={index}>{community.name}</li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </div>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

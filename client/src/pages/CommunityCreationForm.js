@@ -21,7 +21,7 @@ function CommunityCreationForm({ onSubmit, userId }) {
         const communityData = { ...formData, user_id: userId };
         
         // Send the new community data to the backend
-        fetch('/communities', {
+        fetch('/communities/1', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

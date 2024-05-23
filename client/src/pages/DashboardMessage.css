@@ -1,0 +1,120 @@
+/* Dashboard.css */
+
+/* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Body styles */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+  }
+  
+  /* Sidebar styles */
+  .sidebar {
+    background-color: #252542;
+    color: #fff;
+    width: 220px;
+    height: 100vh; /* Full height of viewport */
+    position: fixed;
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+    overflow: auto;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+    padding: 1rem 0;
+    text-align: center;
+  }
+  
+  .menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .menu-item {
+    padding: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .menu-item:hover {
+    background-color: #3a3a59;
+  }
+  
+  .active {
+    background-color: #007bff;
+  }
+  
+  /* Main content styles */
+  .main {
+    margin-left: 220px; /* Adjust this based on sidebar width */
+    padding: 20px;
+  }
+  
+  .greeting {
+    margin-bottom: 20px;
+  }
+  
+  .message-list {
+    overflow-y: auto;
+    max-height: 400px; /* Adjust as needed */
+  }
+  
+  .message {
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .individual-message {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .community-message {
+    background-color: #f2f2f2;
+  }
+  
+  .message-input {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .message-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .message-input input:focus {
+    border-color: #007bff;
+  }
+  
+  .message-input button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .message-input button:hover {
+    background-color: #0056b3;
+  }
+  

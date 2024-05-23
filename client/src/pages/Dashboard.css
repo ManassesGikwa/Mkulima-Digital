@@ -1,12 +1,42 @@
-/* Dashboard.css */
+.parent-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: url('../images/dashboardbackground.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100%;
+  padding: 50px;
+}
 
-/* Top bar styles */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  height: 100%;
+  margin: 20px auto 0;
+  padding: 20px;
+  background-color: rgb(25, 39, 25);
+  border-radius: 15px;
+}
+
 .top-bar {
+  position: relative;
+  width: 1450px;
+  height: 170px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  background-color: #f0f0f0;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  border-radius: 10px 10px 0 0;
+  z-index: 1;
+  margin-top: -20px;
+  margin-left:-5px;
+  
 }
 
 .notification-bell {
@@ -16,127 +46,215 @@
 
 .expert-profile-topbar {
   display: flex;
+  flex-direction: column;
+  margin-left: 50px;
+  margin-top: 20px;
+}
+
+.notification-container {
+  display: flex;
   align-items: center;
+  margin-left: auto; /* Pushes the container to the right edge */
+  color: green;
 }
 
-.user-profile {
-  margin-right: 20px;
+.notification-bell {
+  font-size: 24px;
+  color:rgb(25, 39, 25);
 }
 
-.options-button {
-  background-color: #007bff;
-  border-color: #007bff;
-}
 
-.options-button:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
-}
 
-.dropdown-menu {
-  min-width: 150px;
-}
-
-/* Sidebar styles */
 .sidebar {
-  width: 200px;
-  background-color: #333;
-  color: #fff;
-  padding: 20px;
+  position: absolute;
+  border-radius: 10px 0px 0 10px ;
+  margin-right:1150px;
+  width: 305px;
+  height: 1100px; 
+  margin-bottom:500px;
+  background-color: rgb(25, 39, 25);
+  color: #4db52a ;
+  padding-top:350px;
+
+  padding-left: 50px;
+  box-sizing: border-box;
 }
 
 .sidebar-item {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
-  cursor: pointer;
+  margin-top: 35px;
+  font-size: 22px;
 }
 
 .sidebar-icon {
   margin-right: 10px;
 }
 
-/* Main content styles */
 .main-content {
+  margin-left: 320px; /* Width of the sidebar + some margin */
   flex: 1;
-  padding: 20px;
+  margin-top: 80px; /* Ensure it is below the top-bar */
+  width: calc(100% - 340px); /* Full width minus sidebar width and some margin */
 }
 
-.banner {
-  background-color: #007bff;
-  color: #fff;
-  padding: 20px;
-  text-align: center;
+.options-button {
+  background-color: rgb(25, 39, 25);
+;
+  border-color: #4db52a;
+  color:#4db52a ;
 }
 
-.new-post-button {
-  background-color: #28a745;
-  border-color: #28a745;
+.options-button:hover {
+  background-color: #89d799;
+  border-color: #eef3ef;
 }
 
-.new-post-button:hover {
-  background-color: #218838;
-  border-color: #1e7e34;
-}
-
-/* Top articles styles */
-.article-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-.article-card {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.card-content {
-  padding: 10px;
-}
-
-.meta-info {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: #666;
-}
-
-/* Expert info styles */
-.expert-info {
-  display: flex;
-  justify-content: space-between;
+.show-more-button {
+  background-color: #228235;
+  border-color: #52cb6a;
   margin-top: 20px;
 }
 
-.follower-icon,
-.communities-icon {
-  margin-right: 10px;
+.show-more-button:hover {
+  background-color: #23bf42;
+  border-color: #eef3ef;
 }
 
-/* Modal styles */
-.modal-header {
-  background-color: #007bff;
-  color: #fff;
-}
-
-.modal-title {
-  color: #fff;
-}
-
-/* Pagination styles */
-.pagination {
-  justify-content: center;
-}
-
-/* Notification dot styles */
 .notification-dot {
   width: 10px;
   height: 10px;
   background-color: red;
   border-radius: 50%;
-  display: inline-block;
+  margin-left: 5px;
 }
 
-/* Add more styles as needed */
+.banner {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  background-image: url('../images/dashboardbanner.jpg');
+  padding: 30px;
+  width: 650px;
+  height: 150px;
+}
+
+.new-post-button {
+  background-color: green;
+  color: white;
+}
+
+.content-sections {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.top-articles {
+  width: 60%; /* Ensures it takes full width available */
+  height: 80%;
+  background-color: #ffffff;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.toparticles-h3{
+  color: #4db52a ;
+}
+
+.article-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.article-card {
+  background-color: #fefefe;
+  padding: 1rem;
+  border-radius: 4px; /* Changed to fixed value */
+  transition: box-shadow 0.3s ease-in-out; /* Added a transition for the shadow */
+  cursor: default;
+  box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.article-card:hover {
+  box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+}
+
+.show-more-button {
+  margin-top: 20px;
+}
+
+.expert-info {
+  flex: 1;
+  margin-left: 60px;
+  margin-bottom: 50px;
+}
+
+.followers, .following, .communities {
+  background-color: #4db52a ;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.followers:hover, .following:hover, .communities:hover {
+  transform: scale(1.05);
+  background-color: rgb(159, 209, 150);
+  box-shadow: 0 30px 20px rgba(0, 0, 0, 0.2);
+}
+
+.expert-details {
+  margin-top: -200px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.follower-icon {
+  font-size: 50px;
+}
+
+.following-icon {
+  font-size: 50px;
+}
+
+.communities-icon {
+  font-size: 50px;
+}
+
+
+
+
+/* Responsive styling */
+@media screen and (max-width: 768px) {
+  .main-content {
+    margin-left: 10px;
+    width: calc(100% - 20px);
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-top: 20px;
+    padding: 20px 10px;
+  }
+
+  .expert-info {
+    margin-left: 0;
+  }
+
+  .followers, .following, .communities {
+    width: 100%;
+  }
+
+  .top-bar, .expert-profile-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .expert-profile-topbar {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}

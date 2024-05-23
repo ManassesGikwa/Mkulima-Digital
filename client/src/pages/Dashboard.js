@@ -280,7 +280,6 @@
 // export default ExpertDashboard;
 
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { FaChartBar, FaPenFancy, FaEnvelope, FaBell, FaUser, FaUserFriends, FaUsers, FaUsersCog } from 'react-icons/fa';
 import ProfileUpdateForm from './ProfileUpdateForm';
 import CommunityCreationForm from './CommunityCreationForm';
@@ -291,7 +290,6 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal';
-
 
 function ExpertDashboard() {
     const navigate = useNavigate(); 
@@ -411,10 +409,6 @@ function ExpertDashboard() {
     function toggleFollowers(){
         setShowFollowers(!showFollowers);
     }
-    function handleInboxClick() {
-        navigate('/messages');
-    }
-
     return (
         <div className='parent-container'>
             <div className="dashboard">
@@ -425,12 +419,12 @@ function ExpertDashboard() {
                     </div>
                     <div className="expert-profile-topbar">
                         <div className='user-profile'>
-                            {/* {expert && (
+                            {expert && (
                                 <div>
                                     <h3 style={{'marginBottom': '15px', }}>{expert.name}<FaUser className='profile-icon' /></h3>
                                     <p style={{ 'fontSize': "20px",}}>{expert.expertise_area}</p>
                                 </div>
-                            )} */}
+                            )}
                         </div>
                         <Dropdown as={ButtonGroup}>
                             <Button className="options-button">Options</Button>
@@ -475,8 +469,7 @@ function ExpertDashboard() {
                     </div>
                     <div className="sidebar-item" onClick={handleInboxClick}>
                         <FaEnvelope className='sidebar-icon' />
-                        <span><Link to='/inbox'> Inbox </Link></span>
-                        {/* {inboxMessages.length > 0 && <span className='notification-dot'></span> } */}
+                        <span>Inbox</span>
                     </div>
                 </div>
                 <div className="main-content">
@@ -539,6 +532,11 @@ function ExpertDashboard() {
                                         </ul>
                                     )}
                             </div>
+                            {/* <div className='following'>
+                                <FaUsers className='following-icon' />
+                                <h4>Following</h4>
+                                <p>{following}</p>
+                            </div> */}
                             <div className='communities'>
                                 <FaUsersCog className='communities-icon' />
                                 <h4>Communities</h4>

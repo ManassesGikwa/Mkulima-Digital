@@ -1,4 +1,4 @@
-    # Remote library imports
+# Remote library imports
 import logging
 from faker import Faker
 from datetime import datetime
@@ -172,7 +172,7 @@ def generate_notifications():
 
     logging.info("Seed completed successfully!")
 
-if __name__ == '__main__':
+if _name_ == '_main_':
     with app.app_context():
         db.create_all()
         clear_data()

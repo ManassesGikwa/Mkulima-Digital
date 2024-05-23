@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import CreatePost from './CreatePost';
 
 function ExpertDashboard() {
@@ -29,6 +29,7 @@ function ExpertDashboard() {
     const [expertArticles, setExpertArticles] = useState([]);
     const [showExpertArticles, setShowExpertArticles] = useState(false);
     const [newMessagesCount, setNewMessagesCount] = useState(0);
+    const { id } = useParams();
 
     const [updatedProfileData, setUpdatedProfileData] = useState({
         name: "",
@@ -38,13 +39,13 @@ function ExpertDashboard() {
 
     useEffect(() => {
         // Fetch expert data
-        fetch('/experts/1')
+        fetch('http://127.0.0.1:5555/experts/${id}')
             .then(response => response.json())
             .then(data => setExpert(data))
             .catch(error => console.error('Error fetching expert data:', error));
 
         // Fetch posts
-        fetch('/blogposts')
+        fetch('http://127.0.0.1:5555/blogposts')
             .then(response => response.json())
             .then(data => {
                 setPosts(data);
@@ -56,7 +57,7 @@ function ExpertDashboard() {
             });
 
         // Fetch user data
-        fetch('/users/1')
+        fetch('http://127.0.0.1:5555/users/${id}')
             .then(response => response.json())
             .then(user => {
                 setFollowers(user.followers ?? []);
@@ -65,20 +66,20 @@ function ExpertDashboard() {
             .catch(error => console.error('Error fetching user data:', error));
 
         // Fetch notifications
-        fetch(`/users/1/notifications`)
+        fetch(`http://127.0.0.1:5555/users/${id}/notifications`)
             .then(response => response.json())
             .then(data => setNotifications(data))
             .catch(error => console.error('Error fetching notifications:', error));
         
         // Fetch messages
-        fetch('/messages')
+        fetch('http://127.0.0.1:5555/messages')
             .then(response => response.json())
             .then(data => {
                 const newMessages = data.filter(message => !message.read);
                 setNewMessagesCount(newMessages.length);
             })
             .catch(error => console.error('Error fetching messages:', error));
-    }, []);
+    }, [id]);
 
     useEffect(() => {
         console.log('Communities updated:', communities);
@@ -96,7 +97,7 @@ function ExpertDashboard() {
                 setShowModal(true);
                 break;
             case 'deleteProfile':
-                fetch('/experts/1', { method: 'DELETE' })
+                fetch('http://127.0.0.1:5555/experts/${id}', { method: 'DELETE' })
                     .then(() => {
                         setExpert(null);
                         console.log('Profile deleted');
@@ -129,7 +130,7 @@ function ExpertDashboard() {
         setShowExpertArticles(!showExpertArticles);
 
         if (!showExpertArticles) {
-            fetch('/experts/1/blogposts')
+            fetch('http://127.0.0.1:5555/experts/${id}/blogposts')
                 .then(response => {
                     if (response.ok) {
                         return response.json();

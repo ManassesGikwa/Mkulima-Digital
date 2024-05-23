@@ -124,11 +124,13 @@ const Community = () => {
                 <img src={community.image} alt={community.name} className='card-img-top' />
                 <Link to={`/community/${community.id}`} className='community-name'>{community.name}</Link>
                 <div className='card-body'>
-                  <button onClick={() => handleLike(community.id)} className='btn1'>Like</button>
-                  <button onClick={() => handleFollow(community.id)} className='btn1'>Follow</button>
-                  {userRole === "expert" && ( // Conditionally render Delete button for experts
+                  {/* <p className='card-text'>{community.description}</p> */}
+                  <div className='btn'>
+                    <button onClick={() => handleLike(community.id)} className='btn1'>Like</button>
+                    <button onClick={() => handleFollow(community.id)} className='btn1'>Follow</button>
                     <button onClick={() => handleDelete(community.id)} className='btn1'>Delete</button>
-                  )}
+                    <button className='com-button'>New Community</button>
+                  </div>
                 </div>
               </div>
             </li>

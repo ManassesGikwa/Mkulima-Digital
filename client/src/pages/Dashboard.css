@@ -189,30 +189,6 @@
   margin-top: 20px;
 }
 
-.article-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 2rem;
-  padding: 1rem;
-}
-
-.article-card {
-  background-color: #fefefe;
-  padding: 1rem;
-  border-radius: 4px;
-  transition: box-shadow 0.3s ease-in-out;
-  cursor: default;
-  box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.1);
-}
-
-.article-card:hover {
-  box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.2);
-}
-
-.show-more-button {
-  margin-top: 20px;
-}
-
 .expert-info {
   flex: 1;
   margin-left: 60px;

@@ -40,7 +40,7 @@ class UserAuthentication(Resource):
         email = data.get('email') if action == 'register' else None
         role = data.get('role') if action == 'register' else None
 
-        if action == 'register':
+        
         if action == 'register':
             if not username or not email or not password or not role:
                 return {'message': 'Username, email, password, and role are required'}, 400

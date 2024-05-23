@@ -88,7 +88,6 @@ class Expert(db.Model):
     image = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    notifications = db.relationship('Notification', backref='expert', lazy=True)
 
     blog_posts = db.relationship('BlogPost', back_populates='expert', lazy=True)
     followers = db.relationship('ExpertFollowers', backref='follower_relationships', lazy=True) 

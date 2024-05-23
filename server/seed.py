@@ -57,7 +57,6 @@ def seed_data():
 
     # Generate fake blog posts
     num_blog_posts = 20
-    blog_posts = []
     for _ in range(num_blog_posts):
         author = fake.random_element(elements=users)
         expert = fake.random_element(elements=Expert.query.all())
@@ -118,7 +117,6 @@ def seed_data():
 
     # Generate fake messages
     num_messages = 50
-    messages = []
     for _ in range(num_messages):
         sender = fake.random_element(elements=users)
         receiver = fake.random_element(elements=users)
@@ -148,7 +146,6 @@ def seed_data():
 
     # Generate fake likes
     num_likes = 100
-    likes = []
     for _ in range(num_likes):
         like = Like(
             user_id=fake.random_element(elements=users).id,
@@ -181,4 +178,3 @@ if __name__ == '__main__':
         clear_data()
         seed_data()
         generate_notifications()
-

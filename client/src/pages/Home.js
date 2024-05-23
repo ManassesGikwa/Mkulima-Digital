@@ -136,7 +136,7 @@ const Home = () => {
       <div className="video position-relative">
         <video autoPlay muted loop id="myVideo">
           <source
-            src="https://video.wixstatic.com/video/c0bbc5_ea3fdc8d953b4dbcab20a021d2ef1389/1080p/mp4/file.mp4"
+            src="https://cdn.pixabay.com/video/2020/04/30/37663-418005775_large.mp4"
             type="video/mp4"
           />
         </video>

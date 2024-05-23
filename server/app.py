@@ -93,7 +93,7 @@ class BlogPostDetails(Resource):
     def get(self, id):
         blogpost = BlogPost.query.get_or_404(id)
         return jsonify(blogpost.to_dict())
-   
+
     def put(self, id):
         blogpost = BlogPost.query.get_or_404(id)
         data = request.json
@@ -120,10 +120,6 @@ class Communities(Resource):
         new_community = Community(**data)
         db.session.add(new_community)
         db.session.commit()
-
-        # Notify all users about the new community
-        self.notify_all_users('new_community', f"A new community '{new_community.name}' has been created")
-
         return jsonify(new_community.to_dict()), 201
 
 
@@ -198,31 +194,24 @@ class Messages(Resource):
         return jsonify(serialized_messages)
 
     def post(self):
-        data = request.get_json()
-        new_message = Message(
-            sender_id=data['sender_id'],
-            receiver_id=data['receiver_id'],
-            content=data['content'],
-            created_at=datetime.utcnow()
-        )
+        data = request.json
+        new_message = Message(**data)
         db.session.add(new_message)
         db.session.commit()
+        return jsonify(new_message.to_dict()), 201
 
-        # Notify all users about the new message
-        expert_details = ExpertDetails()
-        expert_details.notify_all_users_new_message(new_message)
+class MessageDetails(Resource):
+    def get(self, id):
+        message = Message.query.get_or_404(id)
+        return jsonify(message.to_dict())
 
-        return new_message.to_dict(), 201
-
-    def put(self, message_id):
-        data = request.get_json()
-        message = Message.query.get(message_id)
-        if message:
-            message.content = data['content']
-            db.session.commit()
-            return message.to_dict(), 200
-        else:
-            return {'error': 'Message not found'}, 404
+    def put(self, id):
+        message = Message.query.get_or_404(id)
+        data = request.json
+        for key, value in data.items():
+            setattr(message, key, value)
+        db.session.commit()
+        return jsonify(message.to_dict())
 
     def delete(self, id):
         message = Message.query.get_or_404(id)
@@ -300,30 +289,7 @@ class Likes(Resource):
 
     def post(self):
         data = request.json
-        post_id = data.get('blog_post_id')
-        user_id = data.get('user_id')
-        
-        # Check if both post_id and user_id are provided
-        if not (post_id and user_id):
-            return jsonify({'error': 'Both post_id and user_id are required'}), 400
-        
-        # Check if the blog post and user exist
-        post = BlogPost.query.get(post_id)
-        if not post:
-            return jsonify({'error': 'Blog post not found'}), 404
-        user = User.query.get(user_id)
-        if not user:
-            return jsonify({'error': 'User not found'}), 404
-        
-        # Check if the user has already liked the post
-        existing_like = Like.query.filter_by(user_id=user_id, blog_post_id=post_id).first()
-        if existing_like:
-            return jsonify({'message': 'User already liked this post'}), 400
-        
-        # Create a new Like instance
-        new_like = Like(user_id=user_id, blog_post_id=post_id, created_at=datetime.utcnow())
-        
-        # Add the like to the database session and commit
+        new_like = Like(**data)
         db.session.add(new_like)
         db.session.commit()
         return jsonify(new_like.to_dict()), 201
@@ -352,7 +318,7 @@ class LikeDetails(Resource):
 class Users(Resource):
     def get(self):
         users = User.query.all()
-        serialized_users =  [user.to_dict() for user in users]
+        serialized_users = [user.to_dict() for user in users]
         return jsonify(serialized_users)
 
     def post(self):
@@ -532,5 +498,3 @@ api.add_resource(ExpertFollowResource, '/follow/expert/<int:expert_id>')
 api.add_resource(CommunityLikeResource, '/like/community/<int:community_id>')
 api.add_resource(BlogPostFollows, '/blogposts/<int:blog_post_id>/follows')
 api.add_resource(BlogPostComments, '/blogposts/<int:blog_post_id>/comments')
-
-

@@ -1,14 +1,14 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from flask_migrate import Migrate
-from models import db, User, BlogPost, Community, Expert, Message, Comment, Like, CommunityFollowers,Notification
+from models import db, User, BlogPost, Community, Expert, Message, Comment, Like, CommunityFollowers, ExpertFollowers, CommunityLikes, Conversation
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token
-import os
-import jwt.exceptions
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from werkzeug.security import generate_password_hash
+import os   
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app, origins='http://localhost:3000')
@@ -23,67 +23,72 @@ api = Api(app)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
-class UserRegistration(Resource):
-    def post(self):
-        try:
-            data = request.json
-            username = data.get('username')
-            email = data.get('email')
-            password = data.get('password')
-            role = data.get('role')  # New field for role
 
+import bcrypt
+
+class UserAuthentication(Resource):
+    def post(self):
+        data = request.json
+        action = data.get('action')
+        username = data.get('username')
+        password = data.get('password')
+        email = data.get('email') if action == 'register' else None
+        role = data.get('role') if action == 'register' else None
+
+        if action == 'register':
             if not username or not email or not password or not role:
                 return {'message': 'Username, email, password, and role are required'}, 400
 
-            # Check if the username or email already exists
             if User.query.filter_by(username=username).first():
                 return {'message': 'Username already exists'}, 400
 
             if User.query.filter_by(email=email).first():
                 return {'message': 'Email already exists'}, 400
+        
+    # Your code here
 
-            # Hash the password before storing it
-            hashed_password = generate_password_hash(password)
-            
-            if role == 'expert':
-                new_expert = Expert(username=username, email=email, password=hashed_password)
-                db.session.add(new_expert)
-            else:
-                new_user = User(username=username, email=email, password=hashed_password, role=role)
-                db.session.add(new_user)
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
+            new_user = User(username=username, email=email, password=hashed_password, role=role)
+            db.session.add(new_user)
             db.session.commit()
 
+            if role == 'expert':
+                new_expert = Expert(name=username, user_id=new_user.id, created_at=datetime.utcnow())
+                db.session.add(new_expert)
+                db.session.commit()
+
             return {'message': 'User created successfully!'}, 201
-        except jwt.exceptions.DecodeError as e:
-            return {'message': 'Registration failed. Error: {}'.format(str(e))}, 500
-        
-class UserLogin(Resource):
-    def post(self):
-        data = request.json
-        username = data.get('username')
-        password = data.get('password')
 
-        user = User.query.filter_by(username=username).first()
-        if user and bcrypt.check_password_hash(user.password, password):
-            access_token = create_access_token(identity=user.id)
-            return {'access_token': access_token}, 200
+        elif action == 'login':
+            if not username or not password:
+                return {'message': 'Username and password are required'}, 400
+
+            print(f'Login attempt for user: {username}')
+
+            # Check if the user exists in either the users or experts table
+            user = User.query.filter_by(username=username).first()
+            if not user:
+                user = Expert.query.filter_by(name=username).first()
+                print(f'User not found in User table, checked Expert table. Found: {user is not None}')
+
+            if user:
+                print(f'Found user: {user.username}')
+            else:
+                print('User not found')
+
+            # If user is found and password matches, generate access token
+            if user and bcrypt.checkpw(password.encode('utf-8'), user.password):
+                print('Password matched')
+                access_token = create_access_token(identity=user.id)
+                return {'access_token': access_token}, 200
+            else:
+                print('Invalid username or password')
+                return {'message': 'Invalid username or password'}, 401
+
         else:
-            return {'message': 'Invalid username or password'}, 401
-
-class BlogPosts(Resource):
-    def get(self):
-        blogposts = BlogPost.query.all()
-        serialized_blogposts = [blogpost.to_dict() for blogpost in blogposts]
-        return jsonify(serialized_blogposts)
-
-    def post(self):
-        data = request.json
-        new_blogpost = BlogPost(**data)
-        db.session.add(new_blogpost)
-        db.session.commit()
-        return jsonify(new_blogpost.to_dict()), 201
-
+            return {'message': 'Invalid action specified'}, 400
+        
 class BlogPostDetails(Resource):
     def get(self, id):
         blogpost = BlogPost.query.get_or_404(id)
@@ -103,6 +108,7 @@ class BlogPostDetails(Resource):
         db.session.commit()
         return jsonify({'message': 'Blog post deleted successfully'})
 
+
 class Communities(Resource):
     def get(self):
         communities = Community.query.all()
@@ -120,16 +126,6 @@ class Communities(Resource):
 
         return jsonify(new_community.to_dict()), 201
 
-    def notify_all_users(self, notification_type, content):
-        users = User.query.all()
-        for user in users:
-            notification = Notification(
-                user_id=user.id,
-                type=notification_type,
-                content=content
-            )
-            db.session.add(notification)
-        db.session.commit()
 
 class CommunityDetails(Resource):
     def get(self, id):
@@ -150,32 +146,7 @@ class CommunityDetails(Resource):
         db.session.commit()
         return jsonify({'message': 'Community deleted successfully'})
 
-class CommunityFollowersResource(Resource):
-    def get(self):
-        followers = CommunityFollowers.query.all()
-        return jsonify([follower.to_dict() for follower in followers])
 
-    def post(self):
-        data = request.get_json()
-        new_follower = CommunityFollowers(
-            community_id=data['community_id'],
-            user_id=data['user_id']
-        )
-        db.session.add(new_follower)
-        db.session.commit()
-        return new_follower.to_dict(), 201
-
-    def delete(self, id):
-        follower = CommunityFollowers.query.get(id)
-        if follower:
-            db.session.delete(follower)
-            db.session.commit()
-            return '', 204
-        else:
-            return {'error': 'Follower not found'}, 404
-
-
-# Expert Resources
 class Experts(Resource):
     def get(self):
         experts = Expert.query.all()
@@ -188,6 +159,7 @@ class Experts(Resource):
         db.session.add(new_expert)
         db.session.commit()
         return jsonify(new_expert.to_dict()), 201
+
 
 class ExpertDetails(Resource):
     def get(self, id):
@@ -207,32 +179,23 @@ class ExpertDetails(Resource):
         db.session.delete(expert)
         db.session.commit()
         return jsonify({'message': 'Expert deleted successfully'})
+    
+class Messages(Resource):
+    def get(self):
+        sender_id = request.args.get('sender_id')
+        receiver_id = request.args.get('receiver_id')
 
-    # Notify all users when a new expert is added
-    def notify_all_users_new_expert(self, expert):
-        content = f'A new expert {expert.name} has been added. Check out their profile!'
-        self.notify_all_users('new_expert', content)
-
-    # Notify all users when a new message is received
-    def notify_all_users_new_message(self, message):
-        content = f'You have received a new message: {message.content}'
-        self.notify_all_users('message', content)
-
-    # Notify all users
-    def notify_all_users(self, notification_type, content):
-        users = User.query.all()
-        for user in users:
-            notification = Notification(
-                user_id=user.id,
-                type=notification_type,
-                content= content
-            )
-            db.session.add(notification)
-
-class MessageDetails(Resource):
-    def get(self, user_id):
-        messages = Message.query.filter_by(sender_id=user_id).all()
-        return [message.to_dict() for message in messages]
+        if sender_id and receiver_id:
+            messages = Message.query.filter(
+                ((Message.sender_id == sender_id) & (Message.receiver_id == receiver_id)) |
+                ((Message.sender_id == receiver_id) & (Message.receiver_id == sender_id))
+            ).order_by(Message.created_at).all()
+            serialized_messages = [message.to_dict() for message in messages]
+            return jsonify(serialized_messages)
+        
+        messages = Message.query.all()
+        serialized_messages = [message.to_dict() for message in messages]
+        return jsonify(serialized_messages)
 
     def post(self):
         data = request.get_json()
@@ -261,28 +224,53 @@ class MessageDetails(Resource):
         else:
             return {'error': 'Message not found'}, 404
 
-    def delete(self, message_id):
-        message = Message.query.get(message_id)
-        if message:
-            db.session.delete(message)
-            db.session.commit()
-            return '', 204
-        else:
-            return {'error': 'Message not found'}, 404
-        
-# Comment Resources
+    def delete(self, id):
+        message = Message.query.get_or_404(id)
+        db.session.delete(message)
+        db.session.commit()
+        return jsonify({'message': 'Message deleted successfully'})
+
+class Conversation(Resource):
+    def get(self):
+        sender_id = request.args.get('sender_id')
+        receiver_id = request.args.get('receiver_id')
+
+        if not sender_id or not receiver_id:
+            return {'message': 'Sender ID and Receiver ID are required'}, 400
+
+        messages = Message.query.filter(
+            ((Message.sender_id == sender_id) & (Message.receiver_id == receiver_id)) |
+            ((Message.sender_id == receiver_id) & (Message.receiver_id == sender_id))
+        ).order_by(Message.created_at).all()
+
+        serialized_messages = [message.to_dict() for message in messages]
+        return jsonify(serialized_messages)
+
+
 class Comments(Resource):
     def get(self):
         comments = Comment.query.all()
         serialized_comments = [comment.to_dict() for comment in comments]
         return jsonify(serialized_comments)
 
-    def post(self):
-        data = request.json
-        new_comment = Comment(**data)
-        db.session.add(new_comment)
-        db.session.commit()
-        return jsonify(new_comment.to_dict()), 201
+    @app.route('/blogposts/<int:blog_post_id>/comments', methods=['POST'])
+    def post_comment(blog_post_id):
+        data = request.get_json()
+        text = data.get('text')
+        user_id = data.get('user_id')  # Ensure you get the user_id from the request data
+
+        if not text or not user_id:
+            return {'error': 'Missing content or user_id'}, 400
+
+        try:
+            new_comment = Comment(content=text, blog_post_id=blog_post_id, user_id=user_id, created_at=datetime.utcnow())
+            db.session.add(new_comment)
+            db.session.commit()
+            return new_comment.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'error': str(e)}, 500
+
 
 class CommentDetails(Resource):
     def get(self, id):
@@ -302,6 +290,7 @@ class CommentDetails(Resource):
         db.session.delete(comment)
         db.session.commit()
         return jsonify({'message': 'Comment deleted successfully'})
+
 
 class Likes(Resource):
     def get(self):
@@ -337,8 +326,8 @@ class Likes(Resource):
         # Add the like to the database session and commit
         db.session.add(new_like)
         db.session.commit()
-        
-        return jsonify({'message': 'Post liked successfully'}), 201
+        return jsonify(new_like.to_dict()), 201
+
 
 class LikeDetails(Resource):
     def get(self, id):
@@ -358,6 +347,8 @@ class LikeDetails(Resource):
         db.session.delete(like)
         db.session.commit()
         return jsonify({'message': 'Like deleted successfully'})
+
+
 class Users(Resource):
     def get(self):
         users = User.query.all()
@@ -370,6 +361,7 @@ class Users(Resource):
         db.session.add(new_user)
         db.session.commit()
         return jsonify(new_user.to_dict()), 201
+
 
 class UserDetails(Resource):
     def get(self, id):
@@ -389,224 +381,142 @@ class UserDetails(Resource):
         db.session.delete(user)
         db.session.commit()
         return jsonify({'message': 'User deleted successfully'})
-    
+
 class CommunityFollowersResource(Resource):
     def get(self, community_id):
-        # Query the database to retrieve followers of the specified community
         followers = CommunityFollowers.query.filter_by(community_id=community_id).all()
-
-        # Serialize the follower data into JSON format
         serialized_followers = [follower.to_dict() for follower in followers]
-
-        # Return the serialized follower data as the response
         return jsonify(serialized_followers)
+
+
 class BlogPostCommentsResource(Resource):
     def get(self, blogpost_id):
-        # Query the database to retrieve comments associated with the specified blog post
         comments = Comment.query.filter_by(blog_post_id=blogpost_id).all()
-
-        # Serialize the comment data into JSON format
         serialized_comments = [comment.to_dict() for comment in comments]
-
-        # Return the serialized comment data as the response
         return jsonify(serialized_comments)
 
-class BlogPostLikes(Resource):
-    def get(self, blog_post_id):
-        # Query the database to retrieve likes associated with the specified blog post
-        likes = Like.query.filter_by(blog_post_id=blog_post_id).all()
+class BlogPostLikesToggle(Resource):
+    def post(self, blog_post_id):
+        try:
+            data = request.get_json()
+            print("Received data:", data)  # Debugging line
 
-        # Serialize the likes into JSON format
-        serialized_likes = [like.to_dict() for like in likes]
+            like = data.get('like')
+            user_id = data.get('user_id')
 
-        # Return the serialized likes as the response
-        return jsonify(serialized_likes)
+            if user_id is None:
+                return {'error': 'User ID is required'}, 400
 
-class ExpertBlogPosts(Resource):
-    def get(self, expert_id):
-        # Query the database to retrieve blog posts associated with the specified expert
-        blogposts = BlogPost.query.filter_by(user_id=expert_id).all()
+            # Check if the user has already liked the post
+            existing_like = Like.query.filter_by(user_id=user_id, blog_post_id=blog_post_id).first()
 
-        # Serialize the blog post data into JSON format
-        serialized_blogposts = [blogpost.to_dict() for blogpost in blogposts]
-
-        # Return the serialized blog post data as the response
-        return jsonify(serialized_blogposts)
-
-    def post(self, expert_id):
-        data = request.json
-        title = data.get('title')
-        content = data.get('content')
-
-        if not title or not content:
-            return {'message': 'Title and content are required'}, 400
-
-        # Create a new blog post
-        new_blogpost = BlogPost(
-            user_id=expert_id,
-            title=title,
-            content=content,
-            created_at=datetime.utcnow()
-        )
-        db.session.add(new_blogpost)
-        db.session.commit()
-
-        # Notify users who follow the expert about the new blog post
-        self.notify_followers(expert_id, 'blog_post', f"A new blog post '{title}' has been added by Expert ID: {expert_id}")
-
-        # Return response indicating successful addition of blog post
-        return jsonify(new_blogpost.to_dict()), 201
-
-    def notify_followers(self, expert_id, notification_type, content):
-        # Retrieve followers of the expert
-        followers = CommunityFollowers.query.filter_by(expert_id=expert_id).all()
-
-        # Create notification for each follower
-        for follower in followers:
-            notification = Notification(
-                user_id=follower.user_id,
-                type=notification_type,
-                content=content
-            )
-            db.session.add(notification)
-        
-        # Commit the changes to the database
-        db.session.commit()
-
-
-class Notifications(Resource):
-    def get(self, user_id=None, notification_id=None):
-        if user_id is not None:
-            # Retrieve notifications for the specified user
-            notifications = Notification.query.filter_by(user_id=user_id).all()
-            serialized_notifications = [notification.to_dict() for notification in notifications]
-            return serialized_notifications, 200
-        elif notification_id is not None:
-            # Retrieve a specific notification by ID
-            notification = Notification.query.get(notification_id)
-            if notification:
-                return notification.to_dict(), 200
+            if existing_like:
+                # Unlike if already liked
+                if like is not None and like is False:
+                    db.session.delete(existing_like)
+                    db.session.commit()
             else:
-                return {"message": "Notification not found"}, 404
-        else:
-            # Retrieve all notifications
-            notifications = Notification.query.all()
-            serialized_notifications = [notification.to_dict() for notification in notifications]
-            return serialized_notifications, 200
+                # Like if not already liked
+                if like is not None and like is True:
+                    new_like = Like(user_id=user_id, blog_post_id=blog_post_id, total=1)
+                    db.session.add(new_like)
+                    db.session.commit()
 
-    def post(self):
+            # Calculate total likes for the post
+            total_likes = Like.query.filter_by(blog_post_id=blog_post_id).count()
+
+            return {'isLiked': like, 'count': total_likes}
+        
+        except Exception as e:
+            print("Error:", e)  # Debugging line
+            return {'error': 'An error occurred'}, 500
+
+# Add resource to API with a unique endpoint name
+api.add_resource(BlogPostLikesToggle, '/blogposts/<int:blog_post_id>/likes', endpoint='blog_post_likes_toggle')
+class ExpertFollowResource(Resource):
+    def post(self, expert_id):
+        user_id = request.json.get('user_id')
+        if not user_id:
+            return {'message': 'User ID is required'}, 400
+        expert_follower = ExpertFollowers(expert_id=expert_id, follower_id=user_id)
+        db.session.add(expert_follower)
+        db.session.commit()
+        return jsonify(expert_follower.to_dict()), 201
+
+class CommunityLikeResource(Resource):
+    def post(self, community_id):
+        user_id = request.json.get('user_id')
+        if not user_id:
+            return {'message': 'User ID is required'}, 400
+        community_like = CommunityLikes(community_id=community_id, user_id=user_id)
+        db.session.add(community_like)
+        db.session.commit()
+        return jsonify(community_like.to_dict()), 201
+    
+# Serve React app from 'client/build' folder
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != '' and os.path.exists("client/build/" + path):
+        return send_from_directory('client/build', path)
+    else:
+        return send_from_directory('client/build', 'index.html')
+
+# Addition
+class BlogPostFollows(Resource):
+    def post(self, blog_post_id):
         data = request.json
-        user_id = data.get('user_id')
-        message_id = data.get('message_id')
-        community_id = data.get('community_id')
-        expert_id = data.get('expert_id')
-        blog_post_id = data.get('blog_post_id')
-        notification_type = data.get('type')
-        content = data.get('content')
+        follow = data.get('follow')
 
-        if not user_id or not notification_type or not content:
-            return {'message': 'User ID, type, and content are required'}, 400
+        if follow is None:
+            return {'message': 'Invalid request, follow status is required.'}, 400
 
-        # Create a new notification
-        new_notification = Notification(
-            user_id=user_id,
-            message_id=message_id,
-            community_id=community_id,
-            expert_id=expert_id,
-            blog_post_id=blog_post_id,
-            type=notification_type,
-            content=content,
-            timestamp=datetime.utcnow()
-        )
-        db.session.add(new_notification)
+        # Implement the logic for following/unfollowing a blog post here
+        # This can include checking if the user is already following the post
+        # and toggling the follow status accordingly.
+
+        # Placeholder response
+        return jsonify({'isFollowed': follow})
+
+class BlogPostComments(Resource):
+    def post(self, blog_post_id):
+        data = request.json
+        text = data.get('text')
+
+        if not text:
+            return {'message': 'Comment text is required.'}, 400
+
+        new_comment = Comment(text=text, blog_post_id=blog_post_id)
+        db.session.add(new_comment)
         db.session.commit()
 
-        return jsonify(new_notification.to_dict()), 201
+        return jsonify(new_comment.to_dict()), 201
 
-    def delete(self, notification_id):
-        # Retrieve and delete the specified notification
-        notification = Notification.query.get_or_404(notification_id)
-        db.session.delete(notification)
-        db.session.commit()
-        return jsonify({'message': 'Notification deleted successfully'}), 200
+class BlogPostLikesToggle(Resource):  # Renamed resource
+    def post(self, blog_post_id):
+        data = request.json
+        like = data.get('like')
 
-def create_notification(user_id, notification_type, content, message_id=None, community_id=None, expert_id=None, blog_post_id=None):
-    new_notification = Notification(
-        user_id=user_id,
-        type=notification_type,
-        content=content,
-        message_id=message_id,
-        community_id=community_id,
-        expert_id=expert_id,
-        blog_post_id=blog_post_id,
-        timestamp=datetime.utcnow()
-    )
-    db.session.add(new_notification)
-    db.session.commit()
+        if like is None:
+            return {'message': 'Invalid request, like status is required.'}, 400
 
-@app.route('/blog_posts', methods=['POST'])
-def add_blog_post():
-    data = request.json
-    title = data.get('title')
-    content = data.get('content')
-    image = data.get('image')
-    user_id = data.get('user_id')
-    expert_id = data.get('expert_id')
+        # Implement the logic for liking/unliking a blog post here
+        # This can include checking if the user has already liked the post
+        # and toggling the like status accordingly.
 
-    if not title or not content or not user_id or not expert_id:
-        return {'message': 'Title, content, user_id, and expert_id are required'}, 400
+        # Placeholder response
+        return jsonify({'isLiked': like, 'count': 1 if like else 0})
 
-    new_blog_post = BlogPost(
-        title=title,
-        content=content,
-        image=image,
-        user_id=user_id,
-        expert_id=expert_id,
-        created_at=datetime.utcnow()
-    )
-    db.session.add(new_blog_post)
-    db.session.commit()
-
-    # Send notification to the expert
-    expert = Expert.query.get(expert_id)
-    expert_notification_content = f"Your post '{title}' has been created successfully. Click here to view."
-    create_notification(
-        user_id=user_id,
-        notification_type='blog_post',
-        content=expert_notification_content,
-        blog_post_id=new_blog_post.id,
-        expert_id=expert_id
-    )
-
-    # Send notification to all users
-    users = User.query.all()
-    for user in users:
-        if user.id != user_id:
-            user_notification_content = f"Expert {expert.name} has added a new post. Click here to check it out."
-            create_notification(
-                user_id=user.id,
-                notification_type='blog_post',
-                content=user_notification_content,
-                blog_post_id=new_blog_post.id,
-                expert_id=expert_id
-            )
-
-    return jsonify(new_blog_post.to_dict()), 201
-
-# Add routes for the Notifications resource
-api.add_resource(Notifications, '/notifications', '/notifications/<int:id>', '/users/<int:user_id>/notifications')
 
 
 # Add routes for all resources
-api.add_resource(UserRegistration, '/register')
-api.add_resource(UserLogin, '/login')
-api.add_resource(BlogPosts, '/blogposts')
+api.add_resource(UserAuthentication, '/auth')
+#api.add_resource(BlogPosts, '/blogposts')
 api.add_resource(BlogPostDetails, '/blogposts/<int:id>')
 api.add_resource(Communities, '/communities')
 api.add_resource(CommunityDetails, '/communities/<int:id>')
 api.add_resource(Experts, '/experts')
 api.add_resource(ExpertDetails, '/experts/<int:id>')
-#api.add_resource(MessageDetails, '/messages')
 api.add_resource(Comments, '/comments')
 api.add_resource(CommentDetails, '/comments/<int:id>')
 api.add_resource(Likes, '/likes')
@@ -615,10 +525,12 @@ api.add_resource(Users, '/users')
 api.add_resource(UserDetails, '/users/<int:id>')
 api.add_resource(CommunityFollowersResource, '/communities/<int:community_id>/followers')
 api.add_resource(BlogPostCommentsResource, '/blogposts/<int:blogpost_id>/comments')
-api.add_resource(BlogPostLikes, '/blogposts/<int:blog_post_id>/likes')
-api.add_resource(MessageDetails, '/messages', '/messages/<int:message_id>')
-api.add_resource(ExpertBlogPosts, '/experts/<int:expert_id>/blogposts')
+api.add_resource(Messages, '/messages')
+api.add_resource(MessageDetails, '/messages/<int:id>')
+api.add_resource(Conversation, '/conversations/<int:sender_id>/<int:receiver_id>')
+api.add_resource(ExpertFollowResource, '/follow/expert/<int:expert_id>')
+api.add_resource(CommunityLikeResource, '/like/community/<int:community_id>')
+api.add_resource(BlogPostFollows, '/blogposts/<int:blog_post_id>/follows')
+api.add_resource(BlogPostComments, '/blogposts/<int:blog_post_id>/comments')
 
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5555)

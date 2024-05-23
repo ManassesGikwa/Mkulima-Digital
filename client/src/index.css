@@ -140,6 +140,21 @@ h1,h2,h3,h4,h5,h6{
   }
 
 /* ==================================================== NAVBAR & HEADER ========================================= */
+/* Profile icon styles */
+/* Add this CSS below the existing styles */
+
+/* Profile icon styles */
+.profile-icon {
+  font-size: 1.5rem; /* Adjust size as needed */
+  color: #000;
+ }
+
+/* Profile name styles */
+.profile-name {
+  font-size: 1.1rem;
+  color: #000;
+ }
+
 
 header {
     width: 100%;

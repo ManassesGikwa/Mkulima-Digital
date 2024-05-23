@@ -280,7 +280,7 @@
 // export default ExpertDashboard;
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaChartBar, FaPenFancy, FaEnvelope, FaBell, FaUser, FaUserFriends, FaUsers, FaUsersCog } from 'react-icons/fa';
 import ProfileUpdateForm from './ProfileUpdateForm';
 import CommunityCreationForm from './CommunityCreationForm';
@@ -425,12 +425,12 @@ function ExpertDashboard() {
                     </div>
                     <div className="expert-profile-topbar">
                         <div className='user-profile'>
-                            {expert && (
+                            {/* {expert && (
                                 <div>
                                     <h3 style={{'marginBottom': '15px', }}>{expert.name}<FaUser className='profile-icon' /></h3>
                                     <p style={{ 'fontSize': "20px",}}>{expert.expertise_area}</p>
                                 </div>
-                            )}
+                            )} */}
                         </div>
                         <Dropdown as={ButtonGroup}>
                             <Button className="options-button">Options</Button>
@@ -477,7 +477,6 @@ function ExpertDashboard() {
                         <FaEnvelope className='sidebar-icon' />
                         <span><Link to='/inbox'> Inbox </Link></span>
                         {/* {inboxMessages.length > 0 && <span className='notification-dot'></span> } */}
-                        <span>Inbox</span>
                     </div>
                 </div>
                 <div className="main-content">

@@ -1,124 +1,159 @@
-import React, { useState, useRef, useEffect } from 'react';
-import './Messaging.css';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Messaging = () => {
-    const [user, setUser] = useState(null);
-    const [messages, setMessages] = useState([]);
-    const [formValue, setFormValue] = useState('');
+function MessagingComponent() {
+  const [message, setMessage] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const currentUserId = 1; // This should be dynamically set to the logged-in user's ID
 
-    useEffect(() => {
-        // Fetch user data to check if logged in
-        axios.get('http://127.0.0.1:5555/users')
-            .then(response => {
-                // Assuming there's a way to identify the logged-in user, e.g., via a session token
-                const loggedInUser = response.data.find(u => u.email === "currentUserEmail@example.com");
-                if (loggedInUser) {
-                    setUser(loggedInUser);
-                }
-            })
-            .catch(error => console.error('Error fetching users:', error));
+  useEffect(() => {
+    if (selectedUser) {
+      loadMessages();
+    }
+  }, [selectedUser]);
 
-        // Fetch messages
-        fetchMessages();
-    }, []);
+  const loadMessages = async () => {
+    setIsLoading(true);
+    setError(null);
 
-    const fetchMessages = () => {
-        axios.get('http://127.0.0.1:5555/messages')
-            .then(response => setMessages(response.data))
-            .catch(error => console.error('Error fetching messages:', error));
-    };
-
-    const sendMessage = async (e) => {
-        e.preventDefault();
-        if (!user) return;
-
-        const newMessage = {
-            content: formValue,
-            created_at: new Date().toISOString(),
-            sender_id: user.id,
-            receiver_id: 1, // Set the appropriate receiver_id
-        };
-
-        try {
-            await axios.post('http://127.0.0.1:5555/messages', newMessage);
-            setFormValue('');
-            fetchMessages();
-            dummy.current.scrollIntoView({ behavior: 'smooth' });
-        } catch (error) {
-            console.error('Error sending message:', error);
+    try {
+      const response = await axios.get(`http://localhost:5555/messages`, {
+        params: {
+          sender_id: currentUserId,
+          receiver_id: selectedUser.id
         }
-    };
+      });
 
-    const dummy = useRef();
+      const responseReverse = await axios.get(`http://localhost:5555/messages`, {
+        params: {
+          sender_id: selectedUser.id,
+          receiver_id: currentUserId
+        }
+      });
 
-    return (
-        <div className='App'>
-            <header>
-                <SignOut user={user} setUser={setUser} />
-            </header>
+      setMessages([...response.data, ...responseReverse.data].sort((a, b) => new Date(a.created_at) - new Date(b.created_at)));
+    } catch (error) {
+      console.error('Error loading messages:', error);
+      setError('Failed to load messages. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-            <section>
-                {user ? <ChatRoom messages={messages} sendMessage={sendMessage} formValue={formValue} setFormValue={setFormValue} dummy={dummy} /> : <SignIn setUser={setUser} />}
-            </section>
-        </div>
-    );
-};
+  const handleMessageChange = (e) => {
+    setMessage(e.target.value);
+  };
 
-function SignIn({ setUser }) {
-    const signInWithGoogle = () => {
-        // Redirect to your login/register page
-        window.location.href = 'http://127.0.0.1:3000/login';
-    };
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
-    return (
-        <button onClick={signInWithGoogle}>Sign in</button>
-    );
-}
+  const searchUsers = async () => {
+    setIsLoading(true);
+    setError(null);
 
-function SignOut({ user, setUser }) {
-    const handleSignOut = () => {
-        // Handle sign out logic, e.g., clearing user state and session
-        setUser(null);
-        // Optionally redirect to login page
-    };
+    try {
+      const response = await axios.get(`http://localhost:5555/users`, {
+        params: {
+          q: searchQuery
+        }
+      });
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error('Error searching users:', error);
+      setError('Failed to search users. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    return user && (
-        <button onClick={handleSignOut}>Sign Out</button>
-    );
-}
+  const sendMessage = async () => {
+    if (!selectedUser) {
+      setError('Please select a user to send a message.');
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
 
-function ChatRoom({ messages, sendMessage, formValue, setFormValue, dummy }) {
-    return (
+    try {
+      const response = await axios.post('http://localhost:5555/messages', {
+        sender_id: currentUserId,
+        receiver_id: selectedUser.id,
+        content: message,
+        created_at: new Date().toISOString()
+      });
+
+      console.log('Message sent:', response.data);
+      loadMessages();
+      setMessage('');
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setError('Failed to send message. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="messaging-container">
+      <div className="search-bar">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder="Search for users by username"
+        />
+        <button onClick={searchUsers} disabled={isLoading}>
+          {isLoading ? 'Searching...' : 'Search'}
+        </button>
+      </div>
+      <div className="search-results">
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <ul>
+            {searchResults.map((user) => (
+              <li key={user.id} onClick={() => setSelectedUser(user)}>
+                {user.username}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      {selectedUser && (
         <>
-            <main>
-                {messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
-
-                <div ref={dummy}></div>
-            </main>
-            <div className='mess-form'>
-                <form onSubmit={sendMessage}>
-                    <input placeholder='message' value={formValue} onChange={(e) => setFormValue(e.target.value)} />
-                    <button type="submit">🕊️</button>
-                </form>
-            </div>
+          <div className="message-history">
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`message ${msg.sender_id === currentUserId ? 'sent' : 'received'}`}
+              >
+                {msg.content}
+              </div>
+            ))}
+          </div>
+          <div className="message-input">
+            <textarea
+              value={message}
+              onChange={handleMessageChange}
+              placeholder="Type your message here..."
+              rows={4}
+              cols={50}
+            />
+            <button onClick={sendMessage} disabled={isLoading}>
+              {isLoading ? 'Sending...' : 'Send'}
+            </button>
+            {error && <div style={{ color: 'red' }}>{error}</div>}
+          </div>
         </>
-    );
+      )}
+    </div>
+  );
 }
 
-function ChatMessage({ message }) {
-    const { content, sender_id, receiver_id } = message;
-
-    // Assuming user is available globally or passed as prop to identify sent/received messages
-    const user = {}; // Replace with actual user context or prop
-    const messageClass = sender_id === user.id ? 'sent' : 'received';
-
-    return (
-        <div className={`message ${messageClass}`}>
-            <img src="https://via.placeholder.com/50" alt="User avatar" />
-            <p>{content}</p>
-        </div>
-    );
-}
-
-export default Messaging;
+export default MessagingComponent;

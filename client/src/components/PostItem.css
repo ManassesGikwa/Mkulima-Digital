@@ -1,0 +1,28 @@
+/* PostItem.css */
+.post {
+    margin-bottom: 20px;
+}
+
+.post__thumbnail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.post__content {
+    margin-top: 10px;
+}
+
+.post__footer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.btn.category {
+    margin-right: 10px;
+}
+
+.like-count {
+    font-weight: bold;
+}

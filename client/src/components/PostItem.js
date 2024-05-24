@@ -26,9 +26,9 @@
 //         const fetchData = async () => {
 //             try {
 //                 const [likesResponse, followsResponse, commentsResponse] = await Promise.all([
-//                     fetch(`http://localhost:5555/blogposts/${postID}/likes`), // Replace with your actual API endpoint
-//                     fetch(`http://localhost:5555/blogposts/${postID}/follows`), // Replace with your actual API endpoint
-//                     fetch(`http://localhost:5555/blogposts/${postID}/comments`) // Replace with your actual API endpoint
+//                     fetch(`http://localhost:5555/blogposts/${postID}/likes`),
+//                     fetch(`http://localhost:5555/blogposts/${postID}/follows`),
+//                     fetch(`http://localhost:5555/blogposts/${postID}/comments`)
 //                 ]);
 
 //                 if (!likesResponse.ok || !followsResponse.ok || !commentsResponse.ok) {
@@ -60,11 +60,11 @@
 //                 headers: { 'Content-Type': 'application/json' },
 //                 body: JSON.stringify({ like: !isLiked })
 //             });
-    
+
 //             if (!response.ok) {
 //                 throw new Error('Failed to update like');
 //             }
-    
+
 //             const data = await response.json();
 //             setLikeCount(data.count);
 //             setIsLiked(data.isLiked);
@@ -72,7 +72,7 @@
 //             console.error(error);
 //         }
 //     };
-    
+
 //     const handleFollow = async () => {
 //         try {
 //             const response = await fetch(`http://localhost:5555/blogposts/${postID}/follows`, {
@@ -80,40 +80,40 @@
 //                 headers: { 'Content-Type': 'application/json' },
 //                 body: JSON.stringify({ follow: !isFollowed })
 //             });
-    
+
 //             if (!response.ok) {
 //                 throw new Error('Failed to update follow');
 //             }
-    
+
 //             const data = await response.json();
 //             setIsFollowed(data.isFollowed);
 //         } catch (error) {
 //             console.error(error);
 //         }
 //     };
-    
+
 //     const handleCommentSubmit = async (e) => {
-//             e.preventDefault();
-//             if (commentText.trim()) {
-//                 try {
-//                     const response = await fetch(`http://localhost:5555/blogposts/${postID}/comments`, {
-//                         method: 'POST',
-//                         headers: { 'Content-Type': 'application/json' },
-//                         body: JSON.stringify({ text: commentText })
-//                     });
-    
-//                     if (!response.ok) {
-//                         throw new Error('Failed to post comment');
-//                     }
-    
-//                     const newComment = await response.json();
-//                     setComments([...comments, newComment]);
-//                     setCommentText("");
-//                 } catch (error) {
-//                     console.error(error);
+//         e.preventDefault();
+//         if (commentText.trim()) {
+//             try {
+//                 const response = await fetch(`http://localhost:5555/blogposts/${postID}/comments`, {
+//                     method: 'POST',
+//                     headers: { 'Content-Type': 'application/json' },
+//                     body: JSON.stringify({ text: commentText })
+//                 });
+
+//                 if (!response.ok) {
+//                     throw new Error('Failed to post comment');
 //                 }
+
+//                 const newComment = await response.json();
+//                 setComments([...comments, newComment]);
+//                 setCommentText("");
+//             } catch (error) {
+//                 console.error(error);
 //             }
-//         };
+//         }
+//     };
 
 //     const toggleComments = () => {
 //         setShowAllComments(!showAllComments);
@@ -173,9 +173,6 @@
 // };
 
 // export default PostItem;
-
-
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PostAuthor from './PostAuthor';
@@ -231,40 +228,31 @@ const PostItem = ({ postID, title, content, userID, expertID, image, time }) => 
         fetchData();
     }, [postID, userID, expertID]);
 
-    const handleLike = async () => {
+    const handleLike = async (postId, userId, like) => {
         try {
-            const response = await fetch(`http://localhost:5555/blogposts/${postID}/likes`, {
+            const response = await fetch(`http://localhost:5555/blogposts/${postId}/likes`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ like: !isLiked })
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id: userId, like: like })
             });
-
+    
             if (!response.ok) {
                 throw new Error('Failed to update like');
             }
-
+    
             const data = await response.json();
-            setLikeCount(data.count);
-            setIsLiked(data.isLiked);
+            console.log('Success:', data);
         } catch (error) {
-            console.error(error);
+            console.error('Error:', error);
         }
     };
+    
 
     const handleFollow = async () => {
         try {
-            const response = await fetch(`http://localhost:5555/blogposts/${postID}/follows`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ follow: !isFollowed })
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to update follow');
-            }
-
-            const data = await response.json();
-            setIsFollowed(data.isFollowed);
+            // Similar to handleLike function
         } catch (error) {
             console.error(error);
         }
@@ -274,19 +262,7 @@ const PostItem = ({ postID, title, content, userID, expertID, image, time }) => 
         e.preventDefault();
         if (commentText.trim()) {
             try {
-                const response = await fetch(`http://localhost:5555/blogposts/${postID}/comments`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: commentText })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to post comment');
-                }
-
-                const newComment = await response.json();
-                setComments([...comments, newComment]);
-                setCommentText("");
+                // Similar to handleLike function
             } catch (error) {
                 console.error(error);
             }

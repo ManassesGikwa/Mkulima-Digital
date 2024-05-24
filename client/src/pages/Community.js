@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import "./Community.css";
 
-
 const Community = () => {
   const [communities, setCommunities] = useState([]);
 
@@ -23,7 +22,13 @@ const Community = () => {
   };
 
   const handleFollow = (id) => {
-  
+    const updatedCommunities = communities.map(community => {
+      if (community.id === id) {
+        return { ...community, followed: !community.followed };
+      }
+      return community;
+    });
+    setCommunities(updatedCommunities);
   };
 
   const handleDelete = (id) => {
@@ -53,18 +58,14 @@ const Community = () => {
                 <img src={community.image} alt={community.name} className='card-img-top' />
                 <Link to={`/community/${community.id}`} className='community-name'>{community.name}</Link>
                 <div className='card-body'>
-                    <button onClick={() => handleLike(community.id)} className='btn1'>Like</button>
-                    <button onClick={() => handleFollow(community.id)} className='btn1'>Follow</button>
+                    <button onClick={() => handleLike(community.id)} className='btn1'>({community.likes || 0})Likes</button>
+                    <button onClick={() => handleFollow(community.id)} className='btn1'>{community.followed ? 'Following' : 'Follow'}</button>
                     <button onClick={() => handleDelete(community.id)} className='btn1'>Delete</button>
-                 
                 </div>
               </div>
             </li>
           ))}
         </ul>
-      </div>
-      <div>
-      
       </div>
     </div>
   );

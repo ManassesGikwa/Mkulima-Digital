@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './CommunityCreationForm.css';
 
-function CommunityCreationForm({ onSubmit }) {
+function CommunityCreationForm({ onSubmit, userId }) {
     const [formData, setFormData] = useState({
         name: '',
         description: ''
@@ -15,30 +15,26 @@ function CommunityCreationForm({ onSubmit }) {
         }));
     };
 
-    async function handleSubmit(e) {
+    const handleSubmit = (e) => {
         e.preventDefault();
-
-        try {
-            const response = await fetch('/communities', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-            if (response.ok) {
-                onSubmit(formData); // Call the onSubmit prop with the new community data
-                setFormData({
-                    name: '',
-                    description: ''
-                });
-            } else {
-                console.error('Failed to add new community');
-            }
-        } catch (error) {
-            console.error('Error adding a new community:', error);
-        }
-    }
+        // Pass userId along with community data
+        const communityData = { ...formData, user_id: userId };
+        
+        // Send the new community data to the backend
+        fetch('/communities/1', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(communityData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Call the parent onSubmit function with the new community data
+            onSubmit(data);
+        })
+        .catch(error => console.error('Error creating community:', error));
+    };
 
     return (
         <div className="community-form-container">

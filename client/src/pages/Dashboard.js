@@ -65,7 +65,7 @@ function ExpertDashboard() {
             .catch(error => console.error('Error fetching user data:', error));
 
         // Fetch notifications
-        fetch('/users/1/notifications')
+        fetch(`/users/1/notifications`)
             .then(response => response.json())
             .then(data => setNotifications(data))
             .catch(error => console.error('Error fetching notifications:', error));
@@ -156,9 +156,9 @@ function ExpertDashboard() {
     }
 
     return (
-        <div className='parent-container'>
+        
             <div className="dashboard">
-                
+            <div className='side-content'>
                 <div className='top-left-corner'>
                     <h1 style={{'color':'white'}}>Mkulima Digital</h1>
                     <h3 style={{'color':'white'}}>Expert's DashBoard</h3>
@@ -250,6 +250,7 @@ function ExpertDashboard() {
                             <span>Messages ({newMessagesCount})</span>
                         </Link>
                     </div>
+                </div>
                 </div>
                 <div className="main-content">
                     <div className='banner'>
@@ -345,7 +346,7 @@ function ExpertDashboard() {
                     )}
                 </div>
             </div>
-        </div>
+       
     );
 }
 

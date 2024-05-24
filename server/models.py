@@ -24,13 +24,12 @@ class User(db.Model):
     liked_communities = db.relationship('CommunityLikes', backref='liked_user', lazy=True)
 
     def to_dict(self):
-        user_dict = {
+        return {
             'id': self.id,
             'username': self.username,
             'email': self.email,
             'role': self.role
         }
-        
 
 class BlogPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -88,7 +87,6 @@ class Expert(db.Model):
     image = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    notifications = db.relationship('Notification', backref='expert', lazy=True)
 
     blog_posts = db.relationship('BlogPost', back_populates='expert', lazy=True)
     followers = db.relationship('ExpertFollowers', backref='follower_relationships', lazy=True) 
@@ -177,6 +175,37 @@ class Notification(db.Model):
             'read': self.read,
             'timestamp': self.timestamp
         }
+# class Conversation(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+#     receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+#     messages = db.relationship('Message', backref='conversation', lazy=True)
+
+#     def to_dict(self):
+#         return {
+#             'id': self.id,
+#             'sender_id': self.sender_id,
+#             'receiver_id': self.receiver_id,
+#             'messages': [message.to_dict() for message in self.messages]
+#         }
+
+# class Message(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     content = db.Column(db.String)
+#     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+#     receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+#     conversation_id = db.Column(db.Integer, db.ForeignKey('conversation.id'), nullable=False)
+#     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+#     def to_dict(self):
+#         return {
+#             'id': self.id,
+#             'content': self.content,
+#             'sender_id': self.sender_id,
+#             'receiver_id': self.receiver_id,
+#             'conversation_id': self.conversation_id,
+#             'created_at': self.created_at.isoformat()
+#         }
 class Conversation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

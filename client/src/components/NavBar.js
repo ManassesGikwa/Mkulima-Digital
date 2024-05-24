@@ -1,19 +1,28 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { FaUser } from 'react-icons/fa';
 
-const NavBar = () => {
-  // Get the current location using useLocation hook
-  const location = useLocation();
+import '../index.css';
+import Home from '../pages/Home';
 
-  // Check if the current location is '/dashboard'
-  const isDashboard = location.pathname === '/dashboard';
+const NavBar = () => {
+  const [expert, setExpert] = useState(null);
+
+  useEffect(() => {
+    // Fetch expert data
+    fetch('/experts/1')
+      .then((response) => response.json())
+      .then((data) => setExpert(data))
+      .catch((error) => console.error('Error fetching expert data:', error));
+  }, []);
 
   return (
     <div>
       <nav className="navbar navbar-expand-lg bg-white">
         <div className="container-fluid container-lg" id="round-onclick">
-          <h1 className="logo text-decoration-none"><Link to="/">Mkulima Digital</Link></h1>
+          <h1 className="logo text-decoration-none">
+            <Link to="/">Mkulima Digital</Link>
+          </h1>
           <button
             className="navbar-toggler menu border-0"
             type="button"
@@ -53,16 +62,24 @@ const NavBar = () => {
                 </Link>
               </li>
             </ul>
-            <Link to="/support" className="nav-btn sm primary">SUPPORT</Link>
-            <Link to="/login" className="nav-btn sm login">LOGIN</Link>
-            {/* Render profile icon and name if on the dashboard */}
-            {isDashboard && (
-              <div className="profile-icon-name">
-                <FaUser className="profile-icon" />
-                <span className="profile-name">John Doe</span>
-              </div>
-            )}
+            <Link to="/support" className="nav-btn sm primary">
+              SUPPORT
+            </Link>
+            <Link to="/login" className="nav-btn sm login">
+              LOGIN
+            </Link>
           </div>
+        </div>
+
+        <div className="user-profile">
+        <Link to="/dashboard">
+             {expert && (
+           <div>
+            <h3 style={{'color':'white','fontSize': "20px", }}>{expert.name}<FaUser className='profile-icon' style={{'marginRight':'5px'}} /></h3>
+            <p style={{ 'color':'white' ,'fontSize': "15px", 'textAlign':'center'}}>{expert.expertise_area}</p>
+          </div>
+            )}
+  </Link>
         </div>
       </nav>
     </div>

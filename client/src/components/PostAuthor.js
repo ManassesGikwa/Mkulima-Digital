@@ -1,42 +1,61 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import Avatar from '../images2/avatar1.jpg'; // Default avatar
+import React, { useState, useEffect } from "react";
+import PostItem from "./PostItem";
 
-const PostAuthor = ({ authorID, postTime }) => {
-    const [author, setAuthor] = useState(null);
+const Posts = () => {
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchAuthor = async () => {
+        // Fetch posts from the API
+        const fetchPosts = async () => {
             try {
-                const response = await fetch(`http://localhost:5555/experts/${authorID}`); // Replace with your actual API endpoint
+                const response = await fetch('http://localhost:5555/blogposts'); // Replace with your actual API endpoint
                 if (!response.ok) {
-                    throw new Error('Failed to fetch author');
+                    throw new Error('Failed to fetch posts');
                 }
                 const data = await response.json();
-                setAuthor(data);
+                setPosts(data);
             } catch (error) {
-                console.error(error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchAuthor();
-    }, [authorID]);
+        fetchPosts();
+    }, []); // Empty dependency array means this effect runs once when the component mounts
 
-    if (!author) {
-        return <p>Loading author...</p>;
+    if (loading) {
+        return <h2 className="center">Loading...</h2>;
+    }
+
+    if (error) {
+        return <h2 className="center">Error: {error}</h2>;
     }
 
     return (
-        <Link to={`http://localhost:5555/experts/${authorID}`} className="post__author">
-            <div className="post__author-avatar">
-                <img src={author.avatar || Avatar} alt={author.name} />
-            </div>
-            <div className="post__author-details">
-                <h5>By: {author.name}</h5>
-                <small>{new Date(postTime).toLocaleString()}</small>
-            </div>
-        </Link>
+        <section className="posts">
+            {posts.length > 0 ? (
+                <div className="container posts__container">
+                    {posts.map(({ id, title, content, image, created_at, user_id, expert_id }) => (
+                        <PostItem
+                            key={id}
+                            postID={id}
+                            title={title}
+                            content={content}
+                            image={image}
+                            time={created_at}
+                            userID={user_id}
+                            expertID={expert_id}
+                        />
+                    ))}
+                </div>
+            ) : (
+                <h2 className="center">No Posts Found!</h2>
+            )}
+        </section>
     );
 };
 
-export default PostAuthor;
+export default Posts;

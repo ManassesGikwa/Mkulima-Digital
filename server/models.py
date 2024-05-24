@@ -26,9 +26,10 @@ class User(db.Model):
     def to_dict(self):
         return {
             'id': self.id,
-            'username': self.username,
+            'created_at': self.created_at.isoformat(),
+            'profile_picture': self.profile_picture,
             'email': self.email,
-            'role': self.role
+            'username': self.username
         }
 
 class BlogPost(db.Model):

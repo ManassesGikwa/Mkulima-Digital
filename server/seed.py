@@ -220,7 +220,6 @@ def seed_data():
 
     # Generate fake experts
     num_experts = 5
-    experts = []
     for _ in range(num_experts):
         user = fake.random_element(elements=users)
         expert = Expert(
@@ -231,13 +230,11 @@ def seed_data():
             created_at=fake.date_time_this_decade(),
             user_id=user.id
         )
-        experts.append(expert)
-    db.session.add_all(experts)
+        db.session.add(expert)
     db.session.commit()
 
     # Generate fake blog posts
     num_blog_posts = 20
-    blog_posts = []
     for _ in range(num_blog_posts):
         author = fake.random_element(elements=users)
         expert = fake.random_element(elements=Expert.query.all())
@@ -298,7 +295,6 @@ def seed_data():
 
     # Generate fake messages
     num_messages = 50
-    messages = []
     for _ in range(num_messages):
         sender = fake.random_element(elements=users)
         receiver = fake.random_element(elements=users)
@@ -328,7 +324,6 @@ def seed_data():
 
     # Generate fake likes
     num_likes = 100
-    likes = []
     for _ in range(num_likes):
         like = Like(
             user_id=fake.random_element(elements=users).id,

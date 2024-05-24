@@ -2,13 +2,12 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from flask_migrate import Migrate
-from models import db, User, BlogPost, Community, Expert, Message, Comment, Like, CommunityFollowers
+from models import db, User, BlogPost, Community, Expert, Message, Comment, Like, CommunityFollowers, ExpertFollowers, CommunityLikes, Conversation
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-import os   
-from datetime import datetime
+import os
 
 app = Flask(__name__)
 CORS(app, origins='http://localhost:3000')
@@ -60,7 +59,12 @@ class UserAuthentication(Resource):
             if not username or not password:
                 return {'message': 'Username and password are required'}, 400
 
+            # Check if the user exists in either the users or experts table
             user = User.query.filter_by(username=username).first()
+            if not user:
+                user = Expert.query.filter_by(name=username).first()
+
+            # If user is found and password matches, generate access token
             if user and check_password_hash(user.password, password):
                 access_token = create_access_token(identity=user.id)
                 return {'access_token': access_token}, 200
@@ -175,6 +179,17 @@ class ExpertDetails(Resource):
 
 class Messages(Resource):
     def get(self):
+        sender_id = request.args.get('sender_id')
+        receiver_id = request.args.get('receiver_id')
+
+        if sender_id and receiver_id:
+            messages = Message.query.filter(
+                ((Message.sender_id == sender_id) & (Message.receiver_id == receiver_id)) |
+                ((Message.sender_id == receiver_id) & (Message.receiver_id == sender_id))
+            ).order_by(Message.created_at).all()
+            serialized_messages = [message.to_dict() for message in messages]
+            return jsonify(serialized_messages)
+
         messages = Message.query.all()
         serialized_messages = [message.to_dict() for message in messages]
         return jsonify(serialized_messages)
@@ -207,35 +222,35 @@ class MessageDetails(Resource):
         return jsonify({'message': 'Message deleted successfully'})
 
 
+class Conversation(Resource):
+    def get(self):
+        sender_id = request.args.get('sender_id')
+        receiver_id = request.args.get('receiver_id')
+
+        if not sender_id or not receiver_id:
+            return {'message': 'Sender ID and Receiver ID are required'}, 400
+
+        messages = Message.query.filter(
+            ((Message.sender_id == sender_id) & (Message.receiver_id == receiver_id)) |
+            ((Message.sender_id == receiver_id) & (Message.receiver_id == sender_id))
+        ).order_by(Message.created_at).all()
+
+        serialized_messages = [message.to_dict() for message in messages]
+        return jsonify(serialized_messages)
+
+
 class Comments(Resource):
     def get(self):
         comments = Comment.query.all()
         serialized_comments = [comment.to_dict() for comment in comments]
         return jsonify(serialized_comments)
 
-    # def post(self):
-    #     data = request.json
-    #     new_comment = Comment(content=text, blog_post_id=blog_post_id, user_id=user_id, created_at=datetime.utcnow())
-    #     db.session.add(new_comment)
-    #     db.session.commit()
-    #     return jsonify(new_comment.to_dict()), 201
-    @app.route('/blogposts/<int:blog_post_id>/comments', methods=['POST'])
-    def post_comment(blog_post_id):
-        data = request.get_json()
-        text = data.get('text')
-        user_id = data.get('user_id')  # Ensure you get the user_id from the request data
-
-        if not text or not user_id:
-            return {'error': 'Missing content or user_id'}, 400
-
-        try:
-            new_comment = Comment(content=text, blog_post_id=blog_post_id, user_id=user_id, created_at=datetime.utcnow())
-            db.session.add(new_comment)
-            db.session.commit()
-            return new_comment.to_dict(), 201
-        except Exception as e:
-            db.session.rollback()
-            return {'error': str(e)}, 500
+    def post(self):
+        data = request.json
+        new_comment = Comment(**data)
+        db.session.add(new_comment)
+        db.session.commit()
+        return jsonify(new_comment.to_dict()), 201
 
 
 class CommentDetails(Resource):
@@ -347,37 +362,28 @@ class BlogPostLikes(Resource):
         return jsonify(serialized_likes)
 
 
-# Add routes for all resources
-api.add_resource(UserAuthentication, '/auth')
-api.add_resource(BlogPosts, '/blogposts')
-api.add_resource(BlogPostDetails, '/blogposts/<int:id>')
-api.add_resource(Communities, '/communities')
-api.add_resource(CommunityDetails, '/communities/<int:id>')
-api.add_resource(Experts, '/experts')
-api.add_resource(ExpertDetails, '/experts/<int:id>')
-api.add_resource(Messages, '/messages')
-api.add_resource(MessageDetails, '/messages/<int:id>')
-api.add_resource(Comments, '/comments')
-api.add_resource(CommentDetails, '/comments/<int:id>')
-api.add_resource(Likes, '/likes')
-api.add_resource(LikeDetails, '/likes/<int:id>')
-api.add_resource(Users, '/users')
-api.add_resource(UserDetails, '/users/<int:id>')
-api.add_resource(CommunityFollowersResource, '/communities/<int:community_id>/followers')
-api.add_resource(BlogPostCommentsResource, '/blogposts/<int:blogpost_id>/comments')
-api.add_resource(BlogPostLikes, '/blogposts/<int:blog_post_id>/likes')
-#api.add_resource(BlogPostFollows, '/blogposts/<int:blog_post_id>/follows')  # New route for follows
+class ExpertFollowResource(Resource):
+    def post(self, expert_id):
+        user_id = request.json.get('user_id')
+        if not user_id:
+            return {'message': 'User ID is required'}, 400
+        expert_follower = ExpertFollowers(expert_id=expert_id, follower_id=user_id)
+        db.session.add(expert_follower)
+        db.session.commit()
+        return jsonify(expert_follower.to_dict()), 201
 
-# Serve React app from 'client/build' folder
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve(path):
-    if path != '' and os.path.exists("client/build/" + path):
-        return send_from_directory('client/build', path)
-    else:
-        return send_from_directory('client/build', 'index.html')
 
-# Addition
+class CommunityLikeResource(Resource):
+    def post(self, community_id):
+        user_id = request.json.get('user_id')
+        if not user_id:
+            return {'message': 'User ID is required'}, 400
+        community_like = CommunityLikes(community_id=community_id, user_id=user_id)
+        db.session.add(community_like)
+        db.session.commit()
+        return jsonify(community_like.to_dict()), 201
+
+
 class BlogPostFollows(Resource):
     def post(self, blog_post_id):
         data = request.json
@@ -393,6 +399,7 @@ class BlogPostFollows(Resource):
         # Placeholder response
         return jsonify({'isFollowed': follow})
 
+
 class BlogPostComments(Resource):
     def post(self, blog_post_id):
         data = request.json
@@ -406,6 +413,7 @@ class BlogPostComments(Resource):
         db.session.commit()
 
         return jsonify(new_comment.to_dict()), 201
+
 
 class BlogPostLikesToggle(Resource):  # Renamed resource
     def post(self, blog_post_id):
@@ -422,7 +430,43 @@ class BlogPostLikesToggle(Resource):  # Renamed resource
         # Placeholder response
         return jsonify({'isLiked': like, 'count': 1 if like else 0})
 
-# Add new routes for follows, comments, and likes on a specific blog post
+
+# Serve React app from 'client/build' folder
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != '' and os.path.exists("client/build/" + path):
+        return send_from_directory('client/build', path)
+    else:
+        return send_from_directory('client/build', 'index.html')
+
+
+# Add routes for all resources
+api.add_resource(UserAuthentication, '/auth')
+api.add_resource(BlogPosts, '/blogposts')
+api.add_resource(BlogPostDetails, '/blogposts/<int:id>')
+api.add_resource(Communities, '/communities')
+api.add_resource(CommunityDetails, '/communities/<int:id>')
+api.add_resource(Experts, '/experts')
+api.add_resource(ExpertDetails, '/experts/<int:id>')
+api.add_resource(Comments, '/comments')
+api.add_resource(CommentDetails, '/comments/<int:id>')
+api.add_resource(Likes, '/likes')
+api.add_resource(LikeDetails, '/likes/<int:id>')
+api.add_resource(Users, '/users')
+api.add_resource(UserDetails, '/users/<int:id>')
+api.add_resource(CommunityFollowersResource, '/communities/<int:community_id>/followers')
+api.add_resource(BlogPostCommentsResource, '/blogposts/<int:blogpost_id>/comments')
+api.add_resource(BlogPostLikes, '/blogposts/<int:blog_post_id>/likes')
+api.add_resource(Messages, '/messages')
+api.add_resource(MessageDetails, '/messages/<int:id>')
+api.add_resource(Conversation, '/conversations/<int:sender_id>/<int:receiver_id>')
+api.add_resource(ExpertFollowResource, '/follow/expert/<int:expert_id>')
+api.add_resource(CommunityLikeResource, '/like/community/<int:community_id>')
 api.add_resource(BlogPostFollows, '/blogposts/<int:blog_post_id>/follows')
 api.add_resource(BlogPostComments, '/blogposts/<int:blog_post_id>/comments')
-api.add_resource(BlogPostLikesToggle, '/blogposts/<int:blog_post_id>/likes')  # Renamed route
+api.add_resource(BlogPostLikesToggle, '/blogposts/<int:blog_post_id>/likes')
+
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5555)

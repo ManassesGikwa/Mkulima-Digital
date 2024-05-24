@@ -142,103 +142,121 @@ h1,h2,h3,h4,h5,h6{
 /* ==================================================== NAVBAR & HEADER ========================================= */
 
 header {
-    width: 100%;
-    position: fixed;
-    z-index: 1;
+  width: 100%;
+  position: fixed;
+  z-index: 1;
 }
 
 nav>div {
-    padding: .4rem 0;
+  padding: .4rem 0;
 }
 
 .radius-50 {
-    border-radius: 1rem;
+  border-radius: 1rem;
 }
 
 .collapse:not(.show) .nav-link {
-    font-size: 1.1rem;
-    color: #000 !important;
-    padding: 0 1.5rem !important;
+  font-size: 1.1rem;
+  color: #000 !important;
+  padding: 0 1.5rem !important;
 }
 
 .menu:focus {
-    box-shadow: none;
+  box-shadow: none;
 }
 
 .menu i {
-    color: #000;
-    font-size: 1.8rem;
+  color: #000;
+  font-size: 1.8rem;
 }
 
 .logo h1 {
-    font-size: 1.8rem !important;
-    font-weight: bold;
-    color: #000;
+  font-size: 1.8rem !important;
+  font-weight: bold;
+  color: #000;
 }
 
 .video {
-    height: 80vh;
+  height: 80vh;
 }
 
 .video video {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    /* filter: contrast(1.2); */
+  position: relative;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  /* filter: contrast(1.2); */
 }
 
 .detail {
-    position:absolute;
-    bottom: 4rem;
-    text-align: center;
+  position:absolute;
+  bottom: 4rem;
+  text-align: center;
 }
 
 .detail,
 .detail a {
-    color: #000;
+  color: #000;
 }
 
 .detail h2 {
-    font-size: 55px;
+  font-size: 55px;
 }
 
 .detail a {
-    font-size: 20px;
+  font-size: 20px;
 }
 
 .detail .arrow {
-    font-size: 20px;
-    animation: arrow 1s infinite;
-    transition: all .3s ease;
+  font-size: 20px;
+  animation: arrow 1s infinite;
+  transition: all .3s ease;
 }
 
 
 .nav-btn{
-    text-decoration: none;
-  display: inline-block;
-  width: fit-content;
-  padding: 0.5rem 1rem;
-  border-radius: var(0.6rem);
-  background: #fff;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 300ms ease;
+  text-decoration: none;
+display: inline-block;
+width: fit-content;
+padding: 0.5rem 1rem;
+border-radius: var(0.6rem);
+background: #fff;
+font-weight: 500;
+cursor: pointer;
+transition: all 300ms ease;
 }
 
 .nav-btn.primary{
-  background: #fff;
-  color: black;
+background: #fff;
+color: black;
 }
 
 .nav-btn.login{
-  background: black;
-  color: #fff;
+background: black;
+color: #fff;
 }
 
 .nav-btn:hover{
-  background: rgb(15, 143, 15);
-  color: #fff;
+background: rgb(15, 143, 15);
+color: #fff;
+}
+
+.user-profile{
+background-color:rgb(25, 39, 25) ;
+padding: 20px;
+border:2px solid #4db52a;
+border-radius:50px;
+height: 90px;
+overflow: hidden;
+}
+
+.user-profile:hover{
+background-color:#4db52a ;
+border-color: white ;
+}
+
+.profile-icon{
+margin-left: 8px;
 }
 
 /* =========================================IMAGE SLIDER ====================================================*/
@@ -509,7 +527,7 @@ nav>div {
 .footer {
   background: black;
   color: #fff;
-  padding: 60px 20px;
+  padding: 30px 20px;
 }
 
 .footer .footer-row {
@@ -1183,4 +1201,3 @@ button:hover {
         transform: translateY(10px);
     }
 }
-

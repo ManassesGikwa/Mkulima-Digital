@@ -39,7 +39,7 @@ function ExpertDashboard() {
 
     useEffect(() => {
         // Fetch expert data
-        fetch('http://127.0.0.1:5555/experts/${id}')
+        fetch(`http://127.0.0.1:5555/experts/${id}`)
             .then(response => response.json())
             .then(data => setExpert(data))
             .catch(error => console.error('Error fetching expert data:', error));
@@ -57,7 +57,7 @@ function ExpertDashboard() {
             });
 
         // Fetch user data
-        fetch('http://127.0.0.1:5555/users/${id}')
+        fetch(`http://127.0.0.1:5555/users/${id}`)
             .then(response => response.json())
             .then(user => {
                 setFollowers(user.followers ?? []);
@@ -97,7 +97,7 @@ function ExpertDashboard() {
                 setShowModal(true);
                 break;
             case 'deleteProfile':
-                fetch('http://127.0.0.1:5555/experts/${id}', { method: 'DELETE' })
+                fetch(`http://127.0.0.1:5555/experts/${id}`, { method: 'DELETE' })
                     .then(() => {
                         setExpert(null);
                         console.log('Profile deleted');
@@ -105,7 +105,7 @@ function ExpertDashboard() {
                     .catch(error => console.error('Error deleting profile', error));
                 break;
             case 'signOut':
-                fetch('/signout', { method: 'POST' })
+                fetch('/logout', { method: 'POST' })
                     .then(() => console.log('Signed Out'))
                     .catch(error => console.error('Error signing out:', error));
                 break;
@@ -130,7 +130,7 @@ function ExpertDashboard() {
         setShowExpertArticles(!showExpertArticles);
 
         if (!showExpertArticles) {
-            fetch('http://127.0.0.1:5555/experts/${id}/blogposts')
+            fetch(`http://127.0.0.1:5555/experts/${id}/blogposts`)
                 .then(response => {
                     if (response.ok) {
                         return response.json();

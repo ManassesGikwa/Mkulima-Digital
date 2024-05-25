@@ -178,11 +178,12 @@ const Login = () => {
     const password = formData.get('password'); // Ensure the input field name is 'password'
     
     const userData = {
+    
       action: 'login',
-      usernameOrEmail: usernameOrEmail,
+      username: usernameOrEmail,
       password: password,
     };
-  
+    console.log(userData)
     try {
       // Send user credentials to the server for authentication
       const response = await fetch('/auth', {

@@ -36,7 +36,7 @@ class UserAuthentication(Resource):
             if not username or not email or not password or not role:
                 return {'message': 'Username, email, password, and role are required'}, 400
 
-            if User.query.filter_by(username=username).first():
+            if User.query.filter_by(username=username.lower()).first():
                 return {'message': 'Username already exists'}, 400
 
             if User.query.filter_by(email=email).first():
@@ -60,9 +60,12 @@ class UserAuthentication(Resource):
                 return {'message': 'Username and password are required'}, 400
 
             # Check if the user exists in either the users or experts table
-            user = User.query.filter_by(username=username).first()
+            user = User.query.filter_by(username=username.lower()).first()
             if not user:
-                user = Expert.query.filter_by(name=username).first()
+                user = Expert.query.filter_by(name=username.lower()).first()
+
+            if not user:
+                print("User not found")
 
             # If user is found and password matches, generate access token
             if user and check_password_hash(user.password, password):

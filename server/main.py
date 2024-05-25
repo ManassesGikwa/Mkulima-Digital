@@ -271,6 +271,16 @@ class LikeDetails(Resource):
         community.likes += 1
         db.session.commit()
         return jsonify({'message': 'Community liked successfully'})
+    
+    @app.route('/blogposts/<int:id>/like', methods=['POST'])
+    def like_blogpost(id):
+        blogPost = BlogPost.query.get_or_404(id)
+        blogPost.likes += 1
+        db.session.commit()
+        return jsonify({'message': 'Blogpost liked successfully'})
+    
+    
+
  
 
 # Add routes for all resources

@@ -18,7 +18,7 @@ const PostItem = ({ post }) => {
     const toggleFollow = () => {
         // Update follow status
         setIsFollowed(!isFollowed);
-        // You can implement logic here to send follow/unfollow request to the server if needed
+      
     };
 
     return (

@@ -812,7 +812,7 @@ nav>div {
   
   
   /*==================================================POST DETAIL==================================================*/
-  .post-detail{
+  /* .post-detail{
     width: var(--form-width);
     background: var(--color-white);
     margin-inline: auto;
@@ -840,7 +840,7 @@ nav>div {
   
   .post-detail p{
     margin-bottom: 0.7rem;
-  }
+  } */
 
   
 

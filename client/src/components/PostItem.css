@@ -1,22 +1,42 @@
 /* PostItem.css */
 .post {
     margin-bottom: 20px;
+    width: 380px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid #ccc; 
+    overflow: hidden;
 }
 
 .post__thumbnail {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.post__thumbnail img {
+    width: 350px;
+    height:300px;
+    object-fit: cover; 
 }
 
 .post__content {
     margin-top: 10px;
+    padding: 10px;
+    height: 30%; /* Set the content to take another portion of the post height */
+     /* Add scroll if content overflows */
 }
 
 .post__footer {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    padding: 10px;
+    height: 10%; /* Set the footer to take the remaining portion of the post height */
+    box-sizing: border-box; /* Include padding in the element's total width and height */
 }
 
 .btn.category {

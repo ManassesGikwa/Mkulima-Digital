@@ -1,4 +1,3 @@
-    # Remote library imports
 import logging
 from faker import Faker
 from datetime import datetime
@@ -11,13 +10,9 @@ logging.basicConfig(level=logging.INFO)
 
 def clear_data():
     logging.info("Clearing data...")
-    db.session.query(Like).delete()
-    db.session.query(Comment).delete()
-    db.session.query(Message).delete()
-    db.session.query(BlogPost).delete()
-    db.session.query(Expert).delete()
-    db.session.query(Community).delete()
-    db.session.query(User).delete()
+    meta = db.metadata
+    for table in reversed(meta.sorted_tables):
+        db.session.execute(table.delete())
     db.session.commit()
 
 def seed_data():
@@ -178,4 +173,3 @@ if __name__ == '__main__':
         clear_data()
         seed_data()
         generate_notifications()
-

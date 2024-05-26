@@ -85,5 +85,3 @@ const CreatePost = ({ onClose }) => {
 };
 
 export default CreatePost;
-
-

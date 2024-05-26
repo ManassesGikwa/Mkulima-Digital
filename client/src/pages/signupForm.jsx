@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useHistory } from "react-router-dom";
 import "./signup.css";
-import loginImage from "../assets/login.jpeg";
 
 const SignupForm = () => {
   const [username, setUsername] = useState("");
@@ -40,9 +39,6 @@ const SignupForm = () => {
     <>
       <div className="bckg">
         <div className="register-container">
-          <div className="image-container">
-            <img src={loginImage} alt="Login" className="login-image" />
-          </div>
           <div className="form-container">
             <h1>
               <span
@@ -52,7 +48,7 @@ const SignupForm = () => {
               >
                 🖋️
               </span>{" "}
-              Getting Started
+              Welcome to Mkulima Digital
             </h1>
             <h2>Kindly input your details to continue</h2>
             <form onSubmit={handleSubmit}>

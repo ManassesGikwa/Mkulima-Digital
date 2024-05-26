@@ -1,4 +1,4 @@
-create-post-container {
+.create-post-container {
     max-width: 600px;
     margin: 0; /* Updated to align to the left */
     padding: 20px;

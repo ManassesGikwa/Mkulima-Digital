@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from flask_migrate import Migrate
-from models import db, User, BlogPost, Community, Expert, Message, Comment, Like
+from models import db, User, BlogPost, Community, Expert, Message, Comment, Like,Notification
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token
 import os
@@ -107,31 +107,6 @@ class Communities(Resource):
         db.session.add(new_community)
         db.session.commit()
         return jsonify(new_community.to_dict()), 201
-        # DELETE method to delete a community
-    def delete(self, id):
-        community = Community.query.get_or_404(id)
-        db.session.delete(community)
-        db.session.commit()
-        return jsonify({'message': 'Community deleted successfully'})
-       
-    @app.route('/communities/<int:id>/like', methods=['POST'])
-    def like_community(id):
-     data = request.json
-     user_id = data.get('user_id') 
-     like = Like(user_id=user_id, community_id=id)
-     db.session.add(like)
-     db.session.commit()
-     return jsonify({'message': 'Community liked successfully'})
-
-    # @app.route('/communities/<int:id>/follow', methods=['POST'])
-    # def follow_community(id):
-    #  data = request.json
-    #  user_id = data.get('user_id')  # Assuming the user ID is passed in the request body
-    #  follow = CommunityFollowers(user_id=user_id, community_id=id)
-    #  db.session.add(follow)
-    #  db.session.commit()
-    #  return jsonify({'message': 'Community followed successfully'})
-
 
 class CommunityDetails(Resource):
     def get(self, id):
@@ -283,6 +258,30 @@ class LikeDetails(Resource):
         db.session.delete(like)
         db.session.commit()
         return jsonify({'message': 'Like deleted successfully'})
+# DELETE method to delete a community
+    def delete(self, id):
+        community = Community.query.get_or_404(id)
+        db.session.delete(community)
+        db.session.commit()
+        return jsonify({'message': 'Community deleted successfully'})
+       
+    @app.route('/communities/<int:id>/like', methods=['POST'])
+    def like_community(id):
+        community = Community.query.get_or_404(id)
+        community.likes += 1
+        db.session.commit()
+        return jsonify({'message': 'Community liked successfully'})
+    
+    @app.route('/blogposts/<int:id>/like', methods=['POST'])
+    def like_blogpost(id):
+        blogPost = BlogPost.query.get_or_404(id)
+        blogPost.likes += 1
+        db.session.commit()
+        return jsonify({'message': 'Blogpost liked successfully'})
+    
+    
+
+ 
 
 # Add routes for all resources
 api.add_resource(UserRegistration, '/register')
@@ -299,7 +298,6 @@ api.add_resource(Comments, '/comments')
 api.add_resource(CommentDetails, '/comments/<int:id>')
 api.add_resource(Likes, '/likes')
 api.add_resource(LikeDetails, '/likes/<int:id>')
-
 
 if __name__ == '__main__':
     app.run(debug=True, port=5555)

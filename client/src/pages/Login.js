@@ -134,6 +134,7 @@
 // };
 
 // export default Login;
+
 import React, { useState } from 'react';
 
 const Login = () => {
@@ -177,11 +178,12 @@ const Login = () => {
     const password = formData.get('password'); // Ensure the input field name is 'password'
     
     const userData = {
+    
       action: 'login',
-      username: usernameOrEmail, // Ensure this matches the backend expectation
+      username: usernameOrEmail,
       password: password,
     };
-
+    console.log(userData)
     try {
       // Send user credentials to the server for authentication
       const response = await fetch('/auth', {
@@ -191,7 +193,7 @@ const Login = () => {
         },
         body: JSON.stringify(userData),
       });
-
+  
       // Handle response
       if (response.ok) {
         // If the response is successful (status code 200), log in was successful

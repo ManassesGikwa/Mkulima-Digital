@@ -4,7 +4,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from models import db, User, BlogPost, Community, Expert, Message, Comment, Like, CommunityFollowers, ExpertFollowers, CommunityLikes, Conversation
 from flask_bcrypt import Bcrypt
-from flask_jwt_extended import JWTManager, create_access_token
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
@@ -79,6 +79,7 @@ class UserAuthentication(Resource):
 
 
 class BlogPosts(Resource):
+    
     def get(self):
         blogposts = BlogPost.query.all()
         serialized_blogposts = [blogpost.to_dict() for blogpost in blogposts]

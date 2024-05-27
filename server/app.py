@@ -392,7 +392,23 @@ class BlogPostLikes(Resource):
         likes = Like.query.filter_by(blog_post_id=blog_post_id).all()
         serialized_likes = [like.to_dict() for like in likes]
         return jsonify(serialized_likes)
+    def post(self, blog_post_id):
+        # Assuming you receive the user_id from the request or from authentication
+        user_id = request.json.get('user_id')  # Assuming user_id is sent in the request body
 
+        # Check if the user has already liked the post
+        existing_like = Like.query.filter_by(blog_post_id=blog_post_id, user_id=user_id).first()
+        if existing_like:
+            return {'message': 'User has already liked this post'}, 400
+
+        # Create a new like
+        new_like = Like(blog_post_id=blog_post_id, user_id=user_id)
+
+        # Add the new like to the database
+        db.session.add(new_like)
+        db.session.commit()
+
+        return {'message': 'Like added successfully'}, 201
 
 class ExpertFollowResource(Resource):
     def post(self, expert_id):

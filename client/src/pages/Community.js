@@ -1,80 +1,6 @@
-// import React, { useEffect, useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import "./Community.css";
-
-
-// const Community = () => {
-//   const [communities, setCommunities] = useState([]);
-
-//   useEffect(() => {
-//     fetch("http://127.0.0.1:5555/communities")
-//       .then((res) => res.json())
-//       .then((communities) => setCommunities(communities));
-//   }, []);
-
-//   const handleLike = (id) => {
-//     const updatedCommunities = communities.map(community => {
-//       if (community.id === id) {
-//         return { ...community, likes: (community.likes || 0) + 1 };
-//       }
-//       return community;
-//     });
-//     setCommunities(updatedCommunities);
-//   };
-
-//   const handleFollow = (id) => {
-  
-//   };
-
-//   const handleDelete = (id) => {
-//     const updatedCommunities = communities.filter(community => community.id !== id);
-//     setCommunities(updatedCommunities);
-//     fetch(`http://127.0.0.1:5555/communities/${id}`, {
-//       method: 'DELETE',
-//     })
-//     .then(() => {
-//     })
-//     .catch(error => {
-//       console.error('Error deleting community:', error);
-//     });
-//   };
-
-//   return (
-//     <div className='community'>
-//       <h1>OUR COMMUNITIES</h1>
-//       <div className='com-button'>
-//         <Link to="/community/add">Add Community</Link>
-//       </div>
-//       <div className='mini-community'>
-//         <ul className='community-list'>
-//           {communities.map((community) => (
-//             <li key={community.id}>
-//               <div className='card'>
-//                 <img src={community.image} alt={community.name} className='card-img-top' />
-//                 <Link to={`/community/${community.id}`} className='community-name'>{community.name}</Link>
-//                 <div className='card-body'>
-//                     <button onClick={() => handleLike(community.id)} className='btn1'>Like</button>
-//                     <button onClick={() => handleFollow(community.id)} className='btn1'>Follow</button>
-//                     <button onClick={() => handleDelete(community.id)} className='btn1'>Delete</button>
-                 
-//                 </div>
-//               </div>
-//             </li>
-//           ))}
-//         </ul>
-//       </div>
-//       <div>
-      
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Community;
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import "./Community.css";
-
 
 const Community = () => {
   const [communities, setCommunities] = useState([]);
@@ -82,40 +8,74 @@ const Community = () => {
 
   useEffect(() => {
     // Simulating fetching user role from backend
-    // For demonstration purposes, set default role to "user"
+    // For demonstration purposes, set default role to "expert"
     setUserRole("expert");
 
+    fetchCommunities();
+  }, []);
+
+  const fetchCommunities = () => {
     fetch("http://127.0.0.1:5555/communities")
       .then((res) => res.json())
       .then((communities) => setCommunities(communities));
-  }, []);
+  };
 
   const handleLike = (id) => {
-    const updatedCommunities = communities.map(community => {
-      if (community.id === id) {
-        return { ...community, likes: (community.likes || 0) + 1 };
+    // Logic for liking a community
+    fetch(`http://127.0.0.1:5555/like/community/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id: 123, // Replace with actual user ID
+      }),
+    })
+    .then((res) => {
+      if (res.ok) {
+        // Update local state to reflect the like
+        const updatedCommunities = communities.map(community => {
+          if (community.id === id) {
+            return { ...community, likes: (community.likes || 0) + 1 };
+          }
+          return community;
+        });
+        setCommunities(updatedCommunities);
+      } else {
+        console.error('Failed to like community');
       }
-      return community;
+    })
+    .catch(error => {
+      console.error('Error liking community:', error);
     });
-    setCommunities(updatedCommunities);
   };
 
   const handleFollow = (id) => {
-    // Logic for handling follow
+    // Logic for following a community
   };
 
   const handleDelete = (id) => {
-    // Logic for handling delete (to be implemented by expert)
+    // Logic for deleting a community
+    fetch(`http://127.0.0.1:5555/communities/${id}`, {
+      method: 'DELETE',
+    })
+    .then((res) => {
+      if (res.ok) {
+        // Remove the deleted community from local state
+        const updatedCommunities = communities.filter(community => community.id !== id);
+        setCommunities(updatedCommunities);
+      } else {
+        console.error('Failed to delete community');
+      }
+    })
+    .catch(error => {
+      console.error('Error deleting community:', error);
+    });
   };
 
   return (
     <div className='community'>
       <h1>OUR COMMUNITIES</h1>
-      {userRole === "expert" && ( // Conditionally render Add Community button for experts
-        <div className='com-button'>
-          <Link to="/community/add">Add Community</Link>
-        </div>
-      )}
       <div className='mini-community'>
         <ul className='community-list'>
           {communities.map((community) => (
@@ -124,12 +84,12 @@ const Community = () => {
                 <img src={community.image} alt={community.name} className='card-img-top' />
                 <Link to={`/community/${community.id}`} className='community-name'>{community.name}</Link>
                 <div className='card-body'>
-                  {/* <p className='card-text'>{community.description}</p> */}
                   <div className='btn'>
                     <button onClick={() => handleLike(community.id)} className='btn1'>Like</button>
                     <button onClick={() => handleFollow(community.id)} className='btn1'>Follow</button>
-                    <button onClick={() => handleDelete(community.id)} className='btn1'>Delete</button>
-                    <button className='com-button'>New Community</button>
+                    {userRole === "expert" && (
+                      <button onClick={() => handleDelete(community.id)} className='btn1'>Delete</button>
+                    )}
                   </div>
                 </div>
               </div>

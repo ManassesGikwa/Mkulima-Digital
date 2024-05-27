@@ -73,12 +73,14 @@ const NavBar = () => {
 
         <div className="user-profile">
         <Link to="/dashboard">
-             {expert && (
-           <div>
-            <h3 style={{'color':'white','fontSize': "20px", }}>{expert.name}<FaUser className='profile-icon' style={{'marginRight':'5px'}} /></h3>
-            <p style={{ 'color':'white' ,'fontSize': "15px", 'textAlign':'center'}}>{expert.expertise_area}</p>
-          </div>
-            )}
+        {expert && (
+              <div>
+                  <img src={expert.image} alt={expert.name} style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
+                  <h3 style={{ color: 'white', fontSize: "20px" }}>{expert.name}</h3>
+                  <p style={{ color: 'white', fontSize: "15px", textAlign: 'center' }}>{expert.expertise_area}</p>
+              </div>
+          )}
+
   </Link>
         </div>
       </nav>

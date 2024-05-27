@@ -241,23 +241,47 @@ nav>div {
   color: #fff;
 }
 
-.user-profile{
-  background-color:rgb(25, 39, 25) ;
-  padding: 20px;
-  border:2px solid #4db52a;
-  border-radius:50px;
-  height: 90px;
-  overflow: hidden;
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  background-color: rgb(25, 39, 25);
+  border-radius: 75px;
+  width: 200px;
+  padding: 9px;
 }
 
-.user-profile:hover{
-  background-color:#4db52a ;
-  border-color: white ;
+.user-profile:hover {
+  background-color: #206309;
 }
 
-.profile-icon{
-  margin-left: 8px;
+.user-profile img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right:20px;
+  margin-left: 40px;
 }
+
+.user-profile div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Align items vertically and distribute space */
+  flex-grow: 1; 
+}
+
+.user-profile h3,
+.user-profile p {
+  font-size: 20px;
+  color: white;
+}
+
+.user-profile p {
+  font-size: 15px;
+  text-align: center;
+}
+
+
 /* =========================================IMAGE SLIDER ====================================================*/
 
 .body1 {

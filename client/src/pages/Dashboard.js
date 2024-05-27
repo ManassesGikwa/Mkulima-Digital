@@ -56,12 +56,20 @@ function ExpertDashboard() {
                 setLoading(false);
             });
 
+        // Fetch communities
+        fetch(`http://127.0.0.1:5555/communities`)
+        .then(response => response.json())
+        .then(data => setCommunities(data))
+        .catch(error => console.error('Error fetching community data:', error));
+
+
         // Fetch user data
         fetch(`http://127.0.0.1:5555/users/${id}`)
             .then(response => response.json())
             .then(user => {
                 setFollowers(user.followers ?? []);
                 setCommunities(user.communities ?? []);
+
             })
             .catch(error => console.error('Error fetching user data:', error));
 

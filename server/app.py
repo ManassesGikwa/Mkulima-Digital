@@ -8,6 +8,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 CORS(app, origins='http://localhost:3000')
@@ -132,19 +133,46 @@ class CommunityDetails(Resource):
         community = Community.query.get_or_404(id)
         return jsonify(community.to_dict())
 
-    def put(self, id):
-        community = Community.query.get_or_404(id)
-        data = request.json
-        for key, value in data.items():
-            setattr(community, key, value)
-        db.session.commit()
-        return jsonify(community.to_dict())
+    
+def upload_img(file):
+    if file:
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+        return file_path
+    return None
 
-    def delete(self, id):
-        community = Community.query.get_or_404(id)
-        db.session.delete(community)
-        db.session.commit()
-        return jsonify({'message': 'Community deleted successfully'})
+@app.route('/communities/<int:id>', methods=['PUT'])
+def update_community(id):
+    community = Community.query.get_or_404(id)
+    data = request.form
+    image_file = request.files.get('image')
+    image_url = upload_img(image_file) if image_file else None
+
+    # Update community fields
+    community.name = data.get('name', community.name)
+    community.description = data.get('description', community.description)
+    community.image = image_url or community.image  # Update image URL only if new image is provided
+    db.session.commit()
+
+    return jsonify({
+        'message': 'Community updated successfully',
+        'community': {
+            'id': community.id,
+            'name': community.name,
+            'description': community.description,
+            'image': community.image,
+            'likes': community.likes  
+        }
+    })
+
+    # POST method to like a community
+@app.route('/communities/<int:id>/like', methods=['POST'])
+def like_community(id):
+    community = Community.query.get_or_404(id)
+    community.likes += 1
+    db.session.commit()  # Save the updated like count to the database
+    return jsonify({'message': 'Community liked successfully', 'likes': community.likes})   
 
 
 class Experts(Resource):

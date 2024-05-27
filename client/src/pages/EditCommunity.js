@@ -38,7 +38,7 @@
 //     formData.append("name", community.name);
 //     formData.append("description", community.description);
 //     formData.append("created_at", community.created_at);
-//     if (community.image) {
+//     if (community.image instanceof File) {
 //       formData.append("image", community.image);
 //     }
 
@@ -127,8 +127,8 @@
 //   );
 // };
 
-// export default EditCommunity;
-import React, { useState, useEffect } from "react";
+// export default EditCommunity
+    import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 const EditCommunity = ({ initialCommunity }) => {
@@ -178,6 +178,10 @@ const EditCommunity = ({ initialCommunity }) => {
         {
           method: "PUT",
           body: formData,
+          headers: {
+            // Set content type to 'multipart/form-data' to upload files
+            'Content-Type': 'multipart/form-data',
+          }
         }
       );
 

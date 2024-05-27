@@ -323,6 +323,7 @@ def upload_img(file):
         file.save(file_path)
         return file_path
     return None
+
 @app.route('/communities/<int:id>', methods=['PUT'])
 def update_community(id):
     community = Community.query.get_or_404(id)

@@ -1,0 +1,143 @@
+.App {
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.App header {
+  position: relative;
+  background-color: rgb(211, 211, 211);
+  height: 10vh;
+  min-height: 50px;
+  color: white;
+  width: 100%;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 99;
+  box-sizing: border-box;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #fff;
+  border: 1px solid #000;
+}
+
+
+main {
+  padding: 10px;
+  height: 80vh;
+  margin: 10vh 0 10vh;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+}
+
+main::-webkit-scrollbar {
+  width: 0.25rem;
+}
+
+main::-webkit-scrollbar-track {
+  background: rgb(15, 143, 15);
+}
+
+main::-webkit-scrollbar-thumb {
+  background: #6649b8;
+}
+
+.mess-form form {
+  height: 10vh;
+  position: relative;
+  bottom: 0;
+  background-color: rgb(199, 196, 196);
+  width: 100%;
+  max-width: 728px;
+  display: flex;
+  font-size: 1.5rem;
+}
+
+.mess-form form button {
+  width: 20%;
+  background-color: rgb(15, 143, 15);
+}
+
+
+.mess-form input {
+  line-height: 1;
+  width: 100%;
+  font-size: 1rem;
+  background: rgb(218, 215, 215);
+  color: #000;
+  outline: none;
+  border: none;
+  padding: 0 10px;
+}
+
+.mess-form button {
+  background-color: #282c34; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1.25rem;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+.sign-in {
+  color: rgb(15, 143, 15);
+  background: white;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+
+.message p {
+  max-width: 500px;
+  margin-bottom: 12px;
+  line-height: 24px;
+  padding: 10px 20px;
+  border-radius: 25px;
+  position: relative;
+  color: white;
+  text-align: center;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+}
+
+
+.sent {
+  flex-direction: row-reverse;
+}
+
+.sent p {
+  color: white;
+  background: #0b93f6;
+  align-self: flex-end;
+}
+.received p {
+  background: #e5e5ea;
+  color: black;
+}
+
+.message img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 2px 5px;
+}

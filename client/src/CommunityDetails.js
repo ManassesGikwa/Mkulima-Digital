@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import './CommunityDetails.css'; // Import CSS file for styling
 
 const CommunityDetails = () => {
@@ -23,10 +23,10 @@ const CommunityDetails = () => {
         <img src={community.image} alt={community.name} className='card-img-top' />
       </div>
       <div className='content-container'>
-        <h1>name:{community.name}</h1>
-        <p>description:{community.description}</p>
-        <p>created_at:{community.created_at}</p>
-        <button className='button'>Edit</button>
+        <h1>Name: {community.name}</h1>
+        <p>Description: {community.description}</p>
+        <p>Created At: {community.created_at}</p>
+        <Link to={`/community/${id}/edit`} className='button'>Edit</Link>
       </div>
     </div>
   );

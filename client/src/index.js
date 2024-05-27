@@ -1,6 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import ReactDOM from 'react-dom/client';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import './index.css';
@@ -20,6 +19,10 @@ import Finance from './pages/Finance';
 import Support from './pages/Support';
 import Dashboard from './pages/Dashboard';
 import EditPost from './pages/EditPost';
+import CommunityCreationForm from './pages/CommunityCreationForm';
+import Messaging from './pages/Messaging';
+import CommunityDetails from './CommunityDetails';
+import EditCommunity from './pages/EditCommunity';
 
 
 const router = createBrowserRouter([
@@ -35,6 +38,7 @@ const router = createBrowserRouter([
       {path: "blogs", element: <Posts />},
       {path: "edit", element: <EditPost />},
       {path: "community", element: <Community />},
+      { path: "community/add", element: <CommunityCreationForm /> },
       {path: "careers", element: <Careers />},
       {path: "finance", element: <Finance />},
       // {path: "register", element: <Register />},
@@ -44,10 +48,10 @@ const router = createBrowserRouter([
       {path: "authors", element: <Authors />},
       {path: "create", element: <CreatePost/>},
       {path: "posts/users/:id", element: <AuthorPosts />},
-      // {path: "myposts/:id", element: <Dashboard />},
-      // {path: "posts/:id/edit", element: <EditPost />},
-      // {path: "posts/:id/delete", element: <DeletePost />},
-      // {path: "logout", element: <Logout />},
+      {path: "community/:id", element: <CommunityDetails />},
+      {path: "community/:id/edit", element: <EditCommunity />},
+      {path: "dashboard/inbox", element: <Messaging />},
+      
     ]
   }
 ]);

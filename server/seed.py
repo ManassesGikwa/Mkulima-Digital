@@ -10,9 +10,13 @@ logging.basicConfig(level=logging.INFO)
 
 def clear_data():
     logging.info("Clearing data...")
-    meta = db.metadata
-    for table in reversed(meta.sorted_tables):
-        db.session.execute(table.delete())
+    db.session.query(Like).delete()
+    db.session.query(Comment).delete()
+    db.session.query(Message).delete()
+    db.session.query(BlogPost).delete()
+    db.session.query(Expert).delete()
+    db.session.query(Community).delete()
+    db.session.query(User).delete()
     db.session.commit()
 
 def seed_data():

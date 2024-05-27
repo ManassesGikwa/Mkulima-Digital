@@ -37,12 +37,15 @@
 //   const handleSignInClick = async (event) => {
 //     event.preventDefault();
 //     const formData = new FormData(event.target);
+//     const usernameOrEmail = formData.get('email'); // Ensure the input field name is 'email'
+//     const password = formData.get('password'); // Ensure the input field name is 'password'
+    
 //     const userData = {
 //       action: 'login',
-//       username: formData.get('email'), // Assuming username is the email for login
-//       password: formData.get('password'),
+//       usernameOrEmail: usernameOrEmail,
+//       password: password,
 //     };
-
+  
 //     try {
 //       // Send user credentials to the server for authentication
 //       const response = await fetch('/auth', {
@@ -52,14 +55,26 @@
 //         },
 //         body: JSON.stringify(userData),
 //       });
-
-//       // Handle response (e.g., show success message, set authentication state)
-//       const data = await response.json();
-//       console.log(data); // Handle response from the server
+  
+//       // Handle response
+//       if (response.ok) {
+//         // If the response is successful (status code 200), log in was successful
+//         const data = await response.json();
+//         console.log('Login successful:', data);
+//         // Handle further actions here, such as redirecting the user to a dashboard page
+//       } else {
+//         // If the response is not successful, handle the error
+//         const errorText = await response.text();
+//         console.error('Login failed:', errorText);
+//         // Optionally display an error message to the user
+//       }
 //     } catch (error) {
 //       console.error('Error signing in:', error);
+//       // Handle other errors, such as network errors
 //     }
 //   };
+  
+  
 
 //   return (
 //     <div className='login-body'>
@@ -119,6 +134,7 @@
 // };
 
 // export default Login;
+
 import React, { useState } from 'react';
 
 const Login = () => {
@@ -158,7 +174,7 @@ const Login = () => {
   const handleSignInClick = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
-    const usernameOrEmail = formData.get('email'); // Ensure the input field name is 'email'
+    const usernameOrEmail = formData.get('username'); // Ensure the input field name is 'username'
     const password = formData.get('password'); // Ensure the input field name is 'password'
     
     const userData = {
@@ -229,7 +245,7 @@ const Login = () => {
               <a href="#" className="social"><i className="fab fa-linkedin-in"></i></a>
             </div>
             <span>or use your account</span>
-            <input type="email" name="email" placeholder="Email" required />
+            <input type="text" name="username" placeholder="Username or Email" required /> {/* Change type to text and name to username */}
             <input type="password" name="password" placeholder="Password" required />
             <a href="#">Forgot your password?</a>
             <button type="submit">Sign In</button>

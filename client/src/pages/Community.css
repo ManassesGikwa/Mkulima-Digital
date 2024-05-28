@@ -14,7 +14,6 @@
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
-  
 }
 
 .com-button a {
@@ -62,7 +61,8 @@
   transition: transform 0.3s;
   height: 100%;
 }
-.card img{
+
+.card img {
   height: 400px;
 }
 
@@ -80,11 +80,12 @@
   padding: 15px;
   text-align: center;
   flex-grow: 1; 
-  
 }
-card-body buton{
+
+.card-body button {
   background-color: rgb(2, 18, 2);
 }
+
 .community-name {
   display: block;
   font-size: 30px;
@@ -114,4 +115,26 @@ card-body buton{
 
 .btn1:hover {
   background-color: yellowgreen;
+}
+.like-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: transparent;
+  color: red;
+  cursor: pointer;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.like-button:hover {
+  color: darkred;
+  transform: scale(1.1);
+}
+
+.like-button i {
+  font-size: 1.5rem; /* Adjust size as needed */
 }

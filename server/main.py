@@ -93,6 +93,25 @@ class BlogPostDetails(Resource):
         db.session.delete(blogpost)
         db.session.commit()
         return jsonify({'message': 'Blog post deleted successfully'})
+    @app.route('/posts/<int:id>/like', methods=['OPTIONS', 'POST'])
+    def like_post(id): 
+     if request.method == 'OPTIONS':
+        # Respond to preflight request
+        response = app.response_class(
+            response='',
+            status=200,
+            mimetype='application/json'
+        )
+        return response
+     elif request.method == 'POST':
+        # Handle POST request to like a post
+        # Your logic here...
+        try:
+            # Perform the logic to like the post
+            # Example: Update the database, increment like count, etc.
+            return jsonify({'message': 'Post liked successfully'}), 200
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
 
 # Community Resources
 class Communities(Resource):

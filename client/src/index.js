@@ -43,7 +43,7 @@ const router = createBrowserRouter([
       {path: "authors", element: <Authors />},
       {path: "create", element: <CreatePost/>},
       {path: "posts/users/:id", element: <AuthorPosts />},
-      {path: "inbox", element: <Messaging />}
+      {path: "dashboard/inbox", element: <Messaging />}
       // {path: "myposts/:id", element: <Dashboard />},
       // {path: "posts/:id/edit", element: <EditPost />},
       // {path: "posts/:id/delete", element: <DeletePost />},

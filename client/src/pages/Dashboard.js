@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import CreatePost from './CreatePost';
 
 function ExpertDashboard() {
@@ -21,7 +21,7 @@ function ExpertDashboard() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const postsPerPage = 4;
+    const postsPerPage = 6;
     const [showModal, setShowModal] = useState(false);
     const [showCommunities, setShowCommunities] = useState(false);
     const [showFollowers, setShowFollowers] = useState(false);
@@ -29,6 +29,7 @@ function ExpertDashboard() {
     const [expertArticles, setExpertArticles] = useState([]);
     const [showExpertArticles, setShowExpertArticles] = useState(false);
     const [newMessagesCount, setNewMessagesCount] = useState(0);
+    const { id } = useParams();
 
     const [updatedProfileData, setUpdatedProfileData] = useState({
         name: "",
@@ -38,13 +39,13 @@ function ExpertDashboard() {
 
     useEffect(() => {
         // Fetch expert data
-        fetch('/experts/1')
+        fetch(`http://127.0.0.1:5555/experts/${id}`)
             .then(response => response.json())
             .then(data => setExpert(data))
             .catch(error => console.error('Error fetching expert data:', error));
 
         // Fetch posts
-        fetch('/blogposts')
+        fetch('http://127.0.0.1:5555/blogposts')
             .then(response => response.json())
             .then(data => {
                 setPosts(data);
@@ -55,8 +56,14 @@ function ExpertDashboard() {
                 setLoading(false);
             });
 
+        // Fetch communities
+        fetch('http://127.0.0.1:5555/communities')
+            .then(response => response.json())
+            .then(data => setCommunities(data))
+            .catch(error => console.error('Error fetching community data:', error));
+
         // Fetch user data
-        fetch('/users/1')
+        fetch(`http://127.0.0.1:5555/users/${id}`)
             .then(response => response.json())
             .then(user => {
                 setFollowers(user.followers ?? []);
@@ -65,20 +72,20 @@ function ExpertDashboard() {
             .catch(error => console.error('Error fetching user data:', error));
 
         // Fetch notifications
-        fetch(`/users/1/notifications`)
+        fetch(`http://127.0.0.1:5555/users/${id}/notifications`)
             .then(response => response.json())
             .then(data => setNotifications(data))
             .catch(error => console.error('Error fetching notifications:', error));
         
         // Fetch messages
-        fetch('/messages')
+        fetch('http://127.0.0.1:5555/messages')
             .then(response => response.json())
             .then(data => {
                 const newMessages = data.filter(message => !message.read);
                 setNewMessagesCount(newMessages.length);
             })
             .catch(error => console.error('Error fetching messages:', error));
-    }, []);
+    }, [id]);
 
     useEffect(() => {
         console.log('Communities updated:', communities);
@@ -96,7 +103,7 @@ function ExpertDashboard() {
                 setShowModal(true);
                 break;
             case 'deleteProfile':
-                fetch('/experts/1', { method: 'DELETE' })
+                fetch(`http://127.0.0.1:5555/experts/${id}`, { method: 'DELETE' })
                     .then(() => {
                         setExpert(null);
                         console.log('Profile deleted');
@@ -104,7 +111,7 @@ function ExpertDashboard() {
                     .catch(error => console.error('Error deleting profile', error));
                 break;
             case 'signOut':
-                fetch('/signout', { method: 'POST' })
+                fetch('/logout', { method: 'POST' })
                     .then(() => console.log('Signed Out'))
                     .catch(error => console.error('Error signing out:', error));
                 break;
@@ -129,7 +136,7 @@ function ExpertDashboard() {
         setShowExpertArticles(!showExpertArticles);
 
         if (!showExpertArticles) {
-            fetch('/experts/1/blogposts')
+            fetch(`http://127.0.0.1:5555/experts/${id}/blogposts`)
                 .then(response => {
                     if (response.ok) {
                         return response.json();
@@ -156,8 +163,7 @@ function ExpertDashboard() {
     }
 
     return (
-        
-            <div className="dashboard">
+        <div className="dashboard">
             <div className='side-content'>
                 <div className='top-left-corner'>
                     <h1 style={{'color':'white'}}>Mkulima Digital</h1>
@@ -213,7 +219,7 @@ function ExpertDashboard() {
                     <Link to={'/blogs'} style={{ 'color': 'white' }}>
                         <div className='sidebar-item'>
                             <FaChartBar className="sidebar-icon" />
-                            <span>My Feed</span>
+                            <span>My Mkulima Feed</span>
                         </div>
                     </Link>
                     <div className='sidebar-item' onClick={handleMyPostsClick}>
@@ -224,7 +230,9 @@ function ExpertDashboard() {
                         <div className='article-grid'>
                             {expertArticles.map(article => (
                                 <div key={article.id} className='article-card'>
+                                     <Link to={`/posts/${article.id}`}>
                                     <img src={article.image} alt={article.title} />
+                                    </Link>
                                     <div className='card-content'>
                                         <h2 style={{ fontSize: "12px" }}>{article.title}</h2>
                                         <p style={{ fontSize: "12px" }}>{article.content}</p>
@@ -246,107 +254,108 @@ function ExpertDashboard() {
                     )}
                     <div className='sidebar-item'>
                         <FaEnvelope className='sidebar-icon' />
-                        <Link to={'/messages'} style={{ color: 'white' }}>
+                        <Link to={'inbox'} style={{ color: 'white' }}>
                             <span>Messages ({newMessagesCount})</span>
                         </Link>
                     </div>
                 </div>
+            </div>
+            <div className="main-content">
+                <div className='banner'>
+                    <h3 style={{ color: 'white' }}>Hello Farmer2024!</h3>
+                    <h4 style={{ color: 'white' }}>Give us an update on how your farming experience is going</h4>
+                    <Button className='new-post-button' onClick={handleNewPostClick}>Write New Post</Button>
                 </div>
-                <div className="main-content">
-                    <div className='banner'>
-                        <h3 style={{ color: 'white' }}>Hello Farmer2024!</h3>
-                        <h4 style={{ color: 'white' }}>Give us an update on how your farming experience is going</h4>
-                        <Button className='new-post-button' onClick={handleNewPostClick}>Write New Post</Button>
+                {showCreatePost ? (
+                    <div className="create-post-view">
+                        <CreatePost onClose={handleCloseCreatePost} />
                     </div>
-                    {showCreatePost ? (
-                        <div className="create-post-view">
-                            <CreatePost onClose={handleCloseCreatePost} />
-                        </div>
-                    ) : (
-                        <div className="other-dashboard-content">
-                            <div className="content-sections">
-                                <div className="top-articles">
-                                    <h3 className='toparticles-h3'>Top Articles</h3>
-                                    {loading ? (
-                                        <Spinner style={{ color: '#EE5E21' }} animation='border' role='status'>
-                                            <span className='visually-hidden'>Loading...</span>
-                                        </Spinner>
-                                    ) : (
-                                        <div className='article-grid'>
-                                            {visibleArticles.map(article => (
-                                                <div key={article.id} className='article-card'>
-                                                    <img src={article.image} alt={article.title} />
-                                                    <div className='card-content'>
-                                                        <h2 style={{ fontSize: "12px" }}>{article.title}</h2>
-                                                        <p style={{ fontSize: "12px" }}>{article.content}</p>
-                                                        <div className='meta-info'>
-                                                            <span>
-                                                                <FaCalendarAlt /> {article.created_at}
-                                                            </span>
-                                                            <span>
-                                                                <FaHeart style={{ color: 'red' }} /> {article.total_likes}
-                                                            </span>
-                                                            <span>
-                                                                <FaComments /> {article.total_comments}
-                                                            </span>
-                                                        </div>
+                ) : (
+                    <div className="other-dashboard-content">
+                        <div className="content-sections">
+                            <div className="top-articles">
+                                <h3 className='toparticles-h3'>Top Articles</h3>
+                                {loading ? (
+                                    <Spinner style={{ color: '#EE5E21' }} animation='border' role='status'>
+                                        <span className='visually-hidden'>Loading...</span>
+                                    </Spinner>
+                                ) : (
+                                    <div className='article-grid'>
+                                        {visibleArticles.map(article => (
+                                            <div key={article.id} className='article-card'>
+                                                 <Link to={`/posts/${article.id}`}>
+                                                <img src={article.image} alt={article.title} />
+                                                </Link>
+                                                <div className='card-content'>
+                                                    <h2 style={{ fontSize: "12px" }}>{article.title}</h2>
+                                                    <p style={{ fontSize: "12px" }}>{article.content}</p>
+                                                    <div className='meta-info'>
+                                                        <span>
+                                                            <FaCalendarAlt /> {article.created_at}
+                                                        </span>
+                                                        <span>
+                                                            <FaHeart style={{ color: 'red' }} /> {article.total_likes}
+                                                        </span>
+                                                        <span>
+                                                            <FaComments /> {article.total_comments}
+                                                        </span>
                                                     </div>
                                                 </div>
-                                            ))}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                                <Pagination style={{ display: 'flex', justifyContent: 'center' }}>
+                                    {Array.from({ length: Math.ceil(posts.length / postsPerPage) }, (_, i) => (
+                                        <Pagination.Item key={i + 1} active={i + 1 === currentPage} onClick={() => paginate(i + 1)}>
+                                            {i + 1}
+                                        </Pagination.Item>
+                                    ))}
+                                </Pagination>
+                            </div>
+                            <div className='expert-info'>
+                                <div className='expert-details' style={{ color: 'white' }}>
+                                    {expert && (
+                                        <div>
+                                            <h4 style={{ fontSize: "20px", color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Bio</h4>
+                                            <p style={{ fontSize: "20px", color: 'white' }}>{expert.bio}</p>
                                         </div>
                                     )}
-                                    <Pagination style={{ display: 'flex', justifyContent: 'center' }}>
-                                        {Array.from({ length: Math.ceil(posts.length / postsPerPage) }, (_, i) => (
-                                            <Pagination.Item key={i + 1} active={i + 1 === currentPage} onClick={() => paginate(i + 1)}>
-                                                {i + 1}
-                                            </Pagination.Item>
-                                        ))}
-                                    </Pagination>
                                 </div>
-                                <div className='expert-info'>
-                                    <div className='expert-details' style={{ color: 'white' }}>
-                                        {expert && (
-                                            <div>
-                                                <h4 style={{ fontSize: "20px", color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Bio</h4>
-                                                <p style={{ fontSize: "20px", color: 'white' }}>{expert.bio}</p>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className='followers'>
-                                        <FaUserFriends className='follower-icon' />
-                                        <h4>Followers</h4>
-                                        <p onClick={toggleFollowers}>{followers.length}</p>
-                                        {showFollowers && (
+                                <div className='followers'>
+                                    <FaUserFriends className='follower-icon' />
+                                    <h4>Followers</h4>
+                                    <p onClick={toggleFollowers}>{followers.length}</p>
+                                    {showFollowers && (
+                                        <ul>
+                                            {followers.map((follower, index) => (
+                                                <li key={index}>{follower}</li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                                <Link to={'/community'}>
+                                    <div className='communities'>
+                                        <FaUsersCog className='communities-icon' />
+                                        <h4>Communities</h4>
+                                        <p onClick={() => setShowCommunities(!showCommunities)} style={{ cursor: 'pointer' }}>
+                                            {communities.length}
+                                        </p>
+                                        {showCommunities && (
                                             <ul>
-                                                {followers.map((follower, index) => (
-                                                    <li key={index}>{follower}</li>
+                                                {communities.map((community, index) => (
+                                                    <li key={index}>{community.name}</li>
                                                 ))}
                                             </ul>
                                         )}
                                     </div>
-                                    <Link to={'/community'}>
-                                        <div className='communities'>
-                                            <FaUsersCog className='communities-icon' />
-                                            <h4>Communities</h4>
-                                            <p onClick={() => setShowCommunities(!showCommunities)} style={{ cursor: 'pointer' }}>
-                                                {communities.length}
-                                            </p>
-                                            {showCommunities && (
-                                                <ul>
-                                                    {communities.map((community, index) => (
-                                                        <li key={index}>{community.name}</li>
-                                                    ))}
-                                                </ul>
-                                            )}
-                                        </div>
-                                    </Link>
-                                </div>
+                                </Link>
                             </div>
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
-       
+        </div>
     );
 }
 

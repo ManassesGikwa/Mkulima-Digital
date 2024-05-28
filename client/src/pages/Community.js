@@ -12,13 +12,14 @@ const Community = () => {
   }, []);
 
   const handleLike = (id) => {
-    const updatedCommunities = communities.map(community => {
-      if (community.id === id) {
-        return { ...community, likes: (community.likes || 0) + 1 };
-      }
-      return community;
+    setCommunities(prevCommunities => {
+      return prevCommunities.map(community => {
+        if (community.id === id) {
+          return { ...community, likes: (community.likes || 0) + 1 };
+        }
+        return community;
+      });
     });
-    setCommunities(updatedCommunities);
   };
 
   const handleFollow = (id) => {

@@ -1,4 +1,8 @@
+
+
 // import React, { useState } from 'react';
+
+
 
 // const Login = () => {
 //   const [isSignUpActive, setIsSignUpActive] = useState(false);
@@ -37,15 +41,16 @@
 //   const handleSignInClick = async (event) => {
 //     event.preventDefault();
 //     const formData = new FormData(event.target);
-//     const usernameOrEmail = formData.get('email'); // Ensure the input field name is 'email'
+//     const usernameOrEmail = formData.get('username'); // Ensure the input field name is 'username'
 //     const password = formData.get('password'); // Ensure the input field name is 'password'
     
 //     const userData = {
+    
 //       action: 'login',
-//       usernameOrEmail: usernameOrEmail,
+//       username: usernameOrEmail,
 //       password: password,
 //     };
-  
+//     console.log(userData)
 //     try {
 //       // Send user credentials to the server for authentication
 //       const response = await fetch('/auth', {
@@ -73,8 +78,6 @@
 //       // Handle other errors, such as network errors
 //     }
 //   };
-  
-  
 
 //   return (
 //     <div className='login-body'>
@@ -108,7 +111,7 @@
 //               <a href="#" className="social"><i className="fab fa-linkedin-in"></i></a>
 //             </div>
 //             <span>or use your account</span>
-//             <input type="email" name="email" placeholder="Email" required />
+//             <input type="text" name="username" placeholder="Username or Email" required /> {/* Change type to text and name to username */}
 //             <input type="password" name="password" placeholder="Password" required />
 //             <a href="#">Forgot your password?</a>
 //             <button type="submit">Sign In</button>
@@ -133,13 +136,16 @@
 //   );
 // };
 
-// export default Login;
-
+// export default Login;import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate instead of useHistory
+import './login.css'; // Import your CSS file here
 import React, { useState } from 'react';
+
 
 const Login = () => {
   const [isSignUpActive, setIsSignUpActive] = useState(false);
   const [role, setRole] = useState('user'); // Default role is user
+  const navigate = useNavigate(); // Use useNavigate hook instead of useHistory
 
   const handleSignUpClick = async (event) => {
     event.preventDefault();
@@ -179,10 +185,10 @@ const Login = () => {
     
     const userData = {
       action: 'login',
-      usernameOrEmail: usernameOrEmail,
+      username: usernameOrEmail,
       password: password,
     };
-  
+
     try {
       // Send user credentials to the server for authentication
       const response = await fetch('/auth', {
@@ -198,7 +204,8 @@ const Login = () => {
         // If the response is successful (status code 200), log in was successful
         const data = await response.json();
         console.log('Login successful:', data);
-        // Handle further actions here, such as redirecting the user to a dashboard page
+        // Redirect to home page after successful login
+        navigate('/'); // Use navigate to redirect
       } else {
         // If the response is not successful, handle the error
         const errorText = await response.text();
@@ -210,8 +217,6 @@ const Login = () => {
       // Handle other errors, such as network errors
     }
   };
-  
-  
 
   return (
     <div className='login-body'>

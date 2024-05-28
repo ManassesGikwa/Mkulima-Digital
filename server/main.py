@@ -7,6 +7,9 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token
 import os
 import jwt.exceptions
+from werkzeug.utils import secure_filename
+import cloudinary
+
 
 app = Flask(__name__)
 CORS(app, origins='http://localhost:3000')
@@ -258,20 +261,107 @@ class LikeDetails(Resource):
         db.session.delete(like)
         db.session.commit()
         return jsonify({'message': 'Like deleted successfully'})
+
+def upload_file(image_file):
+    # Check if image file exists
+    if not image_file:
+        return None
+
+    # Upload image to Cloudinary
+    try:
+        cloudinary_response = cloudinary.uploader.upload(image_file)
+        image_url = cloudinary_response['secure_url']
+        return image_url
+    except Exception as e:
+        print("Error uploading image:", e)
+        return None
+
+@app.route('/communities', methods=['POST'])
+def create_community():
+    data = request.form
+    name = data.get('name')
+    description = data.get('description')
+    user_id = data.get('user_id')
+
+    # Check if all required fields are present
+    if not name or not description or not user_id:
+        return jsonify({'error': 'Missing required fields'}), 400
+
+    # Get the image file from the request
+    image = request.files.get('image')
+
+    # Check if image is provided
+    if not image:
+        return jsonify({'error': 'Image is required'}), 400
+
+    try:
+        # Upload the image to Cloudinary
+        cloudinary_response = cloudinary.uploader.upload(image)
+        image_url = cloudinary_response['secure_url']
+
+        # Create a new community with the provided data
+        new_community = Community(name=name, description=description, image=image_url, user_id=user_id)
+        db.session.add(new_community)
+        db.session.commit()
+
+        return jsonify({'message': 'Community created successfully', 'community': {
+            'id': new_community.id,
+            'name': new_community.name,
+            'description': new_community.description,
+            'image': new_community.image,
+            'user_id': new_community.user_id,
+            'likes': new_community.likes
+        }}), 201
+    except Exception as e:
+        print("Error creating community:", e)
+        return jsonify({'error': 'Failed to create community'}), 500
+
+def upload_img(file):
+    if file:
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+        return file_path
+    return None
+@app.route('/communities/<int:id>', methods=['PUT'])
+def update_community(id):
+    community = Community.query.get_or_404(id)
+    data = request.form
+    image_file = request.files.get('image')
+    image_url = upload_img(image_file) if image_file else None
+
+    # Update community fields
+    community.name = data.get('name', community.name)
+    community.description = data.get('description', community.description)
+    community.image = image_url or community.image  # Update image URL only if new image is provided
+    db.session.commit()
+
+    return jsonify({
+        'message': 'Community updated successfully',
+        'community': {
+            'id': community.id,
+            'name': community.name,
+            'description': community.description,
+            'image': community.image,
+            'likes': community.likes  # Ensure that 'likes' attribute exists in Community model
+        }
+    })
+
 # DELETE method to delete a community
-    def delete(self, id):
-        community = Community.query.get_or_404(id)
-        db.session.delete(community)
-        db.session.commit()
-        return jsonify({'message': 'Community deleted successfully'})
-       
-    @app.route('/communities/<int:id>/like', methods=['POST'])
-    def like_community(id):
-        community = Community.query.get_or_404(id)
-        community.likes += 1
-        db.session.commit()
-        return jsonify({'message': 'Community liked successfully'})
- 
+@app.route('/communities/<int:id>', methods=['DELETE'])
+def delete_community(id):
+    community = Community.query.get_or_404(id)
+    db.session.delete(community)
+    db.session.commit()
+    return jsonify({'message': 'Community deleted successfully'})
+
+# POST method to like a community
+@app.route('/communities/<int:id>/like', methods=['POST'])
+def like_community(id):
+    community = Community.query.get_or_404(id)
+    community.likes += 1
+    db.session.commit()  # Save the updated like count to the database
+    return jsonify({'message': 'Community liked successfully', 'likes': community.likes})
 
 # Add routes for all resources
 api.add_resource(UserRegistration, '/register')

@@ -166,7 +166,7 @@ function ExpertDashboard() {
         <div className="dashboard">
             <div className='side-content'>
                 <div className='top-left-corner'>
-                    <h1 style={{'color':'white'}}>Mkulima Digital</h1>
+                    <h1 style={{'color':'white', 'fontSize':'30px'}}>Mkulima Digital</h1>
                     <h3 style={{'color':'white'}}>Expert's DashBoard</h3>
                 </div>
                 
@@ -184,7 +184,7 @@ function ExpertDashboard() {
                     </div>
                     <div className="expert-profile-topbar">
                         <Dropdown as={ButtonGroup}>
-                            <Button className="options-button">Options</Button>
+                            <Button className="options-button" style={{'color':'white'}}>Options</Button>
                             <Dropdown.Toggle split className="options-button" id="dropdown-split-basic" />
                             <Dropdown.Menu className="dropdown-menu">
                                 <Dropdown.Item onClick={() => handleDropdownClick('updateProfile')}>
@@ -264,7 +264,7 @@ function ExpertDashboard() {
                 <div className='banner'>
                     <h3 style={{ color: 'white' }}>Hello Farmer2024!</h3>
                     <h4 style={{ color: 'white' }}>Give us an update on how your farming experience is going</h4>
-                    <Button className='new-post-button' onClick={handleNewPostClick}>Write New Post</Button>
+                    <Button className='new-post-button' style={{'color':'white', 'height':'10px'}} onClick={handleNewPostClick}>Write New Post</Button>
                 </div>
                 {showCreatePost ? (
                     <div className="create-post-view">

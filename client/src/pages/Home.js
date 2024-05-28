@@ -304,14 +304,14 @@ const Home = () => {
               <div className="col-3">
                 <div className="d-flex justify-content-center">
                   <div className="detail">
-                    <h2 className="mb-3 fw-bold">Mkulima Digital</h2>
-                    <p>We Digitise Grain Management for Over 11,600 Agribusinesses Globally</p>
-                    <hr className="mb-3" />
-                    <Link to="/login" className="text-decoration-none fw-normal">
+                    <h2 className="mb-3 fw-bold" style={{'color':'white'}}>Mkulima Digital</h2>
+                    <p style={{'color':'white'}}>We Digitise Grain Management for Over 11,600 Agribusinesses Globally</p>
+                    <hr className="mb-3" style={{'color':'white'}} />
+                    <Link to="/login" className="text-decoration-none fw-normal" style={{'color':'white'}}>
                       LOGIN
                     </Link>
                     <div className="arrow mt-4">
-                      <i className="bi bi-chevron-down"></i>
+                      <i className="bi bi-chevron-down" style={{'color':'white'}}></i>
                     </div>
                   </div>
                 </div>

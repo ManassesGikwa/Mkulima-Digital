@@ -109,7 +109,7 @@ const NavBar = () => {
     <div>
       <nav className="navbar navbar-expand-lg bg-white">
         <div className="container-fluid container-lg" id="round-onclick">
-          <h1 className="logo text-decoration-none">
+          <h1 className="logo text-decoration-none" style={{'fontSize':'45px'}}>
             <Link to="/">Mkulima Digital</Link>
           </h1>
           <button

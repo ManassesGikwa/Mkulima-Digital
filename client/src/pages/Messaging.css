@@ -141,3 +141,9 @@ button:disabled {
   border-radius: 50%;
   margin: 2px 5px;
 }
+
+.email-header span{
+  margin-left: 1rem;
+  margin-right: 10rem;
+  color: #000;
+}
